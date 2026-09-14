@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3 uid="uid://emailapp30"]
+
+[ext_resource type="Script" path="res://scripts/apps/email_app.gd" id="1_mail"]
+
+[node name="EmailApp" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mail")
+
+[node name="Root" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+theme_override_constants/separation = 8
+
+[node name="Header" type="Label" parent="Root"]
+layout_mode = 2
+text = "Correo"
+
+[node name="MainRow" type="HBoxContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="EmailList" type="ItemList" parent="Root/MainRow"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EmailBody" type="Label" parent="Root/MainRow"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Selecciona un correo"
+autowrap_mode = 3

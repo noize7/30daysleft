@@ -1,0 +1,18 @@
+{
+  "jobs": [
+    {"id": "survey_1", "level": 1, "name": "Encuesta básica", "description": "Responde preguntas simples.", "min_pay": 8, "max_pay": 18, "duration": 6, "clicks_required": 4},
+    {"id": "survey_2", "level": 1, "name": "Encuesta de mercado", "description": "Opinión sobre productos.", "min_pay": 12, "max_pay": 25, "duration": 8, "clicks_required": 5},
+    {"id": "survey_3", "level": 1, "name": "Test de usabilidad", "description": "Prueba una interfaz web.", "min_pay": 15, "max_pay": 30, "duration": 9, "clicks_required": 6},
+    {"id": "write_1", "level": 2, "name": "Redacción corta", "description": "Escribe un párrafo.", "min_pay": 40, "max_pay": 80, "duration": 10, "clicks_required": 7},
+    {"id": "write_2", "level": 2, "name": "Artículo web", "description": "Contenido para un blog.", "min_pay": 55, "max_pay": 110, "duration": 12, "clicks_required": 9},
+    {"id": "write_3", "level": 2, "name": "Copy de anuncio", "description": "Textos publicitarios.", "min_pay": 70, "max_pay": 130, "duration": 11, "clicks_required": 8},
+    {"id": "data_entry", "level": 2, "name": "Entrada de datos", "description": "Transcribe tablas.", "min_pay": 35, "max_pay": 70, "duration": 9, "clicks_required": 10},
+    {"id": "code_1", "level": 3, "name": "Script simple", "description": "Pequeño programa.", "min_pay": 180, "max_pay": 320, "duration": 14, "clicks_required": 11},
+    {"id": "code_2", "level": 3, "name": "Bugfix", "description": "Corrige errores de código.", "min_pay": 220, "max_pay": 400, "duration": 15, "clicks_required": 12},
+    {"id": "code_3", "level": 3, "name": "API wrapper", "description": "Integra una API externa.", "min_pay": 280, "max_pay": 480, "duration": 16, "clicks_required": 13},
+    {"id": "qa_test", "level": 3, "name": "QA / Testing", "description": "Pruebas de regresión.", "min_pay": 200, "max_pay": 360, "duration": 13, "clicks_required": 10},
+    {"id": "pro_1", "level": 4, "name": "Contrato freelance", "description": "Trabajo profesional completo.", "min_pay": 900, "max_pay": 1800, "duration": 20, "clicks_required": 16},
+    {"id": "pro_2", "level": 4, "name": "Consultoría técnica", "description": "Análisis para un cliente.", "min_pay": 1100, "max_pay": 2200, "duration": 18, "clicks_required": 14},
+    {"id": "pro_3", "level": 4, "name": "Proyecto full-stack", "description": "MVP frontend + backend.", "min_pay": 1500, "max_pay": 3000, "duration": 22, "clicks_required": 18}
+  ]
+}

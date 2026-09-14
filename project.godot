@@ -1,0 +1,41 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="30 DAYS LEFT"
+run/main_scene="res://scenes/main/main.tscn"
+config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://scripts/managers/game_manager.gd"
+TimeManager="*res://scripts/managers/time_manager.gd"
+WorkSystem="*res://scripts/systems/work_system.gd"
+UpgradeSystem="*res://scripts/systems/upgrade_system.gd"
+EmailSystem="*res://scripts/systems/email_system.gd"
+ClueSystem="*res://scripts/systems/clue_system.gd"
+SaveManager="*res://scripts/managers/save_manager.gd"
+SanityFX="*res://scripts/systems/sanity_fx.gd"
+
+[display]
+
+window/size/viewport_width=1080
+window/size/viewport_height=720
+window/size/mode=3
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

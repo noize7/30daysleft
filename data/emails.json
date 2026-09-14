@@ -1,0 +1,23 @@
+{
+  "note": "El catalogo vivo esta en scripts/systems/email_system.gd (EMAILS). Este JSON es referencia.",
+  "emails": [
+	{"id": "day1_welcome", "unlock_day": 1, "is_fake": false, "type": "system"},
+	{"id": "day1_job", "unlock_day": 1, "is_fake": false, "type": "job"},
+	{"id": "day2_reminder", "unlock_day": 2, "is_fake": false, "type": "job"},
+	{"id": "day3_odd", "unlock_day": 3, "is_fake": false, "type": "warning"},
+	{"id": "day5_memory", "unlock_day": 5, "is_fake": false, "type": "photo"},
+	{"id": "day5_fake", "unlock_day": 5, "is_fake": true, "type": "warning"},
+	{"id": "day7_neighbor", "unlock_day": 7, "is_fake": false, "type": "text"},
+	{"id": "day8_fake_call", "unlock_day": 8, "is_fake": true, "type": "warning"},
+	{"id": "day10_police", "unlock_day": 10, "is_fake": false, "type": "police"},
+	{"id": "day10_fake", "unlock_day": 10, "is_fake": true, "type": "warning"},
+	{"id": "day12_bank", "unlock_day": 12, "is_fake": false, "type": "document"},
+	{"id": "day15_truth", "unlock_day": 15, "is_fake": false, "type": "medical"},
+	{"id": "day18_press", "unlock_day": 18, "is_fake": false, "type": "document"},
+	{"id": "day20_crisis", "unlock_day": 20, "is_fake": false, "type": "system"},
+	{"id": "day20_fake", "unlock_day": 20, "is_fake": true, "type": "warning"},
+	{"id": "day22_fake_boss", "unlock_day": 22, "is_fake": true, "type": "warning"},
+	{"id": "day25_final", "unlock_day": 25, "is_fake": false, "type": "key"},
+	{"id": "day28_last_warning", "unlock_day": 28, "is_fake": false, "type": "police"}
+  ]
+}

@@ -1,0 +1,65 @@
+[gd_scene load_steps=2 format=3 uid="uid://filesapp30"]
+
+[ext_resource type="Script" path="res://scripts/apps/files_app.gd" id="1_files"]
+
+[node name="FilesApp" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_files")
+
+[node name="Root" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 8.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+
+[node name="Header" type="Label" parent="Root"]
+layout_mode = 2
+text = "Archivos"
+
+[node name="StatusLabel" type="Label" parent="Root"]
+layout_mode = 2
+text = ""
+
+[node name="Sep" type="HSeparator" parent="Root"]
+layout_mode = 2
+
+[node name="MainRow" type="HBoxContainer" parent="Root"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="ClueList" type="ItemList" parent="Root/MainRow"]
+custom_minimum_size = Vector2(180, 220)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.85
+size_flags_vertical = 3
+
+[node name="RightCol" type="VBoxContainer" parent="Root/MainRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.4
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="BodyTitle" type="Label" parent="Root/MainRow/RightCol"]
+layout_mode = 2
+text = "Vista previa"
+
+[node name="ClueBody" type="Label" parent="Root/MainRow/RightCol"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Selecciona un archivo de la lista."
+autowrap_mode = 3

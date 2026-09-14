@@ -1,0 +1,235 @@
+{
+  "upgrades": {
+    "battery": [
+      {
+        "level": 1,
+        "name": "Batería estándar",
+        "capacity": 100,
+        "cost": 0,
+        "desc": "Capacidad base 100%"
+      },
+      {
+        "level": 2,
+        "name": "Batería mejorada",
+        "capacity": 140,
+        "cost": 350,
+        "desc": "Capacidad 140%"
+      },
+      {
+        "level": 3,
+        "name": "Batería industrial",
+        "capacity": 200,
+        "cost": 1200,
+        "desc": "Capacidad 200%"
+      },
+      {
+        "level": 4,
+        "name": "Batería de litio pro",
+        "capacity": 280,
+        "cost": 3500,
+        "desc": "Capacidad 280%"
+      },
+      {
+        "level": 5,
+        "name": "Supercondensador",
+        "capacity": 400,
+        "cost": 8000,
+        "desc": "Capacidad 400%"
+      }
+    ],
+    "cpu": [
+      {
+        "level": 1,
+        "name": "CPU básica",
+        "multiplier": 1.0,
+        "cost": 0,
+        "desc": "Pago normal"
+      },
+      {
+        "level": 2,
+        "name": "CPU rápida",
+        "multiplier": 1.2,
+        "cost": 600,
+        "desc": "+20% pago"
+      },
+      {
+        "level": 3,
+        "name": "CPU pro",
+        "multiplier": 1.4,
+        "cost": 2000,
+        "desc": "+40% pago"
+      },
+      {
+        "level": 4,
+        "name": "CPU overclock",
+        "multiplier": 1.7,
+        "cost": 5000,
+        "desc": "+70% pago"
+      },
+      {
+        "level": 5,
+        "name": "CPU cuántica",
+        "multiplier": 2.1,
+        "cost": 12000,
+        "desc": "+110% pago"
+      }
+    ],
+    "ram": [
+      {
+        "level": 1,
+        "name": "RAM 1GB",
+        "cost": 0,
+        "desc": "Apps básicas"
+      },
+      {
+        "level": 2,
+        "name": "RAM 4GB",
+        "cost": 450,
+        "desc": "Mejor multitarea"
+      },
+      {
+        "level": 3,
+        "name": "RAM 8GB",
+        "cost": 1800,
+        "desc": "Desbloquea archivos ocultos"
+      },
+      {
+        "level": 4,
+        "name": "RAM 16GB",
+        "cost": 4500,
+        "desc": "Menos lag"
+      },
+      {
+        "level": 5,
+        "name": "RAM 32GB",
+        "cost": 10000,
+        "desc": "Máximo rendimiento"
+      }
+    ],
+    "internet": [
+      {
+        "level": 1,
+        "name": "Conexión lenta",
+        "cost": 0,
+        "desc": "Trabajos normales"
+      },
+      {
+        "level": 2,
+        "name": "Banda ancha",
+        "cost": 800,
+        "desc": "Trabajos secretos"
+      },
+      {
+        "level": 3,
+        "name": "Fibra oscura",
+        "cost": 2800,
+        "desc": "Acceso anticipado"
+      },
+      {
+        "level": 4,
+        "name": "Red satélite",
+        "cost": 7000,
+        "desc": "Mejor latencia"
+      },
+      {
+        "level": 5,
+        "name": "Backbone oculto",
+        "cost": 15000,
+        "desc": "Acceso total"
+      }
+    ],
+    "automation": [
+      {
+        "level": 1,
+        "name": "Sin bot",
+        "passive_per_sec": 0.0,
+        "cost": 0,
+        "desc": "Sin pasivos"
+      },
+      {
+        "level": 2,
+        "name": "Auto-clicker",
+        "passive_per_sec": 0.4,
+        "cost": 1000,
+        "desc": "+$0.40/s"
+      },
+      {
+        "level": 3,
+        "name": "Bot avanzado",
+        "passive_per_sec": 1.2,
+        "cost": 3500,
+        "desc": "+$1.20/s"
+      },
+      {
+        "level": 4,
+        "name": "Farm de scripts",
+        "passive_per_sec": 3.0,
+        "cost": 9000,
+        "desc": "+$3.00/s"
+      },
+      {
+        "level": 5,
+        "name": "IA autónoma",
+        "passive_per_sec": 6.5,
+        "cost": 20000,
+        "desc": "+$6.50/s"
+      }
+    ],
+    "cooling": [
+      {
+        "level": 1,
+        "name": "Ventilador stock",
+        "cost": 0,
+        "drain_mult": 1.0,
+        "desc": "Sin bonus"
+      },
+      {
+        "level": 2,
+        "name": "Cooler torre",
+        "cost": 500,
+        "drain_mult": 0.92,
+        "desc": "-8% drenaje batería"
+      },
+      {
+        "level": 3,
+        "name": "Refrigeración líquida",
+        "cost": 2200,
+        "drain_mult": 0.82,
+        "desc": "-18% drenaje"
+      },
+      {
+        "level": 4,
+        "name": "Phase-change",
+        "cost": 6000,
+        "drain_mult": 0.7,
+        "desc": "-30% drenaje"
+      }
+    ],
+    "storage": [
+      {
+        "level": 1,
+        "name": "HDD 128GB",
+        "cost": 0,
+        "desc": "Espacio básico"
+      },
+      {
+        "level": 2,
+        "name": "SSD 256GB",
+        "cost": 400,
+        "desc": "Carga más rápida"
+      },
+      {
+        "level": 3,
+        "name": "NVMe 1TB",
+        "cost": 1600,
+        "desc": "Más cache"
+      },
+      {
+        "level": 4,
+        "name": "RAID 4TB",
+        "cost": 5000,
+        "desc": "Máximo almacenamiento"
+      }
+    ]
+  }
+}

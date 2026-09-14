@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=3 uid="uid://bankapp30"]
+
+[ext_resource type="Script" path="res://scripts/apps/bank_app.gd" id="1_bank"]
+
+[node name="BankApp" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+clip_contents = true
+script = ExtResource("1_bank")
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="Root" type="VBoxContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="Header" type="Label" parent="Scroll/Root"]
+layout_mode = 2
+text = "Banco"
+
+[node name="BalanceLabel" type="Label" parent="Scroll/Root"]
+layout_mode = 2
+text = "Saldo: $0"
+
+[node name="InfoLabel" type="Label" parent="Scroll/Root"]
+layout_mode = 2
+text = "Gestión de pagos"
+autowrap_mode = 3
+
+[node name="MethodLabel" type="Label" parent="Scroll/Root"]
+layout_mode = 2
+text = "Método preferido: Transferencia"
+
+[node name="Methods" type="HBoxContainer" parent="Scroll/Root"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BtnCash" type="Button" parent="Scroll/Root/Methods"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Efectivo"
+
+[node name="BtnTransfer" type="Button" parent="Scroll/Root/Methods"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Transferencia"
+
+[node name="StatusLabel" type="Label" parent="Scroll/Root"]
+layout_mode = 2
+text = ""
+autowrap_mode = 3

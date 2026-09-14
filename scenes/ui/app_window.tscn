@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://appwindow30"]
+
+[ext_resource type="Script" path="res://scripts/ui/app_window.gd" id="1_win"]
+
+[node name="AppWindow" type="Panel"]
+offset_right = 560.0
+offset_bottom = 440.0
+script = ExtResource("1_win")
+
+[node name="TitleBar" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 560.0
+offset_bottom = 36.0
+
+[node name="TitleLabel" type="Label" parent="TitleBar"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 500.0
+offset_bottom = 29.0
+text = "Aplicación"
+
+[node name="CloseButton" type="Button" parent="TitleBar"]
+layout_mode = 0
+offset_left = 522.0
+offset_top = 4.0
+offset_right = 554.0
+offset_bottom = 32.0
+text = "X"
+
+[node name="Content" type="Control" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 40.0
+offset_right = 550.0
+offset_bottom = 426.0

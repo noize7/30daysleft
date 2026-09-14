@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://desktopicon30"]
+
+[ext_resource type="Script" path="res://scripts/ui/desktop_icon.gd" id="1_icon"]
+
+[node name="DesktopIcon" type="Control"]
+custom_minimum_size = Vector2(96, 100)
+layout_mode = 0
+mouse_default_cursor_shape = 2
+script = ExtResource("1_icon")
+app_name = "App"
+icon_scale = 1.5

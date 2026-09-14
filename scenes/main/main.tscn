@@ -1,0 +1,238 @@
+[gd_scene format=3 uid="uid://4dsj517jgmv"]
+
+[ext_resource type="Script" uid="uid://c18vndv1y1phx" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://b465s165h3pyc" path="res://scripts/ui/desktop_ui.gd" id="2_desktop"]
+[ext_resource type="Texture2D" uid="uid://bv4l763ynn0ph" path="res://assets/Icons Pc/Portafolio.png" id="2_yyfjg"]
+[ext_resource type="Texture2D" uid="uid://6l823x5eu2s0" path="res://assets/Icons Pc/Mensajes.png" id="3_b1x3f"]
+[ext_resource type="Texture2D" uid="uid://bcrr4c7f70ux5" path="res://assets/Icons Pc/carpeta.png" id="4_a8run"]
+[ext_resource type="Texture2D" uid="uid://l8l03h64km0y" path="res://assets/Icons Pc/Upgrade .png" id="5_ouso4"]
+[ext_resource type="Texture2D" uid="uid://dayrsinynty06" path="res://assets/Icons Pc/Ajustes.png" id="6_blune"]
+[ext_resource type="Texture2D" uid="uid://d3esssrgkm8d0" path="res://assets/Icons Pc/Banco.png" id="7_th5th"]
+[ext_resource type="Texture2D" uid="uid://b66yguakjnuao" path="res://assets/sprites/windows-xp-wallpaper-v0-breluv06gbc31.png" id="9_b1x3f"]
+[ext_resource type="Texture2D" uid="uid://7onr5g5k1wbd" path="res://assets/Icons Pc/Bateria.png" id="10_a8run"]
+
+[node name="Main" type="Control" unique_id=1329877378]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+icon_trabajo = ExtResource("2_yyfjg")
+icon_correo = ExtResource("3_b1x3f")
+icon_archivos = ExtResource("4_a8run")
+icon_mejoras = ExtResource("5_ouso4")
+icon_opciones = ExtResource("6_blune")
+icon_banco = ExtResource("7_th5th")
+
+[node name="BootScreen" type="ColorRect" parent="." unique_id=1364334444]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="BootLabel" type="Label" parent="BootScreen" unique_id=1611073928]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "30 DAYS LEFT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PowerButton" type="Button" parent="." unique_id=1428557693]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.62
+anchor_right = 0.5
+anchor_bottom = 0.62
+offset_left = -120.0
+offset_top = -29.0
+offset_right = 120.0
+offset_bottom = 29.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "ENCENDER"
+
+[node name="DesktopUI" type="Control" parent="." unique_id=240477645]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_desktop")
+
+[node name="Wallpaper" type="ColorRect" parent="DesktopUI" unique_id=100163400]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.227451, 0.431373, 0.647059, 1)
+
+[node name="WindowsXpWallpaperV0Breluv06Gbc31" type="Sprite2D" parent="DesktopUI" unique_id=1372756719]
+position = Vector2(640.5, 360)
+scale = Vector2(1.1861111, 1)
+texture = ExtResource("9_b1x3f")
+
+[node name="Icons" type="Control" parent="DesktopUI" unique_id=799132579]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Taskbar" type="Panel" parent="DesktopUI" unique_id=673239188]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -47.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="StartButton" type="Button" parent="DesktopUI/Taskbar" unique_id=438342938]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.009000001
+anchor_top = 0.128
+anchor_right = 0.113000005
+anchor_bottom = 0.78700006
+offset_left = 0.27999973
+offset_top = -4.0160007
+offset_right = -0.040008545
+offset_bottom = -3.9890022
+text = "Inicio"
+
+[node name="DayLabel" type="Label" parent="DesktopUI/Taskbar" unique_id=550124047]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.134
+anchor_top = 0.149
+anchor_right = 0.23600002
+anchor_bottom = 0.87200004
+offset_left = 0.27999878
+offset_top = -0.0030002594
+offset_right = 0.11997986
+offset_bottom = 0.01599884
+text = "Dia 1"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="MoneyLabel" type="Label" parent="DesktopUI/Taskbar" unique_id=1224722879]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.24900001
+anchor_top = 0.17
+anchor_right = 0.41200003
+anchor_bottom = 0.89400005
+offset_left = 0.07998657
+offset_top = 0.009999752
+offset_right = 0.039978027
+offset_bottom = -0.018001556
+text = "$0"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="BatteryBar" type="ProgressBar" parent="DesktopUI/Taskbar" unique_id=645615170]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.64400005
+anchor_top = 0.17
+anchor_right = 0.78300005
+anchor_bottom = 0.72300005
+offset_left = 0.47991943
+offset_top = 0.009999752
+offset_right = 0.35992432
+offset_bottom = 0.018997192
+value = 100.0
+show_percentage = false
+
+[node name="BatteryLabel" type="Label" parent="DesktopUI/Taskbar" unique_id=1693079367]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.79
+anchor_top = 0.106000006
+anchor_right = 0.855
+anchor_bottom = 0.83000004
+offset_left = -0.2000122
+offset_top = 0.017999649
+offset_right = -0.4000244
+offset_bottom = -0.010002136
+text = "100%"
+vertical_alignment = 1
+
+[node name="ClockLabel" type="Label" parent="DesktopUI/Taskbar" unique_id=1915577525]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.88600004
+anchor_right = 0.952
+anchor_bottom = 0.78700006
+offset_left = 0.11993408
+offset_top = 3.0
+offset_right = -0.16003418
+offset_bottom = 0.010997772
+text = "01:00 AM"
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="DesktopUI/Taskbar" unique_id=779381508]
+layout_mode = 1
+anchor_left = 0.83500004
+anchor_top = 0.043
+anchor_right = 0.87200004
+anchor_bottom = 0.89400005
+offset_left = 0.19995117
+offset_top = -0.021000147
+offset_right = 0.2399292
+offset_bottom = -0.018001556
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Bateria" type="Sprite2D" parent="DesktopUI/Taskbar/Control" unique_id=1233009631]
+position = Vector2(17.999998, 21.999998)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("10_a8run")
+
+[node name="EndingScreen" type="ColorRect" parent="." unique_id=930666541]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0392157, 0.0392157, 0.0392157, 1)
+
+[node name="EndingLabel" type="Label" parent="EndingScreen" unique_id=356175536]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "FIN"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestartButton" type="Button" parent="EndingScreen" unique_id=759260230]
+layout_mode = 0
+offset_left = 440.0
+offset_top = 520.0
+offset_right = 640.0
+offset_bottom = 570.0
+text = "Reiniciar"
