@@ -1,45 +1,55 @@
 # 30 DAYS LEFT — Godot 4.6
 
-## Tanda 7 — Escape por banco, iconos de mejoras, UI de finales, glitches
+## Tanda 8 — En progreso / parcialmente implementada
 
-### Esta tanda
-- **Nueva partida**: sin flash de "Apagando PC"
-- **Iconos en Mejoras**: cada categoría usa PNG en `assets/Icons Pc/` (cámbialos por los tuyos)
-- **Meta de escape**: $150.000 (antes $1.000.000)
-- **Escape por transferencia**: entre el día 1 y 10 llega un correo con un nº de cuenta; en Banco pegas la cuenta, la cantidad y transfieres. Al completar la meta (+ pistas) → Escape
-- **UI de finales**: texto y botón abajo a la izquierda; imágenes opcionales en `assets/endings/{escape,locura,atrapado}.png`
-- **Etiqueta de final**: "ESCAPE 1 de 3", "FINAL 2 de 3 — LOCURA", "FINAL 3 de 3 — ATRAPADO"
-- **Glitches de cordura** (SanityFX): viñeta y barras cuando la cordura baja
+### Implementado en esta tanda
+- **Sistema de pago dual** (Online vs Efectivo)
+  - Selector en la app Trabajo
+  - Online suma sospecha (mitigado por Proxy anónimo)
+  - Efectivo no suma sospecha
+  - Persistido en save
+- **Más trabajos** (clasificación de imágenes, moderación de foros, reseñas falsas, análisis de datos, tareas especiales)
+  - Algunos bajan cordura (mitigado por Filtro de ruido)
+  - Algunos pueden generar pistas
+- **Nuevas mejoras**
+  - Optimizador de tareas (reduce duración/cooldown)
+  - Filtro de ruido (−pérdida de cordura)
+  - Proxy anónimo (−sospecha Online)
+  - Script de limpieza de logs (chance de bajar sospecha al día)
+  - Batería ampliada hasta 1000%
+- **App MusicPlayer**
+  - Icono en escritorio ("Música")
+  - 5 pistas en loop (placeholder hasta que pongas los OGG)
+  - Persiste pista y volumen
+  - Bajo cordura puede saltar a pista de crisis
+- **DayEventManager ampliado** (días clave + llegadas falsas de efectivo)
+- Guardado/carga actualizado (payment_method + nuevas upgrades)
 
-### Tandas completadas
-| Tanda | Contenido |
-|-------|-----------|
-| 1–4 | Core, trabajo, mejoras, guardado, correo, pistas, cordura |
-| 5 | Menús, créditos, balance, más jobs/upgrades |
-| 6 | UI por escenas, boot, icono opciones, Archivos limpio |
-| **7** | Banco/transferencia, escape, iconos mejoras, finales, glitches |
+### Pendiente / a completar por ti o en siguientes pasos
+- Asignar icono Musica.png al export icon_musica en main.tscn (Inspector del nodo Main)
+- Colocar archivos OGG en assets/audio/music/ (musica_juego1.ogg … 5)
+- Iconos dedicados para las 4 mejoras nuevas (actualmente usan placeholders)
+- Más correos/pistas temáticos si se desea (ya hay base sólida)
+- Animación corta de entrega de efectivo (estilo FNAF) — opcional visual
+- TruthArchive al final de partida (lista real vs falso)
 
-### Tandas que faltan (estimación)
-| Tanda | Contenido previsto |
-|-------|--------------------|
-| 8 | Más correos/pistas, arte de iconos/fondos, más variantes de escape |
-| 9 | Audio (música / SFX), ilustraciones de finales |
-| 10 | Balance final, bugs, build de release |
+### Tandas
+| Tanda | Estado |
+|-------|--------|
+| 1–7 | Completadas |
+| **8** | Parcialmente implementada (core hecho) |
+| 9 | Audio completo + SanityFX profundo + finales |
+| 10 | Balance, polish, release |
 
 ### Autoloads
 GameManager, TimeManager, WorkSystem, UpgradeSystem,
 EmailSystem, ClueSystem, SaveManager, SanityFX
 
-### Cómo poner iconos de mejoras
-Sustituye estos archivos (mismo nombre) en `assets/Icons Pc/`:
-- `Bateria.png`, `CPU.png`, `Ram.png`, `Navegador.png`
-- `bot.png`, `ventilador.png`, `Almacenamiento.png`
+### Cómo poner el icono de Música
+1. Abre scenes/main/main.tscn
+2. Nodo Main → Inspector → Iconos del escritorio → icon_musica
+3. Asigna assets/Icons Pc/Musica.png
 
-### Cómo poner imágenes de finales
-Coloca en `assets/endings/`:
-- `escape.png`, `locura.png`, `atrapado.png`
-
-### Cómo poner iconos del escritorio
-1. Abre `scenes/main/main.tscn`
-2. Nodo **Main** → Inspector → **Iconos del escritorio**
-3. Asigna texturas a cada `icon_*`
+### Cómo poner música
+Coloca en assets/audio/music/:
+- musica_juego1.ogg … musica_juego5.ogg

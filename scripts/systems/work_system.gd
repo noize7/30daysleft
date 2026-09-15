@@ -74,16 +74,22 @@ func get_available_jobs() -> Array:
 		elif UpgradeSystem.has_method("get_effective_job_level"):
 			access = UpgradeSystem.get_effective_job_level()
 	var allow_secret: bool = false
+	var internet_lvl: int = 1
 	if UpgradeSystem and UpgradeSystem.has_method("has_secret_jobs"):
 		allow_secret = UpgradeSystem.has_secret_jobs()
-	elif UpgradeSystem and UpgradeSystem.has_method("get_level"):
-		allow_secret = UpgradeSystem.get_level("internet") >= 2
+	if UpgradeSystem and UpgradeSystem.has_method("get_level"):
+		internet_lvl = UpgradeSystem.get_level("internet")
+		allow_secret = allow_secret or internet_lvl >= 2
 	for job in JOBS:
 		var is_secret: bool = bool(job.get("secret", false))
 		if is_secret and not allow_secret:
 			continue
-		if int(job.get("level", 1)) <= access:
-			result.append(job)
+		if int(job.get("level", 1)) > access:
+			continue
+		# Tanda 8: tareas especiales requieren Internet alto
+		if job.has("requires_internet") and internet_lvl < int(job["requires_internet"]):
+			continue
+		result.append(job)
 	return result
 
 func get_next_level_requirement() -> int:

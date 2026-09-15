@@ -37,7 +37,7 @@ var suspicion: float = 0.0
 var job_level: int = 1          # 1=Encuestas … 4=Profesional
 var jobs_completed: int = 0     # Contador para subir de nivel
 
-# Niveles de mejoras de PC (Fase 3-4). Minimo 1 en todas.
+# Niveles de mejoras de PC (Fase 3-4 + Tanda 8). Mínimo 1 en todas.
 var upgrade_levels: Dictionary = {
 	"battery": 1,
 	"cpu": 1,
@@ -45,8 +45,18 @@ var upgrade_levels: Dictionary = {
 	"internet": 1,
 	"automation": 1,
 	"cooling": 1,
-	"storage": 1
+	"storage": 1,
+	"optimizer": 1,
+	"noise_filter": 1,
+	"proxy": 1,
+	"log_cleaner": 1
 }
+
+## Método de cobro preferido: "cash" (efectivo) o "online".
+## cash  → no sube sospecha; compras ilegales más caras/lentas
+## online → compras baratas/rápidas; cada uso suma sospecha
+var payment_method: String = "online"
+signal payment_method_changed(method: String)
 
 var is_pc_on: bool = false
 var is_game_over: bool = false
@@ -141,15 +151,40 @@ func spend_money(amount: float) -> bool:
 	return true
 
 ## Registra un trabajo terminado: paga (con multiplicador CPU) + nivel.
-func complete_job(pay: float) -> void:
+## Respeta el método de pago dual (Tanda 8).
+func complete_job(pay: float, job_data: Dictionary = {}) -> void:
 	if is_game_over:
 		return
 	# Multiplicador de CPU (Fase 4)
 	var mult: float = UpgradeSystem.get_cpu_multiplier()
-	add_money(pay * mult)
+	var final_pay: float = pay * mult
+	add_money(final_pay)
 	jobs_completed += 1
 	jobs_completed_changed.emit(jobs_completed)
 	_check_job_level_up()
+
+	# --- Pago dual (Tanda 8) ---
+	if payment_method == "online":
+		# Cada cobro online suma sospecha (mitigado por Proxy)
+		var base_susp: float = 1.5 + (final_pay / 500.0)
+		var susp_mult: float = 1.0
+		if UpgradeSystem and UpgradeSystem.has_method("get_online_suspicion_mult"):
+			susp_mult = UpgradeSystem.get_online_suspicion_mult()
+		change_suspicion(base_susp * susp_mult)
+	# cash: no suma sospecha
+
+	# Pérdida de cordura por tipo de trabajo (mitigado por Filtro de ruido)
+	var sanity_cost: float = float(job_data.get("sanity_cost", 0.0))
+	if sanity_cost > 0.0:
+		var s_mult: float = 1.0
+		if UpgradeSystem and UpgradeSystem.has_method("get_sanity_loss_mult"):
+			s_mult = UpgradeSystem.get_sanity_loss_mult()
+		change_sanity(-sanity_cost * s_mult)
+
+	# Algunos trabajos pueden generar pista / correo falso
+	if bool(job_data.get("can_generate_clue", false)) and randf() < 0.12:
+		if ClueSystem and ClueSystem.has_method("try_unlock_random_from_job"):
+			ClueSystem.try_unlock_random_from_job()
 
 ## Comprueba si se alcanzó el requisito del siguiente nivel laboral.
 func _check_job_level_up() -> void:
@@ -236,6 +271,13 @@ func _end_day() -> void:
 		else:
 			trigger_ending("atrapado")
 
+## Cambia el método de cobro preferido ("cash" | "online").
+func set_payment_method(method: String) -> void:
+	if method != "cash" and method != "online":
+		return
+	payment_method = method
+	payment_method_changed.emit(method)
+
 ## Eventos narrativos fijos por día (presión gradual de cordura/sospecha).
 func _apply_day_events(d: int) -> void:
 	# Desbloquear correos y pistas del nuevo día
@@ -243,31 +285,50 @@ func _apply_day_events(d: int) -> void:
 		EmailSystem.unlock_for_day(d)
 	if ClueSystem:
 		ClueSystem.unlock_for_day(d)
-	# Presión narrativa en días clave
+	# Limpieza de logs (Script de limpieza) — chance al empezar el día
+	if UpgradeSystem and UpgradeSystem.has_method("get_log_clean_chance"):
+		var chance: float = UpgradeSystem.get_log_clean_chance()
+		if chance > 0.0 and randf() < chance and suspicion > 0.0:
+			var cleaned: float = minf(suspicion, randf_range(3.0, 8.0))
+			change_suspicion(-cleaned)
+	# Presión narrativa en días clave (DayEventManager)
 	match d:
 		5:
 			change_sanity(-5.0)
 			change_suspicion(5.0)
+		8:
+			# Correo policial ya se desbloquea por EmailSystem
+			change_suspicion(3.0)
 		10:
 			change_sanity(-8.0)
 			change_suspicion(8.0)
-		15:
-			change_sanity(-10.0)
-			change_suspicion(10.0)
-		20:
+		14:
+			change_sanity(-6.0)  # Crisis mental leve
+		18, 19, 20:
+			change_sanity(-8.0)
+			change_suspicion(6.0)
+			# Posible llegada falsa de efectivo si sanity baja
+			if sanity < 40.0 and payment_method == "cash" and randf() < 0.35:
+				_fake_cash_delivery()
+		25:
 			change_sanity(-12.0)
 			change_suspicion(12.0)
-		25:
-			change_sanity(-15.0)
-			change_suspicion(15.0)
-		30:
+		28, 29, 30:
 			change_sanity(-10.0)
 			change_suspicion(10.0)
 		_:
-			# Drenaje leve diario para que la cordura no se quede estática
+			# Drenaje leve diario
 			if d > 1 and d % 3 == 0:
 				change_sanity(-2.0)
 				change_suspicion(1.0)
+
+## Alucinación: "llegada falsa" de efectivo cuando la cordura está baja.
+func _fake_cash_delivery() -> void:
+	# Feedback visual/auditivo vía SanityFX si existe
+	if SanityFX and SanityFX.has_method("trigger_fake_delivery"):
+		SanityFX.trigger_fake_delivery()
+	# Pequeño golpe de cordura extra
+	change_sanity(-4.0)
 
 ## Dispara un final y bloquea el juego.
 func trigger_ending(ending: String) -> void:
@@ -296,6 +357,7 @@ func reset_game() -> void:
 	suspicion = 0.0
 	job_level = 1
 	jobs_completed = 0
+	payment_method = "online"
 	upgrade_levels = {
 		"battery": 1,
 		"cpu": 1,
@@ -303,13 +365,18 @@ func reset_game() -> void:
 		"internet": 1,
 		"automation": 1,
 		"cooling": 1,
-		"storage": 1
+		"storage": 1,
+		"optimizer": 1,
+		"noise_filter": 1,
+		"proxy": 1,
+		"log_cleaner": 1
 	}
 	is_pc_on = false
 	is_game_over = false
 	current_ending = ""
 	icon_positions = {}
 	_roll_escape_account()
+	payment_method_changed.emit(payment_method)
 	# Limpiar progreso narrativo (Tanda 4)
 	if EmailSystem:
 		EmailSystem.unlocked_ids.clear()

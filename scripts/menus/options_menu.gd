@@ -130,7 +130,7 @@ func _ensure_fps_label() -> void:
 	_fps_label.offset_right = -8
 	_fps_label.offset_bottom = 32
 	_fps_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.3))
-	_fps_label.add_theme_font_size_override("font_size", 16)
+	_fps_label.add_theme_font_size_override("font_size", 32)
 	_fps_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tree.root.add_child(_fps_label)
 

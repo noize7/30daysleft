@@ -21,7 +21,7 @@ func save_game() -> bool:
 		DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 
 	var data := {
-		"version": 1,
+		"version": 2,
 		"day": GameManager.day,
 		"money": GameManager.money,
 		"sanity": GameManager.sanity,
@@ -31,6 +31,8 @@ func save_game() -> bool:
 		"job_level": GameManager.job_level,
 		"jobs_completed": GameManager.jobs_completed,
 		"upgrade_levels": GameManager.upgrade_levels.duplicate(true),
+		# Tanda 8: método de pago dual
+		"payment_method": GameManager.payment_method,
 		# Tanda 4: progreso narrativo
 		"unlocked_emails": EmailSystem.unlocked_ids.duplicate(),
 		"read_emails": EmailSystem.read_ids.duplicate(),
@@ -83,6 +85,16 @@ func load_game() -> bool:
 	var ups = data.get("upgrade_levels", {})
 	if typeof(ups) == TYPE_DICTIONARY:
 		GameManager.upgrade_levels = ups.duplicate(true)
+	# Asegurar claves nuevas de Tanda 8
+	for key in ["optimizer", "noise_filter", "proxy", "log_cleaner"]:
+		if not GameManager.upgrade_levels.has(key):
+			GameManager.upgrade_levels[key] = 1
+
+	# Método de pago dual (Tanda 8)
+	var pm: String = str(data.get("payment_method", "online"))
+	if pm != "cash" and pm != "online":
+		pm = "online"
+	GameManager.payment_method = pm
 
 	# Narrativa
 	EmailSystem.unlocked_ids.clear()

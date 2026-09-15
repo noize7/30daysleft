@@ -251,3 +251,21 @@ func read_count() -> int:
 
 func has_enough_for_escape() -> bool:
 	return read_count() >= CLUES_NEEDED_FOR_ESCAPE
+
+## Tanda 8: algunos trabajos pueden desbloquear una pista aleatoria aún no vista.
+func try_unlock_random_from_job() -> void:
+	var candidates: Array = []
+	for clue in CLUES:
+		var cid: String = str(clue["id"])
+		if cid in unlocked_ids:
+			continue
+		# Solo pistas no ocultas o si ya tiene acceso a ocultas
+		if bool(clue.get("hidden", false)) and not UpgradeSystem.has_hidden_files_access():
+			continue
+		candidates.append(cid)
+	if candidates.is_empty():
+		return
+	var pick: String = str(candidates[randi() % candidates.size()])
+	if pick not in unlocked_ids:
+		unlocked_ids.append(pick)
+		clues_changed.emit()

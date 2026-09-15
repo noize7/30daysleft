@@ -28,6 +28,7 @@ const EMAIL_APP_SCENE := preload("res://scenes/apps/email_app.tscn")
 const FILES_APP_SCENE := preload("res://scenes/apps/files_app.tscn")
 const OPTIONS_MENU_SCENE := preload("res://scenes/menus/options_menu.tscn")
 const BANK_APP_SCENE := preload("res://scenes/apps/bank_app.tscn")
+const MUSIC_APP_SCENE := preload("res://scenes/apps/music_app.tscn")
 
 # --- Nodos de la escena ------------------------------------------------------
 @onready var wallpaper: ColorRect = $Wallpaper
@@ -260,9 +261,11 @@ func _create_window(app_name: String) -> Panel:
 	elif app_name == "Correo" or app_name == "Archivos":
 		win_size = Vector2(660, 500)
 	elif app_name == "Banco":
-		win_size = Vector2(560, 520)
+		win_size = Vector2(620, 520)
 	elif app_name == "Opciones":
 		win_size = Vector2(700, 560)
+	elif app_name == "Música":
+		win_size = Vector2(620, 480)
 
 	# La ventana nunca debe ser más grande que la pantalla disponible
 	# (deja margen para bordes y la barra de tareas)
@@ -306,6 +309,8 @@ func _create_window(app_name: String) -> Panel:
 			app_scene = OPTIONS_MENU_SCENE
 		"Banco":
 			app_scene = BANK_APP_SCENE
+		"Música":
+			app_scene = MUSIC_APP_SCENE
 		_:
 			pass
 

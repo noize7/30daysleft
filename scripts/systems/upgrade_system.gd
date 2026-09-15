@@ -1,8 +1,9 @@
 extends Node
 ## =============================================================================
-## UpgradeSystem — Tienda de mejoras de PC (Autoload)
+## UpgradeSystem — Tienda de mejoras de PC (Autoload)  [TANDA 8]
 ##
-## Categorías: battery, cpu, ram, internet, automation, cooling, storage
+## Categorías: battery, cpu, ram, internet, automation, cooling, storage,
+##             optimizer, noise_filter, proxy, log_cleaner
 ## Lee data/upgrades.json. GameManager guarda los niveles.
 ## =============================================================================
 
@@ -13,19 +14,25 @@ const DATA_PATH := "res://data/upgrades.json"
 var _data: Dictionary = {}
 
 const CATEGORY_LABELS := {
-	"battery": "Bateria",
+	"battery": "Batería",
 	"cpu": "CPU",
 	"ram": "RAM",
 	"internet": "Internet",
-	"automation": "Automatizacion",
-	"cooling": "Refrigeracion",
-	"storage": "Almacenamiento"
+	"automation": "Automatización",
+	"cooling": "Refrigeración",
+	"storage": "Almacenamiento",
+	"optimizer": "Optimizador",
+	"noise_filter": "Filtro de ruido",
+	"proxy": "Proxy anónimo",
+	"log_cleaner": "Limpieza de logs"
 }
 
-const CATEGORY_ORDER := ["battery", "cpu", "ram", "internet", "automation", "cooling", "storage"]
+const CATEGORY_ORDER := [
+	"battery", "cpu", "ram", "internet", "automation", "cooling", "storage",
+	"optimizer", "noise_filter", "proxy", "log_cleaner"
+]
 
-## Iconos de cada categoría. Sustituye los PNG en assets/Icons Pc/ con los tuyos
-## (mismo nombre de archivo) y se actualizarán solos.
+## Iconos de cada categoría. Sustituye los PNG en assets/Icons Pc/ con los tuyos.
 const CATEGORY_ICON_PATHS := {
 	"battery": "res://assets/Icons Pc/Bateria.png",
 	"cpu": "res://assets/Icons Pc/CPU.png",
@@ -34,6 +41,10 @@ const CATEGORY_ICON_PATHS := {
 	"automation": "res://assets/Icons Pc/bot.png",
 	"cooling": "res://assets/Icons Pc/ventilador.png",
 	"storage": "res://assets/Icons Pc/Almacenamiento.png",
+	"optimizer": "res://assets/Icons Pc/Upgrade .png",
+	"noise_filter": "res://assets/Icons Pc/Ajustes.png",
+	"proxy": "res://assets/Icons Pc/Candado.png",
+	"log_cleaner": "res://assets/Icons Pc/txt-file.png",
 }
 
 func get_category_icon(category: String) -> Texture2D:
@@ -111,7 +122,6 @@ func buy(category: String) -> bool:
 	if category == "battery":
 		var cap: float = float(nxt.get("capacity", 100))
 		GameManager.max_battery = cap
-		# Rellenar un poco al mejorar
 		GameManager.battery = mini(GameManager.battery + 20.0, cap)
 		GameManager.battery_changed.emit(GameManager.battery)
 	GameManager.upgrade_changed.emit(category, new_lvl)
@@ -120,7 +130,6 @@ func buy(category: String) -> bool:
 func get_cpu_multiplier() -> float:
 	var cur: Dictionary = get_current("cpu")
 	var mult: float = float(cur.get("multiplier", 1.0))
-	# Storage nivel 4+ da +10% extra
 	if get_level("storage") >= 4:
 		mult *= 1.10
 	return mult
@@ -140,15 +149,12 @@ func has_hidden_files_access() -> bool:
 func has_secret_jobs() -> bool:
 	return get_level("internet") >= 2
 
-## Alias de get_cpu_multiplier (usado por desktop_ui / complete_job).
 func get_pay_multiplier() -> float:
 	return get_cpu_multiplier()
 
-## Alias de get_battery_drain_mult (usado por TimeManager).
 func get_battery_drain_factor() -> float:
 	return get_battery_drain_mult()
 
-## True si hay un siguiente nivel comprable (sin mirar dinero).
 func can_upgrade(category: String) -> bool:
 	return not get_next(category).is_empty()
 
@@ -158,22 +164,18 @@ func get_next_cost(category: String) -> int:
 		return 0
 	return int(nxt.get("cost", 0))
 
-## Alias de buy (usado por desktop_ui).
 func try_buy(category: String) -> bool:
 	return buy(category)
 
 func get_effective_job_level() -> int:
 	var base: int = GameManager.job_level
-	# Internet 3+: +1 nivel efectivo
 	if get_level("internet") >= 3:
 		base = mini(4, base + 1)
-	# Internet 5: siempre nivel 4
 	if get_level("internet") >= 5:
 		base = 4
 	return base
 
 func get_job_level_access() -> int:
-	## Nivel máximo de trabajos que puede ver el jugador
 	var base: int = GameManager.job_level
 	if get_level("internet") >= 2:
 		base = mini(4, base + 1)
@@ -181,10 +183,35 @@ func get_job_level_access() -> int:
 		base = 4
 	return base
 
+## --- Nuevas mejoras Tanda 8 ------------------------------------------------
+
+## Multiplicador de cooldown entre trabajos (Optimizador).
+func get_cooldown_mult() -> float:
+	var cur: Dictionary = get_current("optimizer")
+	return float(cur.get("cooldown_mult", 1.0))
+
+## Multiplicador de pérdida de cordura al trabajar / glitches (Filtro de ruido).
+func get_sanity_loss_mult() -> float:
+	var cur: Dictionary = get_current("noise_filter")
+	return float(cur.get("sanity_loss_mult", 1.0))
+
+## Multiplicador de sospecha al usar pago Online (Proxy).
+func get_online_suspicion_mult() -> float:
+	var cur: Dictionary = get_current("proxy")
+	return float(cur.get("suspicion_mult", 1.0))
+
+## Probabilidad de limpiar un poco de sospecha al final del día (Log cleaner).
+func get_log_clean_chance() -> float:
+	var cur: Dictionary = get_current("log_cleaner")
+	return float(cur.get("clean_chance", 0.0))
+
+## Compatibilidad: sospecha general (internet alto + proxy).
 func get_suspicion_mult() -> float:
+	var mult: float = 1.0
 	if get_level("internet") >= 4:
-		return 0.7
-	return 1.0
+		mult *= 0.7
+	mult *= get_online_suspicion_mult()
+	return mult
 
 func get_status_line(category: String) -> String:
 	var cur: Dictionary = get_current(category)
@@ -200,7 +227,7 @@ func get_desc_line(category: String) -> String:
 	var cur: Dictionary = get_current(category)
 	var nxt: Dictionary = get_next(category)
 	if nxt.is_empty():
-		return str(cur.get("desc", "Maximo alcanzado."))
+		return str(cur.get("desc", "Máximo alcanzado."))
 	return "Actual: %s\nSiguiente: %s\nCoste: $%d" % [
 		str(cur.get("desc", "")),
 		str(nxt.get("desc", "")),

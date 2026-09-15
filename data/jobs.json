@@ -1,18 +1,26 @@
 {
   "jobs": [
-    {"id": "survey_1", "level": 1, "name": "Encuesta básica", "description": "Responde preguntas simples.", "min_pay": 8, "max_pay": 18, "duration": 6, "clicks_required": 4},
-    {"id": "survey_2", "level": 1, "name": "Encuesta de mercado", "description": "Opinión sobre productos.", "min_pay": 12, "max_pay": 25, "duration": 8, "clicks_required": 5},
-    {"id": "survey_3", "level": 1, "name": "Test de usabilidad", "description": "Prueba una interfaz web.", "min_pay": 15, "max_pay": 30, "duration": 9, "clicks_required": 6},
-    {"id": "write_1", "level": 2, "name": "Redacción corta", "description": "Escribe un párrafo.", "min_pay": 40, "max_pay": 80, "duration": 10, "clicks_required": 7},
-    {"id": "write_2", "level": 2, "name": "Artículo web", "description": "Contenido para un blog.", "min_pay": 55, "max_pay": 110, "duration": 12, "clicks_required": 9},
-    {"id": "write_3", "level": 2, "name": "Copy de anuncio", "description": "Textos publicitarios.", "min_pay": 70, "max_pay": 130, "duration": 11, "clicks_required": 8},
-    {"id": "data_entry", "level": 2, "name": "Entrada de datos", "description": "Transcribe tablas.", "min_pay": 35, "max_pay": 70, "duration": 9, "clicks_required": 10},
-    {"id": "code_1", "level": 3, "name": "Script simple", "description": "Pequeño programa.", "min_pay": 180, "max_pay": 320, "duration": 14, "clicks_required": 11},
-    {"id": "code_2", "level": 3, "name": "Bugfix", "description": "Corrige errores de código.", "min_pay": 220, "max_pay": 400, "duration": 15, "clicks_required": 12},
-    {"id": "code_3", "level": 3, "name": "API wrapper", "description": "Integra una API externa.", "min_pay": 280, "max_pay": 480, "duration": 16, "clicks_required": 13},
-    {"id": "qa_test", "level": 3, "name": "QA / Testing", "description": "Pruebas de regresión.", "min_pay": 200, "max_pay": 360, "duration": 13, "clicks_required": 10},
-    {"id": "pro_1", "level": 4, "name": "Contrato freelance", "description": "Trabajo profesional completo.", "min_pay": 900, "max_pay": 1800, "duration": 20, "clicks_required": 16},
-    {"id": "pro_2", "level": 4, "name": "Consultoría técnica", "description": "Análisis para un cliente.", "min_pay": 1100, "max_pay": 2200, "duration": 18, "clicks_required": 14},
-    {"id": "pro_3", "level": 4, "name": "Proyecto full-stack", "description": "MVP frontend + backend.", "min_pay": 1500, "max_pay": 3000, "duration": 22, "clicks_required": 18}
+    {"id": "survey_1", "level": 1, "name": "Encuesta básica", "description": "Responde preguntas simples.", "min_pay": 5, "max_pay": 18, "duration": 6, "clicks_required": 4, "sanity_cost": 0},
+    {"id": "survey_2", "level": 1, "name": "Encuesta de mercado", "description": "Opinión sobre productos.", "min_pay": 10, "max_pay": 25, "duration": 8, "clicks_required": 5, "sanity_cost": 0},
+    {"id": "survey_3", "level": 1, "name": "Test de usabilidad", "description": "Prueba una interfaz web.", "min_pay": 12, "max_pay": 28, "duration": 9, "clicks_required": 6, "sanity_cost": 0},
+    {"id": "image_class_1", "level": 1, "name": "Clasificar imágenes", "description": "Etiqueta fotos anónimas. Algunas pueden generar flashes.", "min_pay": 8, "max_pay": 30, "duration": 7, "clicks_required": 5, "sanity_cost": 1.5},
+    {"id": "image_class_2", "level": 1, "name": "Filtrar contenido visual", "description": "Separa imágenes según categoría. Riesgo leve de memoria.", "min_pay": 10, "max_pay": 28, "duration": 8, "clicks_required": 6, "sanity_cost": 2.0},
+
+    {"id": "write_1", "level": 2, "name": "Redacción corta", "description": "Escribe un párrafo.", "min_pay": 40, "max_pay": 90, "duration": 10, "clicks_required": 7, "sanity_cost": 0},
+    {"id": "write_2", "level": 2, "name": "Reseñas falsas", "description": "Textos de opinión. A veces se distorsionan.", "min_pay": 50, "max_pay": 120, "duration": 11, "clicks_required": 8, "sanity_cost": 1.0},
+    {"id": "write_3", "level": 2, "name": "Copy de anuncio", "description": "Textos publicitarios.", "min_pay": 55, "max_pay": 130, "duration": 11, "clicks_required": 8, "sanity_cost": 0},
+    {"id": "mod_forum", "level": 2, "name": "Moderar foro anónimo", "description": "Revisa posts en un board oscuro. Puede generar pistas o correos.", "min_pay": 50, "max_pay": 150, "duration": 12, "clicks_required": 9, "sanity_cost": 2.5, "can_generate_clue": true},
+    {"id": "data_entry", "level": 2, "name": "Entrada de datos", "description": "Transcribe tablas.", "min_pay": 35, "max_pay": 70, "duration": 9, "clicks_required": 10, "sanity_cost": 0},
+
+    {"id": "code_1", "level": 3, "name": "Script simple", "description": "Pequeño programa. Requiere CPU mejorada.", "min_pay": 180, "max_pay": 350, "duration": 14, "clicks_required": 11, "sanity_cost": 0},
+    {"id": "code_2", "level": 3, "name": "Bugfix", "description": "Corrige errores de código.", "min_pay": 220, "max_pay": 420, "duration": 15, "clicks_required": 12, "sanity_cost": 0},
+    {"id": "code_3", "level": 3, "name": "API wrapper", "description": "Integra una API externa.", "min_pay": 260, "max_pay": 480, "duration": 16, "clicks_required": 13, "sanity_cost": 0},
+    {"id": "data_clean", "level": 3, "name": "Análisis de datos limpios", "description": "A veces aparecen archivos corruptos con pistas.", "min_pay": 200, "max_pay": 500, "duration": 14, "clicks_required": 12, "sanity_cost": 1.5, "can_generate_clue": true},
+    {"id": "qa_test", "level": 3, "name": "QA / Testing", "description": "Pruebas de regresión.", "min_pay": 190, "max_pay": 360, "duration": 13, "clicks_required": 10, "sanity_cost": 0},
+
+    {"id": "pro_1", "level": 4, "name": "Contrato freelance oscuro", "description": "Trabajo profesional completo. Alto pago.", "min_pay": 800, "max_pay": 1800, "duration": 20, "clicks_required": 16, "sanity_cost": 0},
+    {"id": "pro_2", "level": 4, "name": "Consultoría técnica", "description": "Análisis para un cliente sin nombre.", "min_pay": 1000, "max_pay": 2200, "duration": 18, "clicks_required": 14, "sanity_cost": 0},
+    {"id": "pro_3", "level": 4, "name": "Proyecto full-stack", "description": "MVP frontend + backend.", "min_pay": 1400, "max_pay": 2800, "duration": 22, "clicks_required": 18, "sanity_cost": 0},
+    {"id": "special_1", "level": 4, "name": "Tarea especial (red oscura)", "description": "Muy rentable. Aumenta presión narrativa. Requiere Internet alto.", "min_pay": 1200, "max_pay": 3000, "duration": 18, "clicks_required": 15, "sanity_cost": 3.0, "can_generate_clue": true, "requires_internet": 3}
   ]
 }

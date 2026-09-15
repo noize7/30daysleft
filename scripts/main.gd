@@ -28,6 +28,8 @@ const START_POPUP_SCENE := preload("res://scenes/menus/start_popup.tscn")
 @export var icon_opciones: Texture2D
 ## Textura del icono Banco.
 @export var icon_banco: Texture2D
+## Textura del icono MusicPlayer (Tanda 8).
+@export var icon_musica: Texture2D
 @export_range(0.5, 3.0, 0.1) var icon_scale: float = 1.8
 
 @export_group("Tienda de mejoras")
@@ -36,7 +38,7 @@ const START_POPUP_SCENE := preload("res://scenes/menus/start_popup.tscn")
 
 ## Nombre de app -> nodo DesktopIcon (para reubicarlos tras cargar partida)
 var _desktop_icons: Dictionary = {}
-const _ICON_NAMES: Array = ["Trabajo", "Correo", "Archivos", "Mejoras", "Opciones", "Banco"]
+const _ICON_NAMES: Array = ["Trabajo", "Correo", "Archivos", "Mejoras", "Opciones", "Banco", "Música"]
 
 var _main_menu: Control = null
 var _options_menu: Control = null
@@ -331,15 +333,23 @@ func _style_ending() -> void:
 
 ## Calcula la posición en rejilla del icono "index" sin solapes,
 ## usando el mismo cálculo de tamaño que DesktopIcon._rebuild().
+## Con 7 iconos usamos 3 columnas para que ninguno quede fuera de pantalla.
 func _grid_icon_position(index: int) -> Vector2:
 	var icon_sz: float = 56.0 * icon_scale
-	var cell_w: float = maxf(icon_sz + 24.0, 96.0 * icon_scale) + 30.0   # + separación horizontal
-	var cell_h: float = icon_sz + 36.0 * icon_scale + 28.0               # + separación vertical
-	var margin: float = 30.0
-	var cols: int = 2
+	var cell_w: float = maxf(icon_sz + 24.0, 96.0 * icon_scale) + 20.0
+	var cell_h: float = icon_sz + 36.0 * icon_scale + 16.0
+	var margin: float = 24.0
+	var cols: int = 3
 	var col: int = index % cols
 	var row: int = index / cols
-	return Vector2(margin + col * cell_w, margin + row * cell_h)
+	var pos := Vector2(margin + col * cell_w, margin + row * cell_h)
+	# Clamp para no salir del área visible (deja margen para la taskbar ~48px)
+	var vp := get_viewport_rect().size
+	var max_x: float = maxf(margin, vp.x - cell_w - 8.0)
+	var max_y: float = maxf(margin, vp.y - cell_h - 56.0)
+	pos.x = clampf(pos.x, margin, max_x)
+	pos.y = clampf(pos.y, margin, max_y)
+	return pos
 
 ## Reordena todos los iconos en la rejilla por defecto (nueva partida / sin guardado).
 func _reset_icon_layout() -> void:
@@ -350,6 +360,7 @@ func _reset_icon_layout() -> void:
 
 ## Aplica las posiciones de icono guardadas en GameManager.icon_positions (tras cargar partida).
 func _apply_saved_icon_positions() -> void:
+	var vp := get_viewport_rect().size
 	for key in GameManager.icon_positions.keys():
 		if not _desktop_icons.has(key):
 			continue
@@ -358,7 +369,11 @@ func _apply_saved_icon_positions() -> void:
 			continue
 		var arr = GameManager.icon_positions[key]
 		if arr is Array and arr.size() >= 2:
-			icon.position = Vector2(float(arr[0]), float(arr[1]))
+			var p := Vector2(float(arr[0]), float(arr[1]))
+			# Evitar iconos fuera de pantalla (p.ej. tras cambiar resolución o añadir iconos)
+			p.x = clampf(p.x, 8.0, maxf(8.0, vp.x - 80.0))
+			p.y = clampf(p.y, 8.0, maxf(8.0, vp.y - 100.0))
+			icon.position = p
 
 func _create_desktop_icons() -> void:
 	var container: Control = desktop.get_node_or_null("Icons")
@@ -372,6 +387,7 @@ func _create_desktop_icons() -> void:
 		{"name": "Mejoras", "color": Color(0.0, 0.55, 0.55), "tex": icon_mejoras},
 		{"name": "Opciones", "color": Color(0.35, 0.35, 0.4), "tex": icon_opciones},
 		{"name": "Banco", "color": Color(0.15, 0.55, 0.30), "tex": icon_banco},
+		{"name": "Música", "color": Color(0.6, 0.2, 0.45), "tex": icon_musica},
 	]
 	for i in range(icons_data.size()):
 		var data: Dictionary = icons_data[i]
