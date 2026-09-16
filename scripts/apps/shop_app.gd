@@ -126,8 +126,12 @@ func _on_buy() -> void:
 	var ok: bool = UpgradeSystem.try_buy(cat)
 	if feedback_label:
 		if ok:
-			feedback_label.text = "Compra realizada: %s" % UpgradeSystem.CATEGORY_LABELS.get(cat, cat)
+			feedback_label.text = "✓ Compra: %s" % UpgradeSystem.CATEGORY_LABELS.get(cat, cat)
 			feedback_label.add_theme_color_override("font_color", Color(0.0, 0.45, 0.0))
+			if is_instance_valid(VFXSystem):
+				VFXSystem.spawn_sparkles(buy_button.global_position + buy_button.size * 0.5, 12)
+				VFXSystem.spawn_toast("Mejora instalada", 1.8, Color(0.6, 1.0, 0.7))
+				VFXSystem.flash_screen(Color(0.4, 0.9, 0.5, 0.12), 0.2)
 		else:
 			feedback_label.text = "No se pudo comprar (dinero o nivel máx)."
 			feedback_label.add_theme_color_override("font_color", Color(0.6, 0.0, 0.0))

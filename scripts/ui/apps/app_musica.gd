@@ -27,6 +27,25 @@ func _ready() -> void:
 	_refresh_list()
 	if GameManager.has_signal("sanity_changed") and not GameManager.sanity_changed.is_connected(_on_sanity):
 		GameManager.sanity_changed.connect(_on_sanity)
+	if GameManager.has_signal("pc_powered_changed") and not GameManager.pc_powered_changed.is_connected(_on_pc_power):
+		GameManager.pc_powered_changed.connect(_on_pc_power)
+	if not GameManager.is_pc_on:
+		_force_stopped_ui()
+
+func _on_pc_power(is_on: bool) -> void:
+	if not is_on:
+		if _player:
+			_player.stop()
+		_is_playing = false
+		_force_stopped_ui()
+
+func _force_stopped_ui() -> void:
+	_is_playing = false
+	if _btn_play:
+		_btn_play.text = "▶ Play"
+	if _status:
+		_status.text = "PC apagada — la música se detuvo.\nEnciende el PC y pulsa Play."
+	_refresh_list()
 
 func _ensure_player() -> void:
 	# Usar un player global para que la música persista entre cierres de app
@@ -36,8 +55,35 @@ func _ensure_player() -> void:
 		_player = AudioStreamPlayer.new()
 		_player.name = "MusicPlayerGlobal"
 		_player.bus = "Master"
+		_player.volume_db = linear_to_db(0.6)
+		_player.process_mode = Node.PROCESS_MODE_ALWAYS
 		root.add_child(_player)
+	# Reconectar finished por si el player ya existía
+	if not _player.finished.is_connected(_on_track_finished):
 		_player.finished.connect(_on_track_finished)
+
+func _load_stream(path: String) -> AudioStream:
+	# Carga robusta de OGG/WAV/MP3 y activa loop si es posible
+	if not ResourceLoader.exists(path):
+		# Intentar sin extensión forzada / rutas alternativas por si el usuario usó otro nombre
+		return null
+	var res = load(path)
+	if res == null:
+		push_warning("MusicPlayer: load() devolvió null para %s" % path)
+		return null
+	if res is AudioStream:
+		var stream: AudioStream = res as AudioStream
+		# Godot 4: AudioStreamOggVorbis, AudioStreamMP3, AudioStreamWAV tienen loop
+		if stream is AudioStreamOggVorbis:
+			(stream as AudioStreamOggVorbis).loop = true
+		elif stream is AudioStreamMP3:
+			(stream as AudioStreamMP3).loop = true
+		elif stream is AudioStreamWAV:
+			var wav := stream as AudioStreamWAV
+			wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		return stream
+	push_warning("MusicPlayer: el recurso no es AudioStream: %s (%s)" % [path, res])
+	return null
 
 func _build_ui() -> void:
 	var bg := ColorRect.new()
@@ -136,27 +182,31 @@ func _toggle_play() -> void:
 
 func _play_current() -> void:
 	if _player == null:
+		_ensure_player()
+	if _player == null:
+		_status.text = "Error: no hay AudioStreamPlayer"
 		return
 	var t: Dictionary = TRACKS[_current_idx]
 	var path: String = str(t["path"])
-	if ResourceLoader.exists(path):
-		var stream = load(path)
-		if stream:
-			_player.stream = stream
-			_player.volume_db = linear_to_db(_volume.value)
-			_player.play()
-			_is_playing = true
-			_btn_play.text = "❚❚ Pause"
-			_save_track()
-		else:
-			_status.text = "No se pudo cargar: %s" % path
-			_is_playing = false
-	else:
-		# Sin archivo: simular reproducción (para desarrollo)
+	var stream: AudioStream = _load_stream(path)
+	if stream:
+		_player.stop()
+		_player.stream = stream
+		_player.volume_db = linear_to_db(clampf(_volume.value, 0.0, 1.0))
+		_player.play()
 		_is_playing = true
 		_btn_play.text = "❚❚ Pause"
-		_status.text = "Reproduciendo (placeholder): %s\n(Añade el OGG en assets/audio/music/)" % str(t["name"])
+		_status.text = "Sonando: %s  (loop)" % str(t["name"])
 		_save_track()
+		# Debug útil si sigue sin oírse
+		if not _player.playing:
+			_status.text = "Stream cargado pero no reproduce. Revisa volumen del sistema / Master."
+	else:
+		# Sin archivo importado: mensaje claro (no fingir audio)
+		_is_playing = false
+		_btn_play.text = "▶ Play"
+		_status.text = "No se encontró: %s\nPon el OGG en assets/audio/music/ y reimporta en Godot." % path.get_file()
+		push_warning("MusicPlayer: falta archivo o no importado → %s" % path)
 	_refresh_list()
 
 func _pause() -> void:

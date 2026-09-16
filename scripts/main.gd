@@ -490,7 +490,7 @@ func _play_boot_animation() -> void:
 		"Cargando escritorio...",
 		"Listo."
 	]
-	var total_time := 2.4
+	var total_time := 3.5
 	var step_time := total_time / float(steps.size())
 	for si in range(steps.size()):
 		status.text = str(steps[si])

@@ -31,7 +31,8 @@ func _build_nodes() -> void:
 	_shader_rect.name = "ShaderGlitch"
 	_shader_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_shader_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_shader_rect.color = Color(1, 1, 1, 0.01)
+	# Blanco opaco: el shader escribe COLOR con alpha según intensity (glitch RGB)
+	_shader_rect.color = Color(1, 1, 1, 1)
 	var sh: Shader = load("res://shaders/sanity_glitch.gdshader") as Shader
 	if sh:
 		_shader_mat = ShaderMaterial.new()
@@ -58,7 +59,8 @@ func _on_sanity(s: float) -> void:
 		var si: float = 0.0
 		if s < 60.0:
 			si = clampf((60.0 - s) / 60.0, 0.0, 1.0)
-		_shader_mat.set_shader_parameter("intensity", si * 0.85)
+		# Intensidad moderada (antes 0.85 era demasiado fuerte a cordura baja)
+		_shader_mat.set_shader_parameter("intensity", si * 0.42)
 
 func _process(delta: float) -> void:
 	if not _enabled or not GameManager:
@@ -80,10 +82,17 @@ func _process(delta: float) -> void:
 		_flash_glitch(intensity)
 		if intensity > 0.55 and randf() < 0.35:
 			_shake_timer = randf_range(0.08, 0.2)
+		# Partículas de “estática / polvo” cuando la cordura baja
+		if VFXSystem and intensity > 0.25 and randf() < 0.45 + intensity * 0.4:
+			var vp := get_viewport().get_visible_rect().size
+			var origin := Vector2(randf() * vp.x, randf() * vp.y)
+			var col := Color(0.75, 0.55, 0.9, 0.55) if intensity > 0.5 else Color(0.65, 0.7, 0.85, 0.45)
+			VFXSystem.spawn_dust(origin, 3 + int(intensity * 5), col)
 	if _shake_timer > 0.0:
 		_shake_timer -= delta
 		if _shader_mat:
-			_shader_mat.set_shader_parameter("intensity", intensity * (0.9 + randf() * 0.4))
+			# Picos de glitch suaves (antes llegaba casi a 1.3 y era demasiado)
+			_shader_mat.set_shader_parameter("intensity", intensity * (0.38 + randf() * 0.18))
 
 func _hide_fx() -> void:
 	if _glitch_bar:

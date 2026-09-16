@@ -65,49 +65,66 @@ func _ready() -> void:
 ## Aplica colores y estilos estilo Windows XP a taskbar, botón Inicio y batería.
 func _apply_xp_style() -> void:
 	if wallpaper:
-		wallpaper.color = Color(0.227, 0.431, 0.647)  # Azul XP clásico
+		wallpaper.color = Color(0.18, 0.38, 0.62)  # Azul un poco más profundo
 
 	if taskbar:
 		var tb_style := StyleBoxFlat.new()
-		tb_style.bg_color = Color(0.141, 0.369, 0.863)
+		tb_style.bg_color = Color(0.10, 0.18, 0.32, 0.94)
 		tb_style.set_corner_radius_all(0)
-		tb_style.border_width_top = 2
-		tb_style.border_color = Color(0.235, 0.506, 0.953)
+		tb_style.border_width_top = 1
+		tb_style.border_color = Color(0.35, 0.55, 0.9, 0.55)
+		tb_style.shadow_color = Color(0, 0, 0, 0.35)
+		tb_style.shadow_size = 6
 		taskbar.add_theme_stylebox_override("panel", tb_style)
 
 	if start_button:
 		var start_style := StyleBoxFlat.new()
-		start_style.bg_color = Color(0.235, 0.545, 0.235)
-		start_style.set_corner_radius_all(4)
-		start_style.content_margin_left = 14
-		start_style.content_margin_right = 14
-		start_style.content_margin_top = 6
-		start_style.content_margin_bottom = 6
+		start_style.bg_color = Color(0.22, 0.48, 0.28)
+		start_style.set_corner_radius_all(6)
+		start_style.content_margin_left = 16
+		start_style.content_margin_right = 16
+		start_style.content_margin_top = 7
+		start_style.content_margin_bottom = 7
+		start_style.border_width_left = 1
+		start_style.border_width_top = 1
+		start_style.border_width_right = 1
+		start_style.border_width_bottom = 1
+		start_style.border_color = Color(0.45, 0.85, 0.5, 0.45)
 		start_button.add_theme_stylebox_override("normal", start_style)
 		var start_hover := start_style.duplicate()
-		start_hover.bg_color = Color(0.298, 0.686, 0.314)
+		start_hover.bg_color = Color(0.30, 0.62, 0.36)
 		start_button.add_theme_stylebox_override("hover", start_hover)
 		var start_pressed_style := start_style.duplicate()
-		start_pressed_style.bg_color = Color(0.180, 0.490, 0.196)
+		start_pressed_style.bg_color = Color(0.15, 0.38, 0.20)
 		start_button.add_theme_stylebox_override("pressed", start_pressed_style)
 		start_button.add_theme_color_override("font_color", Color.WHITE)
 		start_button.add_theme_color_override("font_hover_color", Color.WHITE)
 		start_button.add_theme_font_size_override("font_size", taskbar_font_size)
+		if start_button.text.strip_edges() == "" or start_button.text.to_lower().find("inicio") >= 0:
+			start_button.text = "  Inicio"
 
-	# Labels de la taskbar con fuente grande
+	# Labels de la taskbar
 	for lbl in [clock_label, battery_label, day_label, money_label]:
 		if lbl:
-			lbl.add_theme_color_override("font_color", Color.WHITE)
+			lbl.add_theme_color_override("font_color", Color(0.92, 0.95, 1.0))
 			lbl.add_theme_font_size_override("font_size", taskbar_font_size)
+			lbl.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.4))
+			lbl.add_theme_constant_override("shadow_offset_x", 1)
+			lbl.add_theme_constant_override("shadow_offset_y", 1)
 
 	if battery_bar:
 		_battery_fill_style = StyleBoxFlat.new()
-		_battery_fill_style.bg_color = Color(0.361, 0.722, 0.361)
-		_battery_fill_style.set_corner_radius_all(3)
+		_battery_fill_style.bg_color = Color(0.35, 0.78, 0.45)
+		_battery_fill_style.set_corner_radius_all(4)
 		battery_bar.add_theme_stylebox_override("fill", _battery_fill_style)
 		var bg := StyleBoxFlat.new()
-		bg.bg_color = Color(0.102, 0.102, 0.102)
-		bg.set_corner_radius_all(3)
+		bg.bg_color = Color(0.08, 0.1, 0.14)
+		bg.set_corner_radius_all(4)
+		bg.border_width_left = 1
+		bg.border_width_top = 1
+		bg.border_width_right = 1
+		bg.border_width_bottom = 1
+		bg.border_color = Color(0.3, 0.4, 0.55, 0.4)
 		battery_bar.add_theme_stylebox_override("background", bg)
 
 ## Conecta señales del GameManager y TimeManager a la UI.
@@ -128,7 +145,10 @@ func _connect_signals() -> void:
 ## Muestra el escritorio y refresca labels.
 func show_desktop() -> void:
 	visible = true
+	modulate.a = 0.0
 	_update_all_labels()
+	var tw := create_tween()
+	tw.tween_property(self, "modulate:a", 1.0, 0.35)
 
 ## Oculta el escritorio y cierra todas las ventanas abiertas.
 func hide_desktop() -> void:
@@ -137,14 +157,49 @@ func hide_desktop() -> void:
 
 ## Actualiza día, dinero, batería y reloj.
 func _update_all_labels() -> void:
-	if day_label:
-		day_label.text = "Dia %d" % GameManager.day
-	if money_label:
-		# Dinero + cordura compactos en la taskbar
-		money_label.text = "$%s  |  C:%d%%" % [_format_money(GameManager.money), int(GameManager.sanity)]
+	_refresh_day_label()
+	_refresh_money_sanity_label()
 	_on_battery_changed(GameManager.battery)
-	if clock_label:
-		clock_label.text = TimeManager.get_time_string()
+	_refresh_clock_label()
+
+func _refresh_day_label() -> void:
+	if day_label == null:
+		return
+	var left: int = maxi(0, GameManager.MAX_DAYS - GameManager.day + 1)
+	day_label.text = "Día %d/%d" % [GameManager.day, GameManager.MAX_DAYS]
+	if left <= 5:
+		day_label.add_theme_color_override("font_color", Color(1.0, 0.55, 0.4))
+	elif left <= 10:
+		day_label.add_theme_color_override("font_color", Color(1.0, 0.9, 0.5))
+	else:
+		day_label.add_theme_color_override("font_color", Color.WHITE)
+
+func _refresh_money_sanity_label() -> void:
+	if money_label == null:
+		return
+	var s: int = int(GameManager.sanity)
+	var sus: int = int(GameManager.suspicion)
+	money_label.text = "$%s  ·  C:%d%%  ·  S:%d%%" % [_format_money(GameManager.money), s, sus]
+	# Color de cordura en el texto
+	if s < 30:
+		money_label.add_theme_color_override("font_color", Color(1.0, 0.45, 0.55))
+	elif s < 55:
+		money_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.55))
+	elif sus > 60:
+		money_label.add_theme_color_override("font_color", Color(1.0, 0.75, 0.4))
+	else:
+		money_label.add_theme_color_override("font_color", Color.WHITE)
+
+func _refresh_clock_label() -> void:
+	if clock_label == null:
+		return
+	var base: String = TimeManager.get_time_string()
+	if TimeManager.is_work_time:
+		clock_label.text = "● " + base
+		clock_label.add_theme_color_override("font_color", Color(0.55, 1.0, 0.6))
+	else:
+		clock_label.text = "○ " + base
+		clock_label.add_theme_color_override("font_color", Color(1.0, 0.75, 0.55))
 
 ## Formatea dinero: 1200 → 1.2K, 1500000 → 1.50M
 func _format_money(value: float) -> String:
@@ -155,16 +210,21 @@ func _format_money(value: float) -> String:
 	return "%.0f" % value
 
 func _on_day_changed(_d: int) -> void:
-	if day_label:
-		day_label.text = "Dia %d" % GameManager.day
+	_refresh_day_label()
 
 func _on_money_changed(m: float) -> void:
 	if money_label:
 		var passive: float = UpgradeSystem.get_passive_income_per_sec()
-		if passive > 0.0:
-			money_label.text = "$%s  (+$%.1f/s)" % [_format_money(m), passive]
+		var s: int = int(GameManager.sanity)
+		var sus: int = int(GameManager.suspicion)
+		if passive > 0.05:
+			money_label.text = "$%s +$%.1f/s  ·  C:%d%%  ·  S:%d%%" % [_format_money(m), passive, s, sus]
 		else:
-			money_label.text = "$%s" % _format_money(m)
+			money_label.text = "$%s  ·  C:%d%%  ·  S:%d%%" % [_format_money(m), s, sus]
+		money_label.pivot_offset = money_label.size * 0.5
+		var tw := create_tween()
+		tw.tween_property(money_label, "scale", Vector2(1.1, 1.1), 0.07)
+		tw.tween_property(money_label, "scale", Vector2.ONE, 0.12)
 	_refresh_open_shop_window()
 
 ## Actualiza barra y color de batería (verde / amarillo / rojo).
@@ -181,15 +241,16 @@ func _on_battery_changed(_b: float) -> void:
 			_battery_fill_style.bg_color = Color(0.941, 0.678, 0.306)
 		else:
 			_battery_fill_style.bg_color = Color(0.851, 0.325, 0.310)
+			if battery_bar and pct <= 15.0:
+				var tw := create_tween()
+				tw.tween_property(battery_bar, "modulate", Color(1.35, 0.55, 0.55), 0.22)
+				tw.tween_property(battery_bar, "modulate", Color.WHITE, 0.3)
 
 func _on_time_updated(_h: int, _m: int, _s: int) -> void:
-	if clock_label:
-		clock_label.text = TimeManager.get_time_string()
-
+	_refresh_clock_label()
 
 func _on_sanity_changed(_s: float) -> void:
-	if money_label:
-		money_label.text = "$%s  |  C:%d%%" % [_format_money(GameManager.money), int(GameManager.sanity)]
+	_refresh_money_sanity_label()
 	# Refrescar correo si está abierto (header muestra cordura)
 	if _windows.has("Correo") and is_instance_valid(_windows["Correo"]):
 		var content = _windows["Correo"].get_node_or_null("Content")
@@ -197,8 +258,9 @@ func _on_sanity_changed(_s: float) -> void:
 			_refresh_email_ui(content)
 
 func _on_suspicion_changed(_s: float) -> void:
-	# La sospecha se refleja en eventos; si llega a 100 GameManager dispara final
-	pass
+	_refresh_money_sanity_label()
+	if _s >= 70.0 and VFXSystem and randf() < 0.15:
+		VFXSystem.spawn_floating_text("Sospecha alta…", Vector2(540, 90), Color(1.0, 0.5, 0.3), 18)
 
 func _on_start_pressed() -> void:
 	start_pressed.emit()
@@ -255,7 +317,8 @@ func _create_window(app_name: String) -> Panel:
 
 	var win_size := Vector2(700, 550)
 	if app_name == "Trabajo":
-		win_size = Vector2(740, 590)
+		# Un poco más alto para que el botón no se salga con jobs de cordura + fila de cobro
+		win_size = Vector2(740, 640)
 	elif app_name == "Mejoras":
 		win_size = Vector2(720, 610)
 	elif app_name == "Correo" or app_name == "Archivos":

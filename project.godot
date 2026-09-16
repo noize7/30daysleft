@@ -25,6 +25,7 @@ EmailSystem="*res://scripts/systems/email_system.gd"
 ClueSystem="*res://scripts/systems/clue_system.gd"
 SaveManager="*res://scripts/managers/save_manager.gd"
 SanityFX="*res://scripts/systems/sanity_fx.gd"
+VFXSystem="*res://scripts/systems/vfx_system.gd"
 
 [display]
 

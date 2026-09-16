@@ -117,11 +117,11 @@ func refresh() -> void:
 			]
 	if work_status:
 		if TimeManager.is_work_time:
-			work_status.text = "HORARIO LABORAL (01:00 - 05:00) — Puedes trabajar"
-			work_status.add_theme_color_override("font_color", Color(0.0, 0.4, 0.0))
+			work_status.text = "HORARIO LABORAL (01:00–05:00) — Trabaja ahora"
+			work_status.add_theme_color_override("font_color", Color(0.0, 0.45, 0.05))
 		else:
-			work_status.text = "Fuera de horario — solo 01:00-05:00"
-			work_status.add_theme_color_override("font_color", Color(0.55, 0.0, 0.0))
+			work_status.text = "Fuera de horario — apaga el PC para avanzar al día siguiente"
+			work_status.add_theme_color_override("font_color", Color(0.7, 0.15, 0.05))
 	if job_list:
 		job_list.clear()
 		var available: Array = WorkSystem.get_available_jobs()
@@ -213,9 +213,17 @@ func _on_work_click() -> void:
 	_clicks_done += 1
 	if click_area:
 		click_area.text = "CLICK %d/%d" % [_clicks_done, _clicks_needed]
+		click_area.pivot_offset = click_area.size * 0.5
+		var tw := create_tween()
+		tw.tween_property(click_area, "scale", Vector2(0.94, 0.94), 0.04)
+		tw.tween_property(click_area, "scale", Vector2.ONE, 0.08)
+		if is_instance_valid(VFXSystem):
+			VFXSystem.spawn_sparkles(click_area.global_position + click_area.size * 0.5, 3)
 		if _clicks_done >= _clicks_needed:
-			click_area.text = "Completado!"
+			click_area.text = "¡Listo!"
 			click_area.disabled = true
+			if is_instance_valid(VFXSystem):
+				VFXSystem.spawn_sparkles(click_area.global_position + click_area.size * 0.5, 10)
 
 func _finish_job() -> void:
 	if _current_job.is_empty():
@@ -231,7 +239,11 @@ func _finish_job() -> void:
 		reward_label.text = "+$%.0f  (clicks x%.0f%%, CPU x%.2f) [%s]" % [
 			final_pay * cpu_mult, click_ratio * 100.0, cpu_mult, method_txt
 		]
-		reward_label.add_theme_color_override("font_color", Color(0.0, 0.4, 0.0))
+		reward_label.add_theme_color_override("font_color", Color(0.05, 0.55, 0.15))
+		reward_label.pivot_offset = reward_label.size * 0.5
+		var tw := create_tween()
+		tw.tween_property(reward_label, "scale", Vector2(1.12, 1.12), 0.1)
+		tw.tween_property(reward_label, "scale", Vector2.ONE, 0.15)
 	_is_working = false
 	_current_job = {}
 	if start_job_button:

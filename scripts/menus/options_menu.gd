@@ -371,41 +371,52 @@ static func apply_saved_settings_boot() -> void:
 			# Pequeño script inline no posible: actualizará cuando se abra opciones
 			# o Main puede refrescar en _process. Se actualiza al abrir opciones.
 
-func _force_black_text(node: Node) -> void:
+func _force_panel_text(node: Node) -> void:
 	if node is Label or node is CheckBox or node is Button or node is OptionButton:
 		if node is Button and node.name in ["BtnApply", "BtnBack", "BtnDefaults"]:
 			return
-		node.add_theme_color_override("font_color", Color(0.08, 0.08, 0.12))
+		node.add_theme_color_override("font_color", Color(0.78, 0.85, 0.95))
 	for c in node.get_children():
-		_force_black_text(c)
+		_force_panel_text(c)
 
 func _apply_xp_style() -> void:
 	if has_node("Panel"):
 		var ps := StyleBoxFlat.new()
-		ps.bg_color = Color(0.925, 0.914, 0.847)
-		ps.border_width_left = 3
-		ps.border_width_top = 3
-		ps.border_width_right = 3
-		ps.border_width_bottom = 3
-		ps.border_color = Color(0.0, 0.329, 0.890)
-		ps.set_corner_radius_all(0)
+		ps.bg_color = Color(0.11, 0.13, 0.18, 0.96)
+		ps.border_width_left = 1
+		ps.border_width_top = 1
+		ps.border_width_right = 1
+		ps.border_width_bottom = 1
+		ps.border_color = Color(0.4, 0.55, 0.85, 0.5)
+		ps.set_corner_radius_all(12)
+		ps.shadow_color = Color(0, 0, 0, 0.45)
+		ps.shadow_size = 14
 		$Panel.add_theme_stylebox_override("panel", ps)
 	if has_node("Wallpaper"):
-		$Wallpaper.color = Color(0.18, 0.32, 0.52)
-	title_label.add_theme_color_override("font_color", Color(0.05, 0.05, 0.12))
-	_force_black_text($Panel)
-	title_label.add_theme_font_size_override("font_size", 26)
+		$Wallpaper.color = Color(0.05, 0.07, 0.12)
+	if title_label:
+		title_label.add_theme_color_override("font_color", Color(0.85, 0.92, 1.0))
+		title_label.add_theme_font_size_override("font_size", 26)
+	if has_node("Panel"):
+		_force_panel_text($Panel)
 	for btn in [btn_apply, btn_back, btn_defaults]:
+		if btn == null:
+			continue
 		var s := StyleBoxFlat.new()
-		s.bg_color = Color(0.141, 0.369, 0.863)
-		s.set_corner_radius_all(5)
+		s.bg_color = Color(0.18, 0.28, 0.48)
+		s.set_corner_radius_all(8)
 		s.content_margin_left = 12
 		s.content_margin_right = 12
 		s.content_margin_top = 8
 		s.content_margin_bottom = 8
+		s.border_width_left = 1
+		s.border_width_top = 1
+		s.border_width_right = 1
+		s.border_width_bottom = 1
+		s.border_color = Color(0.4, 0.55, 0.85, 0.45)
 		btn.add_theme_stylebox_override("normal", s)
 		var h := s.duplicate()
-		h.bg_color = Color(0.235, 0.506, 0.953)
+		h.bg_color = Color(0.28, 0.42, 0.72)
 		btn.add_theme_stylebox_override("hover", h)
 		btn.add_theme_color_override("font_color", Color.WHITE)
 		btn.add_theme_font_size_override("font_size", 16)

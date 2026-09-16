@@ -27,6 +27,7 @@ icon_mejoras = ExtResource("5_ouso4")
 icon_opciones = ExtResource("6_blune")
 icon_banco = ExtResource("7_th5th")
 icon_musica = ExtResource("8_ouso4")
+icon_scale = 1.5
 
 [node name="BootScreen" type="ColorRect" parent="." unique_id=1364334444]
 layout_mode = 1

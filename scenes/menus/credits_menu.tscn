@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://creditsmenu30"]
+[gd_scene format=3 uid="uid://creditsmenu30"]
 
-[ext_resource type="Script" path="res://scripts/menus/credits_menu.gd" id="1_cred"]
+[ext_resource type="Script" uid="uid://dkmxdthu63hv0" path="res://scripts/menus/credits_menu.gd" id="1_cred"]
 
-[node name="CreditsMenu" type="Control"]
+[node name="CreditsMenu" type="Control" unique_id=1220556973]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cred")
 
-[node name="Wallpaper" type="ColorRect" parent="."]
+[node name="Wallpaper" type="ColorRect" parent="." unique_id=1195698930]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +21,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.15, 0.28, 0.48, 1)
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=685621908]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -35,7 +35,7 @@ offset_bottom = 260.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="Panel"]
+[node name="VBox" type="VBoxContainer" parent="Panel" unique_id=205776530]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -49,15 +49,15 @@ grow_vertical = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="Panel/VBox"]
+[node name="TitleLabel" type="Label" parent="Panel/VBox" unique_id=2110827974]
 layout_mode = 2
 text = "Créditos"
 horizontal_alignment = 1
 
-[node name="Sep" type="HSeparator" parent="Panel/VBox"]
+[node name="Sep" type="HSeparator" parent="Panel/VBox" unique_id=668021611]
 layout_mode = 2
 
-[node name="CreditsLabel" type="Label" parent="Panel/VBox"]
+[node name="CreditsLabel" type="Label" parent="Panel/VBox" unique_id=1160813913]
 layout_mode = 2
 size_flags_vertical = 3
 text = "..."
@@ -65,6 +65,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="BtnBack" type="Button" parent="Panel/VBox"]
+[node name="BtnBack" type="Button" parent="Panel/VBox" unique_id=2140915424]
 layout_mode = 2
 text = "Volver"

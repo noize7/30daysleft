@@ -121,8 +121,19 @@ func power_on_pc() -> void:
 ## Apaga la PC y termina el día actual.
 func power_off_pc() -> void:
 	is_pc_on = false
+	_stop_global_music()
 	pc_powered_changed.emit(false)
 	_end_day()
+
+## Detiene el MusicPlayer global (no debe sonar con la PC apagada).
+func _stop_global_music() -> void:
+	if not is_inside_tree():
+		return
+	var root := get_tree().root
+	var player := root.get_node_or_null("MusicPlayerGlobal") as AudioStreamPlayer
+	if player:
+		player.stop()
+		player.stream = null
 
 ## Suma dinero al jugador.
 func add_money(amount: float) -> void:
@@ -246,10 +257,12 @@ func set_upgrade_level(category: String, level: int) -> void:
 func _end_day() -> void:
 	if is_game_over:
 		return
+	var prev_day: int = day
 	day += 1
 	day_changed.emit(day)
 	battery = max_battery
 	battery_changed.emit(battery)
+	# Sin cartel grande al pasar de día (la taskbar ya muestra Día X/30)
 	# Eventos narrativos por día (presión gradual)
 	_apply_day_events(day)
 	# Auto-guardado al terminar el día (respeta opción auto_save)
@@ -317,10 +330,14 @@ func _apply_day_events(d: int) -> void:
 			change_sanity(-10.0)
 			change_suspicion(10.0)
 		_:
-			# Drenaje leve diario
-			if d > 1 and d % 3 == 0:
-				change_sanity(-2.0)
-				change_suspicion(1.0)
+			# Presión diaria más constante (el loop se siente vivo)
+			if d > 1:
+				change_sanity(-1.5)
+				if d % 2 == 0:
+					change_suspicion(1.5)
+				if d % 3 == 0:
+					change_sanity(-1.5)
+					change_suspicion(1.0)
 
 ## Alucinación: "llegada falsa" de efectivo cuando la cordura está baja.
 func _fake_cash_delivery() -> void:
@@ -336,6 +353,7 @@ func trigger_ending(ending: String) -> void:
 		return
 	is_game_over = true
 	is_pc_on = false
+	_stop_global_music()
 	current_ending = ending
 	game_over.emit(ending)
 

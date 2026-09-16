@@ -1,11 +1,12 @@
 extends Node
 ## =============================================================================
 ## TimeManager — Reloj del juego + drenaje de batería + ingreso pasivo (Autoload)
-## Balanceado: ~5-7 min reales para vaciar 100% con cooling base.
+## Loop: encender → trabajar 01:00–05:00 → fuera de horario drenaje ↑ → apagar → día++
 ## =============================================================================
 
 signal time_updated(hour: int, minute: int, second: int)
 signal work_hours_changed(is_work_time: bool)
+signal work_hours_warning(message: String)
 
 var hour: int = 1
 var minute: int = 0
@@ -13,11 +14,16 @@ var second: int = 0
 
 # Base: ~0.28 %/s → ~6 min para vaciar 100 % (ajustable por opciones y cooling)
 var BATTERY_DRAIN_PER_REAL_SECOND: float = 0.28
+# Fuera de horario laboral la batería cae más rápido → empuja a apagar y avanzar día
+var OFF_HOURS_DRAIN_MULT: float = 1.55
 # 28 segundos de juego por cada segundo real
 var GAME_SECONDS_PER_REAL_SECOND: float = 28.0
 
 var _accum: float = 0.0
 var is_work_time: bool = true
+var _warned_end: bool = false
+var _warned_last_hour: bool = false
+var _ambient_tick: float = 0.0
 
 func _ready() -> void:
 	set_process(false)
@@ -30,26 +36,49 @@ func _on_pc_powered(is_on: bool) -> void:
 		minute = 0
 		second = 0
 		_accum = 0.0
+		_warned_end = false
+		_warned_last_hour = false
+		_ambient_tick = 0.0
 		_update_work_time()
 		time_updated.emit(hour, minute, second)
+
+func _center_pos() -> Vector2:
+	var vp := get_viewport().get_visible_rect().size if get_viewport() else Vector2(540, 360)
+	return Vector2(vp.x * 0.5, vp.y * 0.22)
 
 func _process(delta: float) -> void:
 	if GameManager.is_game_over or not GameManager.is_pc_on:
 		return
-	# Drenaje de batería con factor de refrigeración
+	# Drenaje de batería (más fuerte fuera de horario)
 	var drain_factor: float = 1.0
 	if UpgradeSystem and UpgradeSystem.has_method("get_battery_drain_factor"):
 		drain_factor = UpgradeSystem.get_battery_drain_factor()
+	if not is_work_time:
+		drain_factor *= OFF_HOURS_DRAIN_MULT
 	GameManager.spend_battery(BATTERY_DRAIN_PER_REAL_SECOND * drain_factor * delta)
-	# Ingreso pasivo
+	# Ingreso pasivo solo con PC encendida
 	var passive: float = UpgradeSystem.get_passive_income_per_sec()
 	if passive > 0.0:
 		GameManager.add_money(passive * delta)
-	# Avance del reloj
+	# Presión ambiental leve (cordura) cuando el día avanza y la PC sigue encendida
+	_ambient_tick += delta
+	if _ambient_tick >= 45.0:
+		_ambient_tick = 0.0
+		_ambient_pressure()
+	# Reloj
 	_accum += delta * GAME_SECONDS_PER_REAL_SECOND
 	while _accum >= 1.0:
 		_accum -= 1.0
 		_tick_second()
+
+func _ambient_pressure() -> void:
+	# Después de las 05:00, o en días altos, un goteo de tensión
+	if not is_work_time and GameManager.day >= 3:
+		GameManager.change_sanity(-0.8)
+		if GameManager.day >= 12 and randf() < 0.35:
+			GameManager.change_suspicion(0.6)
+	elif is_work_time and GameManager.day >= 15 and randf() < 0.2:
+		GameManager.change_sanity(-0.4)
 
 func _tick_second() -> void:
 	second += 1
@@ -62,13 +91,34 @@ func _tick_second() -> void:
 			if hour >= 24:
 				hour = 0
 			_update_work_time()
+			_check_hour_warnings()
 	time_updated.emit(hour, minute, second)
+
+func _check_hour_warnings() -> void:
+	# Última hora laboral
+	if hour == 4 and not _warned_last_hour:
+		_warned_last_hour = true
+		work_hours_warning.emit("Última hora laboral (hasta 05:00)")
+		if VFXSystem:
+			VFXSystem.spawn_floating_text("Última hora de trabajo", _center_pos(), Color(1.0, 0.85, 0.3), 24)
+	# Fin de horario
+	if hour == 5 and not _warned_end:
+		_warned_end = true
+		work_hours_warning.emit("Horario laboral terminado — apaga para avanzar el día")
+		if VFXSystem:
+			VFXSystem.spawn_floating_text(
+				"Fuera de horario — apaga el PC para el día siguiente",
+				_center_pos(), Color(1.0, 0.55, 0.35), 22
+			)
+			VFXSystem.flash_screen(Color(1.0, 0.5, 0.2, 0.12), 0.3)
 
 func _update_work_time() -> void:
 	var was: bool = is_work_time
 	is_work_time = (hour >= 1 and hour < 5)
 	if was != is_work_time:
 		work_hours_changed.emit(is_work_time)
+		if not is_work_time and not _warned_end:
+			_check_hour_warnings()
 
 func get_time_string() -> String:
 	var h: int = hour

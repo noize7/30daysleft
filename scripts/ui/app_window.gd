@@ -33,6 +33,23 @@ func setup(title: String, wsize: Vector2 = Vector2(620, 480)) -> void:
 	_apply_xp_style()
 	_connect_ui_signals()
 	_clamp_to_viewport()
+	# Animación solo aquí (tras add_child + tamaño real)
+	_play_open_anim()
+
+## Aparición suave al abrir (escala + fade)
+func _play_open_anim() -> void:
+	if size.x < 2.0 or size.y < 2.0:
+		modulate.a = 1.0
+		scale = Vector2.ONE
+		return
+	pivot_offset = size * 0.5
+	scale = Vector2(0.97, 0.97)
+	modulate.a = 0.0
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(self, "scale", Vector2.ONE, 0.15).set_ease(Tween.EASE_OUT)
+	tw.tween_property(self, "modulate:a", 1.0, 0.12)
+
 
 ## Evita que la ventana quede más grande que la pantalla o fuera de ella
 ## (se llama al crearla y cada vez que cambia el tamaño de la ventana del juego).
@@ -88,8 +105,16 @@ func _connect_ui_signals() -> void:
 	_signals_connected = true
 
 func _on_close_pressed() -> void:
-	visible = false
-	closed.emit()
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(self, "scale", Vector2(0.94, 0.94), 0.12).set_ease(Tween.EASE_IN)
+	tw.tween_property(self, "modulate:a", 0.0, 0.12)
+	tw.chain().tween_callback(func():
+		visible = false
+		modulate.a = 1.0
+		scale = Vector2.ONE
+		closed.emit()
+	)
 
 func _on_title_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -112,38 +137,52 @@ func _on_title_input(event: InputEvent) -> void:
 		accept_event()
 
 func _apply_xp_style() -> void:
+	# Cuerpo de ventana: beige suave + borde azul + sombra
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.925, 0.914, 0.847)
-	style.border_width_left = 4
-	style.border_width_top = 4
-	style.border_width_right = 4
-	style.border_width_bottom = 4
-	style.border_color = Color(0.0, 0.329, 0.890)
-	style.set_corner_radius_all(0)
-	style.shadow_color = Color(0, 0, 0, 0.35)
-	style.shadow_size = 10
+	style.bg_color = Color(0.94, 0.93, 0.88)
+	style.border_width_left = 2
+	style.border_width_top = 2
+	style.border_width_right = 2
+	style.border_width_bottom = 2
+	style.border_color = Color(0.12, 0.32, 0.72)
+	style.set_corner_radius_all(6)
+	style.shadow_color = Color(0, 0, 0, 0.4)
+	style.shadow_size = 12
 	add_theme_stylebox_override("panel", style)
 
+	# Barra de título azul con esquinas superiores redondeadas
 	var tb := get_node_or_null("TitleBar") as Panel
 	if tb:
 		var tb_style := StyleBoxFlat.new()
-		tb_style.bg_color = Color(0.0, 0.329, 0.890)
-		tb_style.set_corner_radius_all(0)
+		tb_style.bg_color = Color(0.08, 0.28, 0.68)
+		tb_style.corner_radius_top_left = 5
+		tb_style.corner_radius_top_right = 5
+		tb_style.corner_radius_bottom_right = 0
+		tb_style.corner_radius_bottom_left = 0
+		tb_style.border_width_bottom = 1
+		tb_style.border_color = Color(0.25, 0.5, 0.95, 0.5)
 		tb.add_theme_stylebox_override("panel", tb_style)
 
 	var tl := get_node_or_null("TitleBar/TitleLabel") as Label
 	if tl:
-		tl.add_theme_color_override("font_color", Color.WHITE)
+		tl.add_theme_color_override("font_color", Color(0.95, 0.97, 1.0))
 		tl.add_theme_font_size_override("font_size", title_font_size)
 
+	# Botón cerrar más limpio
 	var cb := get_node_or_null("TitleBar/CloseButton") as Button
 	if cb:
 		var close_style := StyleBoxFlat.new()
-		close_style.bg_color = Color(0.910, 0.067, 0.137)
-		close_style.set_corner_radius_all(2)
+		close_style.bg_color = Color(0.78, 0.12, 0.16)
+		close_style.set_corner_radius_all(4)
+		close_style.content_margin_left = 6
+		close_style.content_margin_right = 6
 		cb.add_theme_stylebox_override("normal", close_style)
 		var ch := close_style.duplicate()
-		ch.bg_color = Color(1.0, 0.25, 0.25)
+		ch.bg_color = Color(0.95, 0.25, 0.28)
 		cb.add_theme_stylebox_override("hover", ch)
+		var cp := close_style.duplicate()
+		cp.bg_color = Color(0.55, 0.08, 0.1)
+		cb.add_theme_stylebox_override("pressed", cp)
 		cb.add_theme_color_override("font_color", Color.WHITE)
-		cb.add_theme_font_size_override("font_size", 16)
+		cb.add_theme_font_size_override("font_size", 15)
+		cb.text = "X"

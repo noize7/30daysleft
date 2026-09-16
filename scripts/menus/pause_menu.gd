@@ -1,5 +1,5 @@
 extends Control
-## PauseMenu — pausa real del juego (Escape)
+## PauseMenu — estilo oscuro pulido
 
 signal resume_pressed
 signal save_pressed
@@ -16,19 +16,39 @@ signal quit_pressed
 @onready var status_label: Label = $Panel/VBox/StatusLabel
 
 func _ready() -> void:
-	# Debe procesar aunque el árbol esté pausado
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	_apply_xp_style()
+	_apply_style()
 	btn_resume.pressed.connect(func(): resume_pressed.emit())
 	btn_save.pressed.connect(_on_save)
 	btn_load.pressed.connect(_on_load)
 	btn_main.pressed.connect(func(): main_menu_pressed.emit())
 	btn_quit.pressed.connect(func(): quit_pressed.emit())
+	for btn in [btn_resume, btn_save, btn_load, btn_main, btn_quit]:
+		if btn:
+			btn.mouse_entered.connect(_hover.bind(btn))
+			btn.mouse_exited.connect(_unhover.bind(btn))
 	visible = false
+
+func _hover(btn: Button) -> void:
+	var tw := create_tween()
+	tw.tween_property(btn, "scale", Vector2(1.04, 1.04), 0.08)
+
+func _unhover(btn: Button) -> void:
+	var tw := create_tween()
+	tw.tween_property(btn, "scale", Vector2.ONE, 0.08)
 
 func show_pause() -> void:
 	visible = true
 	status_label.text = ""
+	modulate.a = 0.0
+	if has_node("Panel"):
+		$Panel.scale = Vector2(0.95, 0.95)
+		$Panel.pivot_offset = $Panel.size * 0.5
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(self, "modulate:a", 1.0, 0.2)
+	if has_node("Panel"):
+		tw.tween_property($Panel, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	get_tree().paused = true
 
 func hide_pause() -> void:
@@ -38,54 +58,84 @@ func hide_pause() -> void:
 func _on_save() -> void:
 	if SaveManager and SaveManager.has_method("save_game"):
 		SaveManager.save_game()
-		status_label.text = "Partida guardada."
-		status_label.add_theme_color_override("font_color", Color(0.1, 0.5, 0.1))
+		status_label.text = "✓ Partida guardada"
+		status_label.add_theme_color_override("font_color", Color(0.4, 0.9, 0.55))
 	else:
-		status_label.text = "Error al guardar."
-		status_label.add_theme_color_override("font_color", Color(0.7, 0.1, 0.1))
+		status_label.text = "Error al guardar"
+		status_label.add_theme_color_override("font_color", Color(0.95, 0.35, 0.35))
 	save_pressed.emit()
 
 func _on_load() -> void:
 	if SaveManager and SaveManager.has_method("load_game"):
 		var ok = SaveManager.load_game()
 		if ok:
-			status_label.text = "Partida cargada."
-			status_label.add_theme_color_override("font_color", Color(0.1, 0.5, 0.1))
+			status_label.text = "✓ Partida cargada"
+			status_label.add_theme_color_override("font_color", Color(0.4, 0.9, 0.55))
 		else:
-			status_label.text = "No hay partida guardada."
-			status_label.add_theme_color_override("font_color", Color(0.7, 0.1, 0.1))
+			status_label.text = "No hay partida guardada"
+			status_label.add_theme_color_override("font_color", Color(0.95, 0.55, 0.35))
 	load_pressed.emit()
 
-func _apply_xp_style() -> void:
+func _apply_style() -> void:
+	# Dim overlay if missing
+	if not has_node("Dim"):
+		var dim := ColorRect.new()
+		dim.name = "Dim"
+		dim.color = Color(0.02, 0.03, 0.06, 0.65)
+		dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		dim.mouse_filter = Control.MOUSE_FILTER_STOP
+		add_child(dim)
+		move_child(dim, 0)
+
 	if has_node("Panel"):
 		var ps := StyleBoxFlat.new()
-		ps.bg_color = Color(0.925, 0.914, 0.847)
-		ps.border_width_left = 3
-		ps.border_width_top = 3
-		ps.border_width_right = 3
-		ps.border_width_bottom = 3
-		ps.border_color = Color(0.0, 0.329, 0.890)
-		ps.set_corner_radius_all(0)
+		ps.bg_color = Color(0.11, 0.13, 0.18, 0.96)
+		ps.border_width_left = 1
+		ps.border_width_top = 1
+		ps.border_width_right = 1
+		ps.border_width_bottom = 1
+		ps.border_color = Color(0.4, 0.55, 0.85, 0.5)
+		ps.set_corner_radius_all(12)
+		ps.shadow_color = Color(0, 0, 0, 0.5)
+		ps.shadow_size = 14
 		$Panel.add_theme_stylebox_override("panel", ps)
+
 	if title_label:
-		title_label.add_theme_color_override("font_color", Color(0.0, 0.15, 0.45))
-		title_label.add_theme_font_size_override("font_size", 28)
+		title_label.add_theme_color_override("font_color", Color(0.85, 0.92, 1.0))
+		title_label.add_theme_font_size_override("font_size", 26)
+		title_label.text = "PAUSA"
+
 	for btn in [btn_resume, btn_save, btn_load, btn_main, btn_quit]:
 		if btn == null:
 			continue
-		var s := StyleBoxFlat.new()
-		s.bg_color = Color(0.141, 0.369, 0.863)
-		s.set_corner_radius_all(5)
-		s.content_margin_left = 14
-		s.content_margin_right = 14
-		s.content_margin_top = 10
-		s.content_margin_bottom = 10
-		btn.add_theme_stylebox_override("normal", s)
-		var h := s.duplicate()
-		h.bg_color = Color(0.235, 0.506, 0.953)
-		btn.add_theme_stylebox_override("hover", h)
-		btn.add_theme_color_override("font_color", Color.WHITE)
-		btn.add_theme_font_size_override("font_size", 20)
-		btn.custom_minimum_size = Vector2(240, 48)
+		_style_btn(btn)
+		btn.pivot_offset = Vector2(120, 24)
+
 	if status_label:
-		status_label.add_theme_font_size_override("font_size", 16)
+		status_label.add_theme_font_size_override("font_size", 15)
+		status_label.add_theme_color_override("font_color", Color(0.6, 0.7, 0.85))
+
+func _style_btn(btn: Button) -> void:
+	var s := StyleBoxFlat.new()
+	s.bg_color = Color(0.18, 0.28, 0.48)
+	s.set_corner_radius_all(8)
+	s.content_margin_left = 14
+	s.content_margin_right = 14
+	s.content_margin_top = 10
+	s.content_margin_bottom = 10
+	s.border_width_left = 1
+	s.border_width_top = 1
+	s.border_width_right = 1
+	s.border_width_bottom = 1
+	s.border_color = Color(0.4, 0.55, 0.85, 0.4)
+	btn.add_theme_stylebox_override("normal", s)
+	var h := s.duplicate()
+	h.bg_color = Color(0.28, 0.42, 0.72)
+	h.border_color = Color(0.55, 0.75, 1.0, 0.65)
+	btn.add_theme_stylebox_override("hover", h)
+	var p := s.duplicate()
+	p.bg_color = Color(0.12, 0.2, 0.38)
+	btn.add_theme_stylebox_override("pressed", p)
+	btn.add_theme_color_override("font_color", Color(0.92, 0.95, 1.0))
+	btn.add_theme_font_size_override("font_size", 18)
+	btn.custom_minimum_size = Vector2(240, 46)

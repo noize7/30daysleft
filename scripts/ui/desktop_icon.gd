@@ -43,7 +43,17 @@ const DRAG_THRESHOLD: float = 6.0
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	mouse_entered.connect(_on_hover_enter)
+	mouse_exited.connect(_on_hover_exit)
 	_rebuild()
+
+func _on_hover_enter() -> void:
+	var tw := create_tween()
+	tw.tween_property(self, "scale", Vector2(1.08, 1.08), 0.12).set_ease(Tween.EASE_OUT)
+
+func _on_hover_exit() -> void:
+	var tw := create_tween()
+	tw.tween_property(self, "scale", Vector2.ONE, 0.12).set_ease(Tween.EASE_OUT)
 
 ## Configura el icono desde código (llamado por Main._create_desktop_icons).
 ## p_name  → nombre de la app
@@ -69,6 +79,7 @@ func _rebuild() -> void:
 	var total_h: float = icon_sz + 36.0 * icon_scale
 	custom_minimum_size = Vector2(total_w, total_h)
 	size = Vector2(total_w, total_h)
+	pivot_offset = Vector2(total_w * 0.5, total_h * 0.5)
 
 	# --- Visual: textura personalizada o cuadrado de color -------------------
 	if icon_texture != null:
@@ -132,6 +143,12 @@ func _gui_input(event: InputEvent) -> void:
 					_dragging = false
 					# Si no se movió lo suficiente → es un click → abrir app
 					if not _moved:
+						# Feedback visual de click
+						var tw := create_tween()
+						tw.tween_property(self, "scale", Vector2(0.92, 0.92), 0.06)
+						tw.tween_property(self, "scale", Vector2(1.08, 1.08), 0.08)
+						if VFXSystem:
+							VFXSystem.spawn_sparkles(global_position + size * 0.5, 6)
 						activated.emit(app_name)
 					_clamp_to_desktop()
 					# Si se arrastró, guardar la nueva posición (persiste en el guardado)

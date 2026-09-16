@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://workapp30"]
+[gd_scene format=3 uid="uid://workapp30"]
 
-[ext_resource type="Script" path="res://scripts/apps/work_app.gd" id="1_work"]
+[ext_resource type="Script" uid="uid://p0asdfu8o0jm" path="res://scripts/apps/work_app.gd" id="1_work"]
 
-[node name="WorkApp" type="Control"]
+[node name="WorkApp" type="Control" unique_id=1890084347]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_work")
 
-[node name="Root" type="VBoxContainer" parent="."]
+[node name="Root" type="VBoxContainer" parent="." unique_id=699349525]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,32 +20,34 @@ offset_left = 4.0
 offset_top = 4.0
 offset_right = -4.0
 offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 6
 
-[node name="Header" type="Label" parent="Root"]
+[node name="Header" type="Label" parent="Root" unique_id=2101622434]
 layout_mode = 2
 text = "Centro de Trabajo"
 
-[node name="LevelProgress" type="Label" parent="Root"]
+[node name="LevelProgress" type="Label" parent="Root" unique_id=1924518663]
 layout_mode = 2
 text = "Progreso"
 
-[node name="WorkStatus" type="Label" parent="Root"]
+[node name="WorkStatus" type="Label" parent="Root" unique_id=1300524154]
 layout_mode = 2
 text = "Horario"
 
-[node name="MainRow" type="HBoxContainer" parent="Root"]
+[node name="MainRow" type="HBoxContainer" parent="Root" unique_id=1941324231]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="JobList" type="ItemList" parent="Root/MainRow"]
+[node name="JobList" type="ItemList" parent="Root/MainRow" unique_id=285440784]
 custom_minimum_size = Vector2(260, 160)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="JobDetails" type="Label" parent="Root/MainRow"]
+[node name="JobDetails" type="Label" parent="Root/MainRow" unique_id=1172859427]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -53,35 +55,33 @@ size_flags_vertical = 3
 text = "Selecciona un trabajo"
 autowrap_mode = 3
 
-[node name="TimerBar" type="ProgressBar" parent="Root"]
+[node name="TimerBar" type="ProgressBar" parent="Root" unique_id=1029345244]
 custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
 show_percentage = false
 
-[node name="TimerRow" type="HBoxContainer" parent="Root"]
+[node name="TimerRow" type="HBoxContainer" parent="Root" unique_id=334175576]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="TimerLabel" type="Label" parent="Root/TimerRow"]
+[node name="TimerLabel" type="Label" parent="Root/TimerRow" unique_id=1933932543]
 layout_mode = 2
 size_flags_horizontal = 3
-text = ""
 
-[node name="ClickArea" type="Button" parent="Root/TimerRow"]
+[node name="ClickArea" type="Button" parent="Root/TimerRow" unique_id=1465953423]
 custom_minimum_size = Vector2(180, 32)
 layout_mode = 2
 text = "CLICK para trabajar"
 
-[node name="BottomRow" type="HBoxContainer" parent="Root"]
+[node name="BottomRow" type="HBoxContainer" parent="Root" unique_id=1260263441]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="StartJobButton" type="Button" parent="Root/BottomRow"]
+[node name="StartJobButton" type="Button" parent="Root/BottomRow" unique_id=526679791]
 custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
 text = ">  Empezar trabajo"
 
-[node name="RewardLabel" type="Label" parent="Root/BottomRow"]
+[node name="RewardLabel" type="Label" parent="Root/BottomRow" unique_id=776908970]
 layout_mode = 2
 size_flags_horizontal = 3
-text = ""
