@@ -58,6 +58,11 @@ func _ready() -> void:
 	_apply_xp_style()
 	_connect_signals()
 	_update_all_labels()
+	
+	if money_label:
+		money_label.mouse_filter = Control.MOUSE_FILTER_PASS
+		money_label.tooltip_text = "Dinero disponible\nC: Cordura (Salud mental)\nS: Sospecha (Peligro)"
+		
 	visible = false
 
 ## Aplica colores y estilos estilo Windows XP a taskbar, botón Inicio y batería.
