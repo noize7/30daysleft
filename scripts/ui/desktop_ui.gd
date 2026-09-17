@@ -17,9 +17,7 @@ class_name DesktopUI
 ##   icon_scale). Aquí solo vive el contenedor $Icons.
 ## =============================================================================
 
-signal icon_activated(app_name: String)
 signal start_pressed
-signal shutdown_requested
 
 const APP_WINDOW_SCENE := preload("res://scenes/ui/app_window.tscn")
 const WORK_APP_SCENE := preload("res://scenes/apps/work_app.tscn")

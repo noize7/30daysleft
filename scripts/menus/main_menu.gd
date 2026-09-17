@@ -52,11 +52,13 @@ func _connect_buttons() -> void:
 
 func _on_btn_hover(btn: Button) -> void:
 	var tw := create_tween()
-	tw.tween_property(btn, "scale", Vector2(1.04, 1.04), 0.1).set_ease(Tween.EASE_OUT)
+	tw.set_parallel(true)
+	tw.tween_property(btn, "scale", Vector2(1.04, 1.04), 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 
 func _on_btn_unhover(btn: Button) -> void:
 	var tw := create_tween()
-	tw.tween_property(btn, "scale", Vector2.ONE, 0.1)
+	tw.set_parallel(true)
+	tw.tween_property(btn, "scale", Vector2.ONE, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 
 func _refresh_continue() -> void:
 	var has_save := false
@@ -83,8 +85,9 @@ func _decorate() -> void:
 	if has_node("CenterPanel/VBox") and title_label:
 		var line := ColorRect.new()
 		line.name = "TitleLine"
-		line.custom_minimum_size = Vector2(0, 2)
-		line.color = Color(0.35, 0.55, 0.95, 0.7)
+		line.custom_minimum_size = Vector2(380, 2)
+		line.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		line.color = Color(0.0, 0.7, 1.0, 0.6)
 		var vbox: VBoxContainer = $CenterPanel/VBox
 		var idx := title_label.get_index()
 		vbox.add_child(line)
@@ -105,7 +108,7 @@ func _decorate() -> void:
 
 func _spawn_ambient_speck() -> void:
 	var vp := get_viewport_rect().size
-	var p := _soft_dot(Color(0.7, 0.85, 1.0, 0.35), randf_range(2.0, 4.5))
+	var p := _soft_dot(Color(0.0, 0.9, 1.0, 0.45), randf_range(2.0, 4.5))
 	p.position = Vector2(randf() * vp.x, vp.y + 4)
 	add_child(p)
 	var tw := create_tween()
@@ -126,37 +129,39 @@ func _soft_dot(color: Color, r: float) -> Panel:
 	return p
 
 func _apply_style() -> void:
-	# Fondo profundo
+	# Fondo profundo más oscuro/abismal
 	if has_node("Wallpaper"):
-		$Wallpaper.color = Color(0.06, 0.09, 0.16)
+		$Wallpaper.color = Color(0.02, 0.03, 0.06)
 
-	# Viñeta superior/inferior
-	_add_vignette()
+	# Viñeta superior/inferior (Desactivada por petición)
+	# _add_vignette()
 
 	if has_node("CenterPanel"):
 		var ps := StyleBoxFlat.new()
-		ps.bg_color = Color(0.12, 0.14, 0.20, 0.94)
-		ps.border_width_left = 1
-		ps.border_width_top = 1
-		ps.border_width_right = 1
-		ps.border_width_bottom = 1
-		ps.border_color = Color(0.35, 0.5, 0.85, 0.55)
-		ps.set_corner_radius_all(12)
-		ps.shadow_color = Color(0, 0, 0, 0.45)
-		ps.shadow_size = 16
-		ps.content_margin_left = 8
-		ps.content_margin_right = 8
+		ps.bg_color = Color.TRANSPARENT
+		ps.draw_center = false
+		ps.content_margin_left = 80
+		ps.content_margin_right = 80
+		ps.content_margin_top = 60
+		ps.content_margin_bottom = 60
 		$CenterPanel.add_theme_stylebox_override("panel", ps)
 
 	if title_label:
-		title_label.add_theme_color_override("font_color", Color(0.85, 0.92, 1.0))
-		title_label.add_theme_font_size_override("font_size", 44)
-		title_label.add_theme_color_override("font_outline_color", Color(0.15, 0.35, 0.8, 0.6))
-		title_label.add_theme_constant_override("outline_size", 3)
+		title_label.add_theme_color_override("font_color", Color(0.9, 0.95, 1.0))
+		title_label.add_theme_font_size_override("font_size", 54)
+		title_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.7, 1.0, 0.6))
+		title_label.add_theme_constant_override("shadow_outline_size", 12)
+		title_label.add_theme_constant_override("shadow_offset_x", 0)
+		title_label.add_theme_constant_override("shadow_offset_y", 0)
+		# Remover el outline duro anterior
+		title_label.add_theme_color_override("font_outline_color", Color.TRANSPARENT)
+		title_label.add_theme_constant_override("outline_size", 0)
 	if subtitle_label:
-		subtitle_label.add_theme_color_override("font_color", Color(0.55, 0.65, 0.8))
-		subtitle_label.add_theme_font_size_override("font_size", 17)
-		subtitle_label.text = "Treinta días. Una deuda. Ninguna segunda oportunidad."
+		subtitle_label.add_theme_color_override("font_color", Color(0.4, 0.6, 0.8))
+		subtitle_label.add_theme_font_size_override("font_size", 16)
+		subtitle_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		subtitle_label.custom_minimum_size = Vector2(420, 0)
+		subtitle_label.text = "TREINTA DÍAS. UNA DEUDA. NINGUNA SEGUNDA OPORTUNIDAD."
 
 	for btn in [btn_play, btn_continue, btn_options, btn_credits, btn_quit]:
 		if btn:
@@ -164,7 +169,7 @@ func _apply_style() -> void:
 			btn.pivot_offset = Vector2(150, 27)
 
 	if version_label:
-		version_label.add_theme_color_override("font_color", Color(0.45, 0.55, 0.7))
+		version_label.add_theme_color_override("font_color", Color(0.2, 0.4, 0.6))
 		version_label.add_theme_font_size_override("font_size", 13)
 		version_label.text = "30 DAYS LEFT  ·  v0.8"
 
@@ -189,35 +194,39 @@ func _add_vignette() -> void:
 
 func _style_button(btn: Button) -> void:
 	var normal := StyleBoxFlat.new()
-	normal.bg_color = Color(0.18, 0.28, 0.48)
-	normal.set_corner_radius_all(8)
+	normal.bg_color = Color(0.06, 0.1, 0.18, 0.85)
+	normal.set_corner_radius_all(25)
 	normal.content_margin_left = 18
 	normal.content_margin_right = 18
-	normal.content_margin_top = 12
-	normal.content_margin_bottom = 12
+	normal.content_margin_top = 14
+	normal.content_margin_bottom = 14
 	normal.border_width_left = 1
 	normal.border_width_top = 1
 	normal.border_width_right = 1
 	normal.border_width_bottom = 1
-	normal.border_color = Color(0.4, 0.55, 0.85, 0.45)
+	normal.border_color = Color(0.1, 0.3, 0.5, 0.5)
 
 	var hover := normal.duplicate()
-	hover.bg_color = Color(0.28, 0.42, 0.72)
-	hover.border_color = Color(0.55, 0.75, 1.0, 0.7)
+	hover.bg_color = Color(0.1, 0.25, 0.45, 0.95)
+	hover.border_color = Color(0.0, 0.8, 1.0, 0.8)
+	hover.shadow_color = Color(0.0, 0.6, 1.0, 0.3)
+	hover.shadow_size = 10
 
 	var pressed := normal.duplicate()
-	pressed.bg_color = Color(0.12, 0.2, 0.38)
+	pressed.bg_color = Color(0.04, 0.08, 0.15)
+	pressed.border_color = Color(0.0, 0.4, 0.6, 0.5)
 
 	var disabled := normal.duplicate()
-	disabled.bg_color = Color(0.15, 0.16, 0.2)
-	disabled.border_color = Color(0.25, 0.25, 0.3, 0.4)
+	disabled.bg_color = Color(0.05, 0.06, 0.08)
+	disabled.border_color = Color(0.1, 0.1, 0.15, 0.4)
 
 	btn.add_theme_stylebox_override("normal", normal)
 	btn.add_theme_stylebox_override("hover", hover)
 	btn.add_theme_stylebox_override("pressed", pressed)
 	btn.add_theme_stylebox_override("disabled", disabled)
-	btn.add_theme_color_override("font_color", Color(0.92, 0.95, 1.0))
-	btn.add_theme_color_override("font_hover_color", Color.WHITE)
-	btn.add_theme_color_override("font_disabled_color", Color(0.45, 0.48, 0.55))
-	btn.add_theme_font_size_override("font_size", 20)
+	btn.add_theme_color_override("font_color", Color(0.7, 0.8, 0.95))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
+	btn.add_theme_color_override("font_disabled_color", Color(0.3, 0.35, 0.45))
+	btn.add_theme_font_size_override("font_size", 18)
 	btn.custom_minimum_size = Vector2(300, 50)
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER

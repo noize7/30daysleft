@@ -32,7 +32,7 @@ var _settings := {
 	"game_speed": 1,
 	"difficulty": 1,
 	"battery_drain": 1,
-	"fullscreen": false,
+	"fullscreen": true,
 	"show_fps": false,
 	"auto_save": true,
 	"language": 0
@@ -261,7 +261,7 @@ func _on_defaults() -> void:
 		"game_speed": 1,
 		"difficulty": 1,
 		"battery_drain": 1,
-		"fullscreen": false,
+		"fullscreen": true,
 		"show_fps": false,
 		"auto_save": true,
 		"language": 0
@@ -303,7 +303,7 @@ static func apply_saved_settings_boot() -> void:
 		"game_speed": 1,
 		"difficulty": 1,
 		"battery_drain": 1,
-		"fullscreen": false,
+		"fullscreen": true,
 		"show_fps": false,
 	}
 	if FileAccess.file_exists(path):

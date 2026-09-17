@@ -19,7 +19,7 @@ var _icon_cache: Dictionary = {}
 
 @onready var header: Label = $Root/Header
 @onready var email_list: ItemList = $Root/MainRow/EmailList
-@onready var email_body: Label = $Root/MainRow/RightCol/EmailBody
+@onready var email_body: Label = $Root/MainRow/EmailBody
 
 var _email_ids: Array = []
 var _copy_btn: Button = null

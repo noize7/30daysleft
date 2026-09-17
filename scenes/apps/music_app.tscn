@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://appmusica30"]
+[gd_scene format=3 uid="uid://ppmusica30"]
 
-[ext_resource type="Script" path="res://scripts/ui/apps/app_musica.gd" id="1"]
+[ext_resource type="Script" uid="uid://cba46q1fmrf7h" path="res://scripts/ui/apps/app_musica.gd" id="1"]
 
-[node name="AppMusica" type="Control"]
+[node name="AppMusica" type="Control" unique_id=1303001340]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

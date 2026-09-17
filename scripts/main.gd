@@ -49,8 +49,12 @@ var _shutting_down: bool = false
 var _start_popup: Control = null
 var _booting: bool = false
 
+const OptionsMenuScript = preload("res://scripts/menus/options_menu.gd")
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	OptionsMenuScript.apply_saved_settings_boot()
+	
 	boot_screen.visible = false
 	desktop.visible = false
 	ending_screen.visible = false
@@ -215,7 +219,7 @@ func _open_options() -> void:
 			_pause_menu.visible = true
 	)
 
-func _start_boot_sequence(load_save: bool) -> void:
+func _start_boot_sequence(_load_save: bool) -> void:
 	boot_screen.visible = true
 	# Mientras se espera a que el jugador pulse encender, solo se ve el botón
 	boot_label.visible = false
@@ -341,6 +345,7 @@ func _grid_icon_position(index: int) -> Vector2:
 	var margin: float = 24.0
 	var cols: int = 3
 	var col: int = index % cols
+	@warning_ignore("integer_division")
 	var row: int = index / cols
 	var pos := Vector2(margin + col * cell_w, margin + row * cell_h)
 	# Clamp para no salir del área visible (deja margen para la taskbar ~48px)
