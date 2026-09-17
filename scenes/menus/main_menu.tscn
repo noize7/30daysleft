@@ -2,6 +2,12 @@
 
 [ext_resource type="Script" uid="uid://b30exddjuldx8" path="res://scripts/menus/main_menu.gd" id="1_mm"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xqga4"]
+bg_color = Color(0.03160447, 0.17339301, 0.32747778, 1)
+corner_radius_top_left = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
 [node name="MainMenu" type="Control" unique_id=322990416]
 layout_mode = 3
 anchors_preset = 15
@@ -34,10 +40,11 @@ offset_right = 200.0
 offset_bottom = 260.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_xqga4")
 
 [node name="VBox" type="VBoxContainer" parent="CenterPanel" unique_id=1183609347]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 18
 alignment = 1
 
 [node name="TitleLabel" type="Label" parent="CenterPanel/VBox" unique_id=1950320412]

@@ -92,19 +92,7 @@ func _decorate() -> void:
 		var idx := title_label.get_index()
 		vbox.add_child(line)
 		vbox.move_child(line, idx + 1)
-	# Sombra de panel
-	if has_node("CenterPanel"):
-		var shadow := ColorRect.new()
-		shadow.name = "PanelShadow"
-		shadow.color = Color(0, 0, 0, 0.35)
-		shadow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		shadow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		shadow.offset_left = 8
-		shadow.offset_top = 10
-		shadow.offset_right = 8
-		shadow.offset_bottom = 10
-		$CenterPanel.add_child(shadow)
-		$CenterPanel.move_child(shadow, 0)
+	# (Sombra eliminada porque dibujaba esquinas cuadradas detrás del panel)
 
 func _spawn_ambient_speck() -> void:
 	var vp := get_viewport_rect().size
@@ -129,17 +117,21 @@ func _soft_dot(color: Color, r: float) -> Panel:
 	return p
 
 func _apply_style() -> void:
-	# Fondo profundo más oscuro/abismal
+	# Fondo de pantalla general
 	if has_node("Wallpaper"):
-		$Wallpaper.color = Color(0.02, 0.03, 0.06)
-
-	# Viñeta superior/inferior (Desactivada por petición)
-	# _add_vignette()
+		$Wallpaper.color = Color(0.04, 0.06, 0.1)
 
 	if has_node("CenterPanel"):
 		var ps := StyleBoxFlat.new()
-		ps.bg_color = Color.TRANSPARENT
-		ps.draw_center = false
+		# Fondo oscuro que resalte del wallpaper
+		ps.bg_color = Color(0.05, 0.1, 0.18, 0.95)
+		ps.draw_center = true
+		
+		# Esquinas redondeadas excepto la superior derecha
+		ps.corner_radius_top_left = 40
+		ps.corner_radius_bottom_left = 40
+		ps.corner_radius_bottom_right = 40
+		ps.corner_radius_top_right = 0
 		ps.content_margin_left = 80
 		ps.content_margin_right = 80
 		ps.content_margin_top = 60
