@@ -1,14 +1,8 @@
-[gd_scene format=3 uid="uid://cos8gqdno4efi"]
+[gd_scene load_steps=2 format=3 uid="uid://mainmenu30days"]
 
-[ext_resource type="Script" uid="uid://b30exddjuldx8" path="res://scripts/menus/main_menu.gd" id="1_mm"]
+[ext_resource type="Script" path="res://scripts/menus/main_menu.gd" id="1_mm"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xqga4"]
-bg_color = Color(0.03160447, 0.17339301, 0.32747778, 1)
-corner_radius_top_left = 50
-corner_radius_bottom_right = 50
-corner_radius_bottom_left = 50
-
-[node name="MainMenu" type="Control" unique_id=322990416]
+[node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_mm")
 
-[node name="Wallpaper" type="ColorRect" parent="." unique_id=2094331899]
+[node name="Wallpaper" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,7 +21,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.227451, 0.431373, 0.647059, 1)
 
-[node name="CenterPanel" type="PanelContainer" parent="." unique_id=1162743773]
+[node name="CenterPanel" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -40,48 +34,56 @@ offset_right = 200.0
 offset_bottom = 260.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_xqga4")
 
-[node name="VBox" type="VBoxContainer" parent="CenterPanel" unique_id=1183609347]
-layout_mode = 2
-theme_override_constants/separation = 18
+[node name="VBox" type="VBoxContainer" parent="CenterPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 28.0
+offset_right = -24.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="CenterPanel/VBox" unique_id=1950320412]
+[node name="TitleLabel" type="Label" parent="CenterPanel/VBox"]
 layout_mode = 2
 text = "30 DAYS LEFT"
 horizontal_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="CenterPanel/VBox" unique_id=2035243982]
+[node name="SubtitleLabel" type="Label" parent="CenterPanel/VBox"]
 layout_mode = 2
 text = "Tienes 30 días. No falles."
 horizontal_alignment = 1
 
-[node name="Spacer1" type="Control" parent="CenterPanel/VBox" unique_id=1376830886]
+[node name="Spacer1" type="Control" parent="CenterPanel/VBox"]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 
-[node name="BtnPlay" type="Button" parent="CenterPanel/VBox" unique_id=66818052]
+[node name="BtnPlay" type="Button" parent="CenterPanel/VBox"]
 layout_mode = 2
 text = "Nueva Partida"
 
-[node name="BtnContinue" type="Button" parent="CenterPanel/VBox" unique_id=215566781]
+[node name="BtnContinue" type="Button" parent="CenterPanel/VBox"]
 layout_mode = 2
 text = "Continuar"
 
-[node name="BtnOptions" type="Button" parent="CenterPanel/VBox" unique_id=1795569886]
+[node name="BtnOptions" type="Button" parent="CenterPanel/VBox"]
 layout_mode = 2
 text = "Opciones"
 
-[node name="BtnCredits" type="Button" parent="CenterPanel/VBox" unique_id=1719825617]
+[node name="BtnCredits" type="Button" parent="CenterPanel/VBox"]
 layout_mode = 2
 text = "Créditos"
 
-[node name="BtnQuit" type="Button" parent="CenterPanel/VBox" unique_id=1508987912]
+[node name="BtnQuit" type="Button" parent="CenterPanel/VBox"]
 layout_mode = 2
 text = "Salir"
 
-[node name="VersionLabel" type="Label" parent="." unique_id=641307208]
+[node name="VersionLabel" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0

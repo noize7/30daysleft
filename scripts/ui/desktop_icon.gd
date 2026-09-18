@@ -83,14 +83,14 @@ func _rebuild() -> void:
 
 	# --- Visual: textura personalizada o cuadrado de color -------------------
 	if icon_texture != null:
-		var tex_rect := TextureRect.new()
-		tex_rect.texture = icon_texture
-		tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		tex_rect.size = Vector2(icon_sz, icon_sz)
-		tex_rect.position = Vector2((total_w - icon_sz) * 0.5, 4.0)
-		tex_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(tex_rect)
+		var tr := TextureRect.new()
+		tr.texture = icon_texture
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tr.size = Vector2(icon_sz, icon_sz)
+		tr.position = Vector2((total_w - icon_sz) * 0.5, 4.0)
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(tr)
 	else:
 		# Fallback: panel redondeado con color (mientras no haya assets)
 		var square := Panel.new()

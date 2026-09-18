@@ -257,7 +257,7 @@ func set_upgrade_level(category: String, level: int) -> void:
 func _end_day() -> void:
 	if is_game_over:
 		return
-	var _prev_day: int = day
+	var prev_day: int = day
 	day += 1
 	day_changed.emit(day)
 	battery = max_battery

@@ -26,8 +26,8 @@ func _ready() -> void:
 		buy_button.pressed.connect(_on_buy)
 	refresh()
 
-func set_icon_scale(new_scale: float) -> void:
-	icon_scale = clampf(new_scale, 0.5, 3.0)
+func set_icon_scale(scale: float) -> void:
+	icon_scale = clampf(scale, 0.5, 3.0)
 	if shop_list:
 		var s: int = int(round(28.0 * icon_scale))
 		shop_list.fixed_icon_size = Vector2i(s, s)

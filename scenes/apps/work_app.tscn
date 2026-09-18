@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://workapp30"]
 
-[ext_resource type="Script" uid="uid://ewxc01ckln8r" path="res://scripts/apps/work_app.gd" id="1_work"]
+[ext_resource type="Script" uid="uid://p0asdfu8o0jm" path="res://scripts/apps/work_app.gd" id="1_work"]
 
 [node name="WorkApp" type="Control" unique_id=1890084347]
 layout_mode = 3

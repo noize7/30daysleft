@@ -122,7 +122,7 @@ func buy(category: String) -> bool:
 	if category == "battery":
 		var cap: float = float(nxt.get("capacity", 100))
 		GameManager.max_battery = cap
-		GameManager.battery = minf(GameManager.battery + 20.0, cap)
+		GameManager.battery = mini(GameManager.battery + 20.0, cap)
 		GameManager.battery_changed.emit(GameManager.battery)
 	GameManager.upgrade_changed.emit(category, new_lvl)
 	return true
