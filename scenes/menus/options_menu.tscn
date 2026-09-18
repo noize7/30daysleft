@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c4lvwh1uo18tp"]
 
-[ext_resource type="Script" uid="uid://cyouikphvpsfj" path="res://scripts/menus/options_menu.gd" id="1_opt"]
+[ext_resource type="Script" uid="uid://y2xbnivmugwi" path="res://scripts/menus/options_menu.gd" id="1_opt"]
 
 [node name="OptionsMenu" type="Control" unique_id=1171395597]
 process_mode = 3
@@ -140,6 +140,18 @@ layout_mode = 2
 text = "Idioma"
 
 [node name="LangOption" type="OptionButton" parent="Panel/VBox/LangRow" unique_id=1398029134]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BgRow" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+
+[node name="BgLabel" type="Label" parent="Panel/VBox/BgRow"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Fondo de pantalla"
+
+[node name="BgOption" type="OptionButton" parent="Panel/VBox/BgRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 

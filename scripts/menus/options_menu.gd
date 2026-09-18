@@ -22,6 +22,7 @@ const SETTINGS_PATH := "user://settings.json"
 @onready var show_fps_check: CheckBox = $Panel/VBox/ShowFpsCheck
 @onready var auto_save_check: CheckBox = $Panel/VBox/AutoSaveCheck
 @onready var language_option: OptionButton = $Panel/VBox/LangRow/LangOption
+@onready var bg_option: OptionButton = $Panel/VBox/BgRow/BgOption
 @onready var btn_apply: Button = $Panel/VBox/Buttons/BtnApply
 @onready var btn_back: Button = $Panel/VBox/Buttons/BtnBack
 @onready var btn_defaults: Button = $Panel/VBox/Buttons/BtnDefaults
@@ -32,10 +33,11 @@ var _settings := {
 	"game_speed": 1,
 	"difficulty": 1,
 	"battery_drain": 1,
-	"fullscreen": false,
+	"fullscreen": true,
 	"show_fps": false,
 	"auto_save": true,
-	"language": 0
+	"language": 0,
+	"background": 0
 }
 
 var _fps_label: Label = null
@@ -82,6 +84,8 @@ func _connect_autosave() -> void:
 		auto_save_check.toggled.connect(_on_toggle_changed)
 	if language_option and not language_option.item_selected.is_connected(_on_any_changed):
 		language_option.item_selected.connect(_on_any_changed)
+	if bg_option and not bg_option.item_selected.is_connected(_on_any_changed):
+		bg_option.item_selected.connect(_on_any_changed)
 	if volume_slider and not volume_slider.drag_ended.is_connected(_on_slider_ended):
 		volume_slider.drag_ended.connect(_on_slider_ended)
 	if sfx_slider and not sfx_slider.drag_ended.is_connected(_on_slider_ended):
@@ -155,6 +159,10 @@ func _populate_options() -> void:
 	language_option.add_item("English (próximamente)", 1)
 	language_option.set_item_disabled(1, true)
 
+	bg_option.clear()
+	bg_option.add_item("Clásico", 0)
+	bg_option.add_item("Nevado", 1)
+
 func _load_into_ui() -> void:
 	_applying_ui = true
 	volume_slider.value = float(_settings.master_volume)
@@ -166,6 +174,7 @@ func _load_into_ui() -> void:
 	show_fps_check.button_pressed = bool(_settings.show_fps)
 	auto_save_check.button_pressed = bool(_settings.auto_save)
 	language_option.selected = clampi(int(_settings.language), 0, 0)
+	bg_option.selected = clampi(int(_settings.background), 0, 1)
 	_on_vol_changed(float(_settings.master_volume))
 	_on_sfx_changed(float(_settings.sfx_volume))
 	_applying_ui = false
@@ -180,6 +189,7 @@ func _capture_from_ui() -> void:
 	_settings.show_fps = show_fps_check.button_pressed
 	_settings.auto_save = auto_save_check.button_pressed
 	_settings.language = language_option.selected
+	_settings.background = bg_option.selected
 
 func _on_vol_changed(v: float) -> void:
 	volume_value.text = "%d%%" % int(v)
@@ -254,6 +264,16 @@ func _apply_runtime_settings(_from_apply: bool) -> void:
 	elif _fps_label and is_instance_valid(_fps_label):
 		_fps_label.visible = false
 
+	# Fondo de pantalla
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree and tree.root:
+		var wallpaper_node = tree.root.find_child("WindowsXpWallpaperV0Breluv06Gbc31", true, false)
+		if wallpaper_node and wallpaper_node is Sprite2D:
+			if int(_settings.background) == 0:
+				wallpaper_node.texture = preload("res://assets/sprites/windows-xp-wallpaper-v0-breluv06gbc31.png")
+			else:
+				wallpaper_node.texture = preload("res://assets/sprites/snowy_pixel_bliss_wide.jpg")
+
 func _on_defaults() -> void:
 	_settings = {
 		"master_volume": 80.0,
@@ -261,10 +281,11 @@ func _on_defaults() -> void:
 		"game_speed": 1,
 		"difficulty": 1,
 		"battery_drain": 1,
-		"fullscreen": false,
+		"fullscreen": true,
 		"show_fps": false,
 		"auto_save": true,
-		"language": 0
+		"language": 0,
+		"background": 0
 	}
 	_load_into_ui()
 	_save_settings()
@@ -303,8 +324,9 @@ static func apply_saved_settings_boot() -> void:
 		"game_speed": 1,
 		"difficulty": 1,
 		"battery_drain": 1,
-		"fullscreen": false,
+		"fullscreen": true,
 		"show_fps": false,
+		"background": 0
 	}
 	if FileAccess.file_exists(path):
 		var file := FileAccess.open(path, FileAccess.READ)
@@ -370,6 +392,16 @@ static func apply_saved_settings_boot() -> void:
 			tree.root.add_child(lbl)
 			# Pequeño script inline no posible: actualizará cuando se abra opciones
 			# o Main puede refrescar en _process. Se actualiza al abrir opciones.
+
+	# Fondo de pantalla (boot)
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree and tree.root:
+		var wallpaper_node = tree.root.find_child("WindowsXpWallpaperV0Breluv06Gbc31", true, false)
+		if wallpaper_node and wallpaper_node is Sprite2D:
+			if int(settings.background) == 0:
+				wallpaper_node.texture = preload("res://assets/sprites/windows-xp-wallpaper-v0-breluv06gbc31.png")
+			else:
+				wallpaper_node.texture = preload("res://assets/sprites/snowy_pixel_bliss_wide.jpg")
 
 func _force_panel_text(node: Node) -> void:
 	if node is Label or node is CheckBox or node is Button or node is OptionButton:

@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://4dsj517jgmv"]
 
-[ext_resource type="Script" uid="uid://c18vndv1y1phx" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="Script" uid="uid://b465s165h3pyc" path="res://scripts/ui/desktop_ui.gd" id="2_desktop"]
+[ext_resource type="Script" uid="uid://b10y07mhywcnp" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://dyymbhci2wv5u" path="res://scripts/ui/desktop_ui.gd" id="2_desktop"]
 [ext_resource type="Texture2D" uid="uid://bv4l763ynn0ph" path="res://assets/Icons Pc/Portafolio.png" id="2_yyfjg"]
 [ext_resource type="Texture2D" uid="uid://6l823x5eu2s0" path="res://assets/Icons Pc/Mensajes.png" id="3_b1x3f"]
 [ext_resource type="Texture2D" uid="uid://bcrr4c7f70ux5" path="res://assets/Icons Pc/carpeta.png" id="4_a8run"]
 [ext_resource type="Texture2D" uid="uid://l8l03h64km0y" path="res://assets/Icons Pc/Upgrade .png" id="5_ouso4"]
 [ext_resource type="Texture2D" uid="uid://dayrsinynty06" path="res://assets/Icons Pc/Ajustes.png" id="6_blune"]
 [ext_resource type="Texture2D" uid="uid://d3esssrgkm8d0" path="res://assets/Icons Pc/Banco.png" id="7_th5th"]
-[ext_resource type="Texture2D" uid="uid://cqqcifebxhnll" path="res://assets/Icons Pc/Musica.png" id="8_ouso4"]
+[ext_resource type="Texture2D" uid="uid://cuoyxvorf5hqj" path="res://assets/Icons Pc/Musica.png" id="8_ouso4"]
 [ext_resource type="Texture2D" uid="uid://b66yguakjnuao" path="res://assets/sprites/windows-xp-wallpaper-v0-breluv06gbc31.png" id="9_b1x3f"]
 [ext_resource type="Texture2D" uid="uid://7onr5g5k1wbd" path="res://assets/Icons Pc/Bateria.png" id="10_a8run"]
 

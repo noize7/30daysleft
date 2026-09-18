@@ -3,11 +3,11 @@ extends Control
 ## El jugador elige pistas en loop. Bajo cordura puede distorsionarse.
 
 const TRACKS := [
-	{"id": "musica_juego1", "name": "Tensión baja", "path": "res://assets/audio/music/musica_juego1.ogg"},
-	{"id": "musica_juego2", "name": "Deep web", "path": "res://assets/audio/music/musica_juego2.ogg"},
-	{"id": "musica_juego3", "name": "Recuerdos", "path": "res://assets/audio/music/musica_juego3.ogg"},
-	{"id": "musica_juego4", "name": "Crisis", "path": "res://assets/audio/music/musica_juego4.ogg"},
-	{"id": "musica_juego5", "name": "Ambiente", "path": "res://assets/audio/music/musica_juego5.ogg"},
+	{"id": "musica_juego1", "name": "music1", "path": "res://assets/audio/music/musica_juego1.mp3"},
+	{"id": "musica_juego2", "name": "music2", "path": "res://assets/audio/music/musica_juego2.ogg"},
+	{"id": "musica_juego3", "name": "music3", "path": "res://assets/audio/music/musica_juego3.mp3"},
+	{"id": "musica_juego4", "name": "music4", "path": "res://assets/audio/music/musica_juego4.mp3"},
+	{"id": "musica_juego5", "name": "music5", "path": "res://assets/audio/music/musica_juego5.mp3"},
 ]
 
 var _player: AudioStreamPlayer = null
@@ -147,16 +147,6 @@ func _build_ui() -> void:
 	_status.size = Vector2(340, 40)
 	_status.autowrap_mode = TextServer.AUTOWRAP_WORD
 	_status.add_theme_color_override("font_color", Color(0.15, 0.15, 0.15))
-	add_child(_status)
-
-	var note := Label.new()
-	note.text = "Nota: coloca archivos OGG en assets/audio/music/\n(musica_juego1.ogg … musica_juego5.ogg)"
-	note.position = Vector2(12, 380)
-	note.size = Vector2(360, 50)
-	note.autowrap_mode = TextServer.AUTOWRAP_WORD
-	note.add_theme_color_override("font_color", Color(0.4, 0.35, 0.2))
-	note.add_theme_font_size_override("font_size", 11)
-	add_child(note)
 
 func _refresh_list() -> void:
 	_list.clear()
