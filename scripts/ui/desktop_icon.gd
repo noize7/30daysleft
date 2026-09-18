@@ -42,7 +42,7 @@ const DRAG_THRESHOLD: float = 6.0
 ## Al entrar en el árbol de nodos: prepara cursor y dibuja el icono.
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	mouse_default_cursor_shape = Control.CURSOR_ARROW
 	mouse_entered.connect(_on_hover_enter)
 	mouse_exited.connect(_on_hover_exit)
 	_rebuild()

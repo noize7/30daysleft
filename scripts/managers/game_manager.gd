@@ -20,6 +20,7 @@ signal jobs_completed_changed(count: int)
 signal upgrade_changed(category: String, new_level: int)
 ## Se emite al transferir a la cuenta de escape (progreso actualizado).
 signal escape_changed(transferred: float)
+signal cash_payment_pending(amount: float)
 
 func _ready() -> void:
 	# Generar cuenta de escape al arrancar (nueva partida sin save).
@@ -169,20 +170,23 @@ func complete_job(pay: float, job_data: Dictionary = {}) -> void:
 	# Multiplicador de CPU (Fase 4)
 	var mult: float = UpgradeSystem.get_cpu_multiplier()
 	var final_pay: float = pay * mult
-	add_money(final_pay)
+	
 	jobs_completed += 1
 	jobs_completed_changed.emit(jobs_completed)
 	_check_job_level_up()
 
 	# --- Pago dual (Tanda 8) ---
 	if payment_method == "online":
+		add_money(final_pay)
 		# Cada cobro online suma sospecha (mitigado por Proxy)
 		var base_susp: float = 1.5 + (final_pay / 500.0)
 		var susp_mult: float = 1.0
 		if UpgradeSystem and UpgradeSystem.has_method("get_online_suspicion_mult"):
 			susp_mult = UpgradeSystem.get_online_suspicion_mult()
 		change_suspicion(base_susp * susp_mult)
-	# cash: no suma sospecha
+	else:
+		# cash: no suma sospecha, y el dinero se recoge manualmente
+		cash_payment_pending.emit(final_pay)
 
 	# Pérdida de cordura por tipo de trabajo (mitigado por Filtro de ruido)
 	var sanity_cost: float = float(job_data.get("sanity_cost", 0.0))

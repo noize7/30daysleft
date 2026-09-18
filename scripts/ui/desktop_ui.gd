@@ -63,6 +63,11 @@ func _ready() -> void:
 		money_label.mouse_filter = Control.MOUSE_FILTER_PASS
 		money_label.tooltip_text = "Dinero disponible\nC: Cordura (Salud mental)\nS: Sospecha (Peligro)"
 		
+	var cash_pickup = preload("res://scenes/ui/cash_pickup.tscn").instantiate()
+	cash_pickup.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	cash_pickup.position = Vector2(-160, -160)
+	add_child(cash_pickup)
+		
 	visible = false
 
 ## Aplica colores y estilos estilo Windows XP a taskbar, botón Inicio y batería.

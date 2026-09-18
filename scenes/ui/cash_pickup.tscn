@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://c3jwhdxk4k441"]
+
+[ext_resource type="Script" path="res://scripts/ui/cash_pickup.gd" id="1_cash"]
+
+[node name="CashPickup" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 140.0
+offset_bottom = 140.0
+pivot_offset = Vector2(70, 70)
+script = ExtResource("1_cash")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true
+mouse_default_cursor_shape = 0
+
+[node name="Timer" type="Timer" parent="."]
