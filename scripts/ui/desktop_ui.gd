@@ -271,6 +271,8 @@ func _on_suspicion_changed(_s: float) -> void:
 		VFXSystem.spawn_floating_text("Sospecha alta…", Vector2(540, 90), Color(1.0, 0.5, 0.3), 18)
 
 func _on_start_pressed() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
 	start_pressed.emit()
 
 func _on_job_level_changed(_lvl: int) -> void:

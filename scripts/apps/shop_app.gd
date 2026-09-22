@@ -90,6 +90,8 @@ func refresh() -> void:
 		_update_details(_selected_idx)
 
 func _on_item_selected(idx: int) -> void:
+	if SoundSystem:
+		SoundSystem.play_click(true)
 	_selected_idx = idx
 	_update_details(idx)
 	if idx >= 0 and idx < UpgradeSystem.CATEGORY_ORDER.size():
@@ -120,6 +122,8 @@ func _update_details(idx: int) -> void:
 			buy_button.text = "Comprar ($%d)" % cost
 
 func _on_buy() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
 	if _selected_idx < 0 or _selected_idx >= UpgradeSystem.CATEGORY_ORDER.size():
 		return
 	var cat: String = UpgradeSystem.CATEGORY_ORDER[_selected_idx]

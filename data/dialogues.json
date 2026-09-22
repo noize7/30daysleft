@@ -1,0 +1,204 @@
+{
+  "tutorial": {
+	"id": "tutorial",
+	"speaker": "BOT-01",
+	"portrait": "robot",
+	"steps": [
+	  {
+		"id": "welcome",
+		"text": "¡Hola! Soy BOT-01, tu asistente de arranque.\nBienvenido a tu PC. Tienes 30 días. No los desperdicies.",
+		"wait_for": null
+	  },
+	  {
+		"id": "player_reply_1",
+		"speaker": "TÚ",
+		"text": "…¿Treinta días para qué? No recuerdo casi nada.",
+		"wait_for": null
+	  },
+	  {
+		"id": "explain_battery",
+		"text": "La barra de abajo es la BATERÍA.\nMientras la PC esté encendida se agota. Cuando llegue a 0, se apaga sola y termina el día.",
+		"wait_for": null
+	  },
+	  {
+		"id": "click_trabajo",
+		"text": "Primero: toca el icono de TRABAJO en el escritorio. Ahí ganas dinero.",
+		"wait_for": "icon_clicked:Trabajo",
+		"highlight": "Trabajo"
+	  },
+	  {
+		"id": "open_work_ok",
+		"text": "Perfecto. Elige un empleo, pulsa Empezar y haz los clicks que te pida.\nSolo pagan entre la 01:00 y las 05:00.",
+		"wait_for": null
+	  },
+	  {
+		"id": "player_work",
+		"speaker": "TÚ",
+		"text": "Encargos nocturnos… como si no tuviera suficiente con no saber quién soy.",
+		"wait_for": null
+	  },
+	  {
+		"id": "click_correo",
+		"text": "Ahora abre CORREO. Ahí llegan avisos, pistas… y también basura de tu propia mente.",
+		"wait_for": "icon_clicked:Correo",
+		"highlight": "Correo"
+	  },
+	  {
+		"id": "correo_ok",
+		"text": "Bien. Revisa el buzón cada día. Algunos mensajes solo aparecen a ciertas horas.",
+		"wait_for": null
+	  },
+	  {
+		"id": "click_archivos",
+		"text": "Abre ARCHIVOS. Ahí se guardan pistas y documentos que recuperes del disco.",
+		"wait_for": "icon_clicked:Archivos",
+		"highlight": "Archivos"
+	  },
+	  {
+		"id": "archivos_ok",
+		"text": "Algunos archivos están ocultos. Más adelante necesitarás más RAM para leerlos.",
+		"wait_for": null
+	  },
+	  {
+		"id": "click_banco",
+		"text": "Abre BANCO. Ahí ves tu saldo y puedes transferir dinero a la cuenta de escape (cuando te llegue por correo).",
+		"wait_for": "icon_clicked:Banco",
+		"highlight": "Banco"
+	  },
+	  {
+		"id": "banco_ok",
+		"text": "El efectivo no sirve para escapar. Solo la transferencia a la cuenta correcta cuenta.",
+		"wait_for": null
+	  },
+	  {
+		"id": "player_bank",
+		"speaker": "TÚ",
+		"text": "Transferir… ¿huir de qué exactamente?",
+		"wait_for": null
+	  },
+	  {
+		"id": "click_mejoras",
+		"text": "Abre MEJORAS (Tienda). Compra upgrades: más batería, menos sospecha, filtros de ruido…",
+		"wait_for": "icon_clicked:Mejoras",
+		"highlight": "Mejoras"
+	  },
+	  {
+		"id": "mejoras_ok",
+		"text": "Gasta con cabeza. El dinero también es tu ticket de salida.",
+		"wait_for": null
+	  },
+	  {
+		"id": "click_musica",
+		"text": "Por último, abre MÚSICA si quieres algo de ambiente mientras trabajas.",
+		"wait_for": "icon_clicked:Música",
+		"highlight": "Música"
+	  },
+	  {
+		"id": "musica_ok",
+		"text": "Opcional, pero ayuda a no volverse loco del todo.",
+		"wait_for": null
+	  },
+	  {
+		"id": "player_end",
+		"speaker": "TÚ",
+		"text": "Treinta días. Trabajar. Leer correos. No confiar en todo lo que vea.\n…Vamos.",
+		"wait_for": null
+	  },
+	  {
+		"id": "tutorial_end",
+		"text": "Listo. Ya conoces todas las apps.\nLa batería vuelve a bajar con normalidad.\nDía 1: a trabajar. Buena suerte… la vas a necesitar.",
+		"wait_for": null,
+		"on_complete": "end_tutorial"
+	  }
+	]
+  },
+  "day_events": {
+	"day_1_start": {
+	  "id": "day_1_start",
+	  "speaker": "BOT-01",
+	  "text": "Día 1. Bueno… a trabajar.\nEmpieza por algo sencillo. No te quemes la batería el primer día.",
+	  "once": true
+	},
+	"day_1_player_thought": {
+	  "id": "day_1_player_thought",
+	  "speaker": "TÚ",
+	  "text": "Esta pantalla… estos iconos… ¿cuánto tiempo llevo aquí?\nDa igual. Hay que ganar dinero.",
+	  "once": true,
+	  "condition": {
+		"day": 1,
+		"hour_min": 1,
+		"minute_min": 20
+	  }
+	},
+	"day_2_mid": {
+	  "id": "day_2_mid",
+	  "speaker": "BOT-01",
+	  "text": "Día 2 · 2:40\nUff… ya casi estamos a medio tiempo de la jornada.\nMantén el ritmo, pero vigila la batería.",
+	  "once": true,
+	  "condition": {
+		"day": 2,
+		"hour_min": 2,
+		"minute_min": 40
+	  }
+	},
+	"day_4_player_doubt": {
+	  "id": "day_4_player_doubt",
+	  "speaker": "TÚ",
+	  "text": "Algunos correos no tienen sentido.\n¿Y si parte de esto solo está en mi cabeza?",
+	  "once": true,
+	  "condition": {
+		"day": 4,
+		"hour_min": 3,
+		"minute_min": 0
+	  }
+	},
+	"day_5_warning": {
+	  "id": "day_5_warning",
+	  "speaker": "BOT-01",
+	  "text": "Día 5. La presión empieza a notarse.\nRevisa el correo. A veces hay ofertas… o amenazas.",
+	  "once": true
+	},
+	"day_5_player": {
+	  "id": "day_5_player",
+	  "speaker": "TÚ",
+	  "text": "Foto rota. Mensajes de alguien que no recuerdo.\nTengo que seguir leyendo, aunque duela.",
+	  "once": true
+	},
+	"day_10_player": {
+	  "id": "day_10_player",
+	  "speaker": "TÚ",
+	  "text": "Policía. Expediente. ¿Estoy siendo buscado… o perseguido?",
+	  "once": true
+	},
+	"day_15_half": {
+	  "id": "day_15_half",
+	  "speaker": "BOT-01",
+	  "text": "Mitad del camino. 15 días restantes.\n¿Vas bien de dinero? ¿De cordura? ¿De sospecha?\nEl reloj no para.",
+	  "once": true
+	},
+	"day_15_player": {
+	  "id": "day_15_player",
+	  "speaker": "TÚ",
+	  "text": "Quince días. Mitad del camino y todavía no sé si estoy salvándome o cavando más hondo.",
+	  "once": true
+	},
+	"day_20_player": {
+	  "id": "day_20_player",
+	  "speaker": "TÚ",
+	  "text": "El disco miente. Los correos mienten.\nSolo puedo confiar en lo que verifique dos veces.",
+	  "once": true
+	},
+	"day_25_player": {
+	  "id": "day_25_player",
+	  "speaker": "TÚ",
+	  "text": "Cinco días. Si la ruta de escape es real… no puedo fallar la transferencia.",
+	  "once": true
+	},
+	"day_29_player": {
+	  "id": "day_29_player",
+	  "speaker": "TÚ",
+	  "text": "Mañana se acaba.\nO salgo… o ellos llegan primero.",
+	  "once": true
+	}
+  }
+}

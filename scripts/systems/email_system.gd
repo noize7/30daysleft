@@ -17,6 +17,8 @@ var EMAILS: Array = [
 	{
 		"id": "day1_welcome",
 		"unlock_day": 1,
+		"unlock_hour": 1,
+		"unlock_minute": 0,
 		"is_fake": false,
 		"type": "system",
 		"from": "sistema@local",
@@ -26,6 +28,8 @@ var EMAILS: Array = [
 	{
 		"id": "day1_job",
 		"unlock_day": 1,
+		"unlock_hour": 1,
+		"unlock_minute": 5,
 		"is_fake": false,
 		"type": "job",
 		"from": "noreply@workgrid.mail",
@@ -35,6 +39,8 @@ var EMAILS: Array = [
 	{
 		"id": "day2_reminder",
 		"unlock_day": 2,
+		"unlock_hour": 1,
+		"unlock_minute": 46,
 		"is_fake": false,
 		"type": "job",
 		"from": "noreply@workgrid.mail",
@@ -44,6 +50,8 @@ var EMAILS: Array = [
 	{
 		"id": "day3_odd",
 		"unlock_day": 3,
+		"unlock_hour": 2,
+		"unlock_minute": 15,
 		"is_fake": false,
 		"type": "warning",
 		"from": "desconocido",
@@ -53,6 +61,8 @@ var EMAILS: Array = [
 	{
 		"id": "day5_memory",
 		"unlock_day": 5,
+		"unlock_hour": 1,
+		"unlock_minute": 30,
 		"is_fake": false,
 		"type": "photo",
 		"from": "tú@ayer",
@@ -62,6 +72,8 @@ var EMAILS: Array = [
 	{
 		"id": "day5_fake",
 		"unlock_day": 5,
+		"unlock_hour": 3,
+		"unlock_minute": 10,
 		"is_fake": true,
 		"type": "warning",
 		"from": "mamá",
@@ -71,6 +83,8 @@ var EMAILS: Array = [
 	{
 		"id": "day7_neighbor",
 		"unlock_day": 7,
+		"unlock_hour": 2,
+		"unlock_minute": 0,
 		"is_fake": false,
 		"type": "text",
 		"from": "vecino_402",
@@ -311,22 +325,52 @@ var unlocked_ids: Array = []
 ## IDs que el jugador ya abrió.
 var read_ids: Array = []
 
+## Si true, no reproducir SFX al desbloquear (arranque, carga, reset).
+var _silent_unlock: bool = true
+
 func _ready() -> void:
 	GameManager.day_changed.connect(_on_day_changed)
-	# Día 1 al empezar
+	# Día 1 al empezar (sin sonido de notificación)
+	_silent_unlock = true
 	unlock_for_day(1)
 	try_send_escape_account(1)
+	# Tras el primer frame permitir notificaciones en gameplay
+	call_deferred("_enable_notifications")
 
-## Desbloquea correos cuyo unlock_day <= día actual.
-## Los falsos solo se desbloquean si sanity < 70 (o siempre a partir de cierto umbral).
-func unlock_for_day(day: int) -> void:
+func _enable_notifications() -> void:
+	_silent_unlock = false
+
+## Desbloquea correos cuyo unlock_day/hora ya se alcanzó.
+## unlock_hour / unlock_minute opcionales (default 1:00 = al empezar el día).
+## Los falsos solo se desbloquean si sanity < 70 (o umbral más alto en días altos).
+## silent: no tocar el flag; se usa _silent_unlock o el parámetro explícito.
+func unlock_for_day(day: int, silent: bool = false) -> void:
 	var changed := false
+	var newly: int = 0
+	var cur_h: int = 1
+	var cur_m: int = 0
+	if TimeManager:
+		cur_h = TimeManager.hour
+		cur_m = TimeManager.minute
+	var pc_on: bool = GameManager != null and GameManager.is_pc_on
 	for mail in EMAILS:
 		var id: String = str(mail["id"])
 		if id in unlocked_ids:
 			continue
-		if int(mail["unlock_day"]) > day:
+		var uday: int = int(mail.get("unlock_day", 999))
+		if uday > day:
 			continue
+		# Si es el mismo día, respetar hora/minuto de llegada
+		if uday == day:
+			var uh: int = int(mail.get("unlock_hour", 1))
+			var um: int = int(mail.get("unlock_minute", 0))
+			if not pc_on:
+				# PC apagada: la hora del reloj es del día anterior → solo liberar
+				# lo que llega al arranque (1:00). El resto espera al reloj.
+				if uh > 1 or (uh == 1 and um > 0):
+					continue
+			elif cur_h < uh or (cur_h == uh and cur_m < um):
+				continue
 		var is_fake: bool = bool(mail.get("is_fake", false))
 		# Correos falsos solo si cordura baja o día alto con cordura < 85
 		if is_fake:
@@ -336,11 +380,22 @@ func unlock_for_day(day: int) -> void:
 				continue
 		unlocked_ids.append(id)
 		changed = true
+		newly += 1
 	if changed:
 		emails_changed.emit()
+		# Un solo sonido si hay correos nuevos Y no estamos en modo silencioso
+		if newly > 0 and not silent and not _silent_unlock:
+			if SoundSystem and SoundSystem.has_method("play_notification"):
+				SoundSystem.play_notification()
+
+## Llamado al cambiar de minuto para liberar correos programados por hora.
+func check_timed_unlocks() -> void:
+	if GameManager:
+		unlock_for_day(GameManager.day)
 
 func _on_day_changed(new_day: int) -> void:
-	unlock_for_day(new_day)
+	# Cambio de día / carga: sin spam de notificaciones
+	unlock_for_day(new_day, true)
 	try_send_escape_account(new_day)
 
 ## Envía (una sola vez) el correo con el número de cuenta de escape

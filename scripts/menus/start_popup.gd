@@ -17,11 +17,15 @@ func _ready() -> void:
 	gui_input.connect(_on_bg_input)
 	if btn_shutdown:
 		btn_shutdown.pressed.connect(func():
+			if SoundSystem:
+				SoundSystem.play_button()
 			visible = false
 			shutdown_pressed.emit()
 		)
 	if btn_cancel:
 		btn_cancel.pressed.connect(func():
+			if SoundSystem:
+				SoundSystem.play_button()
 			visible = false
 			closed.emit()
 		)

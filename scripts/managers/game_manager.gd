@@ -63,6 +63,10 @@ var is_pc_on: bool = false
 var is_game_over: bool = false
 var current_ending: String = ""
 
+## Tutorial: mientras esté activo la batería NO baja y el diálogo guía al jugador.
+var tutorial_active: bool = false
+var tutorial_done: bool = false
+
 ## Posiciones guardadas de los iconos del escritorio: nombre -> [x, y]
 var icon_positions: Dictionary = {}
 
@@ -121,9 +125,12 @@ func power_on_pc() -> void:
 
 ## Apaga la PC y termina el día actual.
 func power_off_pc() -> void:
+	var was_on := is_pc_on
 	is_pc_on = false
 	_stop_global_music()
-	pc_powered_changed.emit(false)
+	# Solo emitir si realmente estaba encendida (evita SFX fantasma)
+	if was_on:
+		pc_powered_changed.emit(false)
 	_end_day()
 
 ## Detiene el MusicPlayer global (no debe sonar con la PC apagada).
@@ -213,8 +220,11 @@ func _check_job_level_up() -> void:
 		job_level_changed.emit(job_level)
 
 ## Gasta batería. Si llega a 0, apaga la PC (fin de día).
+## Durante el tutorial la batería no baja.
 func spend_battery(amount: float) -> void:
 	if not is_pc_on or is_game_over:
+		return
+	if tutorial_active:
 		return
 	battery = clampf(battery - amount, 0.0, max_battery)
 	battery_changed.emit(battery)
@@ -297,11 +307,11 @@ func set_payment_method(method: String) -> void:
 
 ## Eventos narrativos fijos por día (presión gradual de cordura/sospecha).
 func _apply_day_events(d: int) -> void:
-	# Desbloquear correos y pistas del nuevo día
+	# Desbloquear correos y pistas del nuevo día (silencioso: el reloj avisará si llegan a cierta hora)
 	if EmailSystem:
-		EmailSystem.unlock_for_day(d)
+		EmailSystem.unlock_for_day(d, true)
 	if ClueSystem:
-		ClueSystem.unlock_for_day(d)
+		ClueSystem.unlock_for_day(d, true)
 	# Limpieza de logs (Script de limpieza) — chance al empezar el día
 	if UpgradeSystem and UpgradeSystem.has_method("get_log_clean_chance"):
 		var chance: float = UpgradeSystem.get_log_clean_chance()
@@ -396,6 +406,8 @@ func reset_game() -> void:
 	is_pc_on = false
 	is_game_over = false
 	current_ending = ""
+	tutorial_active = false
+	tutorial_done = false
 	icon_positions = {}
 	_roll_escape_account()
 	payment_method_changed.emit(payment_method)
@@ -403,11 +415,19 @@ func reset_game() -> void:
 	if EmailSystem:
 		EmailSystem.unlocked_ids.clear()
 		EmailSystem.read_ids.clear()
-		EmailSystem.unlock_for_day(1)
+		EmailSystem._silent_unlock = true
+		EmailSystem.unlock_for_day(1, true)
+		EmailSystem.call_deferred("_enable_notifications")
 	if ClueSystem:
 		ClueSystem.unlocked_ids.clear()
 		ClueSystem.read_ids.clear()
-		ClueSystem.unlock_for_day(1)
+		ClueSystem._silent_unlock = true
+		ClueSystem.unlock_for_day(1, true)
+		ClueSystem.call_deferred("_enable_notifications")
+	if DialogueSystem and DialogueSystem.has_method("reset"):
+		DialogueSystem.reset()
+	if MissionSystem and MissionSystem.has_method("reset"):
+		MissionSystem.reset()
 	day_changed.emit(day)
 	money_changed.emit(money)
 	battery_changed.emit(battery)
@@ -418,8 +438,11 @@ func reset_game() -> void:
 	for cat in upgrade_levels.keys():
 		upgrade_changed.emit(str(cat), 1)
 	pc_powered_changed.emit(false)
-	# Liberar el flag en el siguiente frame para no interferir con el boot.
-	call_deferred("_clear_suppress_shutdown")
+	# Sincronizar SoundSystem para que no “recuerde” la PC como encendida
+	if SoundSystem and SoundSystem.has_method("sync_pc_state"):
+		SoundSystem.sync_pc_state(false)
+	# Liberar el flag un poco más tarde (varios frames) por si hay señales encoladas
+	get_tree().create_timer(0.15).timeout.connect(_clear_suppress_shutdown, CONNECT_ONE_SHOT)
 
 func _clear_suppress_shutdown() -> void:
 	suppress_shutdown = false

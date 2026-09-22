@@ -46,9 +46,13 @@ func _ready() -> void:
 	_set_method(preferred_method)
 
 func _on_cash() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
 	_set_method("cash")
 
 func _on_transfer_mode() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
 	_set_method("transfer")
 
 func _on_money(_m: float) -> void:
@@ -204,6 +208,8 @@ func _set_method(m: String) -> void:
 		status_label.add_theme_color_override("font_color", Color(0.1, 0.35, 0.2))
 
 func _on_fill_all() -> void:
+	if SoundSystem:
+		SoundSystem.play_click(true)
 	if _amount_edit == null:
 		return
 	# Redondeo a 2 decimales hacia abajo para no superar el saldo
@@ -228,6 +234,8 @@ func _parse_amount(raw: String) -> float:
 	return float(cleaned)
 
 func _on_transfer() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
 	if _account_edit == null or _amount_edit == null:
 		return
 	var account: String = _account_edit.text.strip_edges().replace(" ", "")

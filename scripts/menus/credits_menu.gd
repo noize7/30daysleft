@@ -19,7 +19,11 @@ Gracias por jugar."""
 func _ready() -> void:
 	_apply_style()
 	credits_label.text = CREDITS_TEXT
-	btn_back.pressed.connect(func(): closed.emit())
+	btn_back.pressed.connect(func():
+		if SoundSystem:
+			SoundSystem.play_button()
+		closed.emit()
+	)
 	modulate.a = 0.0
 	var tw := create_tween()
 	tw.tween_property(self, "modulate:a", 1.0, 0.35)

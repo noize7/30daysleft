@@ -26,6 +26,7 @@ var _warned_last_hour: bool = false
 var _ambient_tick: float = 0.0
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	set_process(false)
 	GameManager.pc_powered_changed.connect(_on_pc_powered)
 
@@ -41,6 +42,9 @@ func _on_pc_powered(is_on: bool) -> void:
 		_ambient_tick = 0.0
 		_update_work_time()
 		time_updated.emit(hour, minute, second)
+		# Liberar correos/archivos de las 1:00 del día actual al encender
+		_check_timed_content()
+		_check_time_dialogues()
 
 func _center_pos() -> Vector2:
 	var vp := get_viewport().get_visible_rect().size if get_viewport() else Vector2(540, 360)
@@ -48,6 +52,10 @@ func _center_pos() -> Vector2:
 
 func _process(delta: float) -> void:
 	if GameManager.is_game_over or not GameManager.is_pc_on:
+		return
+	# Durante el tutorial: no drenar batería ni avanzar presión ambiental
+	# (el reloj sí puede avanzar suavemente si se desea; aquí lo congelamos también)
+	if GameManager.tutorial_active:
 		return
 	# Drenaje de batería (más fuerte fuera de horario)
 	var drain_factor: float = 1.0
@@ -57,9 +65,10 @@ func _process(delta: float) -> void:
 		drain_factor *= OFF_HOURS_DRAIN_MULT
 	GameManager.spend_battery(BATTERY_DRAIN_PER_REAL_SECOND * drain_factor * delta)
 	# Ingreso pasivo solo con PC encendida
-	var passive: float = UpgradeSystem.get_passive_income_per_sec()
-	if passive > 0.0:
-		GameManager.add_money(passive * delta)
+	if UpgradeSystem and UpgradeSystem.has_method("get_passive_income_per_sec"):
+		var passive: float = UpgradeSystem.get_passive_income_per_sec()
+		if passive > 0.0:
+			GameManager.add_money(passive * delta)
 	# Presión ambiental leve (cordura) cuando el día avanza y la PC sigue encendida
 	_ambient_tick += delta
 	if _ambient_tick >= 45.0:
@@ -82,9 +91,11 @@ func _ambient_pressure() -> void:
 
 func _tick_second() -> void:
 	second += 1
+	var minute_changed := false
 	if second >= 60:
 		second = 0
 		minute += 1
+		minute_changed = true
 		if minute >= 60:
 			minute = 0
 			hour += 1
@@ -93,6 +104,10 @@ func _tick_second() -> void:
 			_update_work_time()
 			_check_hour_warnings()
 	time_updated.emit(hour, minute, second)
+	# Solo al cambiar de minuto: diálogos y correos/archivos programados
+	if minute_changed:
+		_check_time_dialogues()
+		_check_timed_content()
 
 func _check_hour_warnings() -> void:
 	# Última hora laboral
@@ -130,3 +145,21 @@ func get_time_string() -> String:
 	if h == 0:
 		h = 12
 	return "%02d:%02d %s" % [h, minute, suffix]
+
+## Dispara diálogos programados por día/hora (ej. día 2 a las 2:40)
+func _check_time_dialogues() -> void:
+	if not DialogueSystem:
+		return
+	if GameManager.day == 2 and hour == 2 and minute >= 40:
+		DialogueSystem.try_day_event("day_2_mid")
+	if GameManager.day == 1 and hour == 1 and minute >= 20:
+		DialogueSystem.try_day_event("day_1_player_thought")
+	if GameManager.day == 4 and hour == 3 and minute >= 0:
+		DialogueSystem.try_day_event("day_4_player_doubt")
+
+## Libera correos/archivos que ya alcanzaron su hora de llegada
+func _check_timed_content() -> void:
+	if EmailSystem and EmailSystem.has_method("check_timed_unlocks"):
+		EmailSystem.check_timed_unlocks()
+	if ClueSystem and ClueSystem.has_method("check_timed_unlocks"):
+		ClueSystem.check_timed_unlocks()

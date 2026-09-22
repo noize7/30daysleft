@@ -52,9 +52,21 @@ func _ready() -> void:
 	_populate_options()
 	_load_into_ui()
 	_connect_autosave()
-	btn_apply.pressed.connect(_on_apply)
-	btn_back.pressed.connect(func(): closed.emit())
-	btn_defaults.pressed.connect(_on_defaults)
+	btn_apply.pressed.connect(func():
+		if SoundSystem:
+			SoundSystem.play_button()
+		_on_apply()
+	)
+	btn_back.pressed.connect(func():
+		if SoundSystem:
+			SoundSystem.play_button()
+		closed.emit()
+	)
+	btn_defaults.pressed.connect(func():
+		if SoundSystem:
+			SoundSystem.play_button()
+		_on_defaults()
+	)
 	volume_slider.value_changed.connect(_on_vol_changed)
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	_ui_ready = true
@@ -192,10 +204,46 @@ func _capture_from_ui() -> void:
 	_settings.background = bg_option.selected
 
 func _on_vol_changed(v: float) -> void:
-	volume_value.text = "%d%%" % int(v)
+	if volume_value:
+		volume_value.text = "%d%%" % int(v)
+	# Aplicar en vivo mientras se arrastra el slider
+	if not _applying_ui and _ui_ready:
+		_settings.master_volume = v
+		_apply_volumes()
 
 func _on_sfx_changed(v: float) -> void:
-	sfx_value.text = "%d%%" % int(v)
+	if sfx_value:
+		sfx_value.text = "%d%%" % int(v)
+	if not _applying_ui and _ui_ready:
+		_settings.sfx_volume = v
+		_apply_volumes()
+
+## Aplica solo volúmenes (Master + SFX). Crea el bus SFX si no existe.
+func _apply_volumes() -> void:
+	_ensure_sfx_bus()
+	var master_lin: float = clampf(float(_settings.master_volume) / 100.0, 0.0, 1.0)
+	var sfx_lin: float = clampf(float(_settings.sfx_volume) / 100.0, 0.0, 1.0)
+	# Master: 0% = silencio real (-80 dB aprox)
+	var master_db: float = -80.0 if master_lin <= 0.001 else linear_to_db(master_lin)
+	var sfx_db: float = -80.0 if sfx_lin <= 0.001 else linear_to_db(sfx_lin)
+	var master_idx: int = AudioServer.get_bus_index("Master")
+	if master_idx >= 0:
+		AudioServer.set_bus_volume_db(master_idx, master_db)
+	var sfx_idx: int = AudioServer.get_bus_index("SFX")
+	if sfx_idx >= 0:
+		AudioServer.set_bus_volume_db(sfx_idx, sfx_db)
+	# SoundSystem: escala extra de SFX por si algo suena por Master
+	if SoundSystem:
+		SoundSystem.master_sfx_scale = sfx_lin
+
+func _ensure_sfx_bus() -> void:
+	if AudioServer.get_bus_index("SFX") >= 0:
+		return
+	# Crear bus SFX en runtime si el proyecto no tenía layout
+	var count: int = AudioServer.bus_count
+	AudioServer.add_bus(count)
+	AudioServer.set_bus_name(count, "SFX")
+	AudioServer.set_bus_send(count, "Master")
 
 func _on_apply() -> void:
 	_capture_from_ui()
@@ -211,13 +259,8 @@ func _apply_runtime_settings(_from_apply: bool) -> void:
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 
-	# Volumen
-	var master_db: float = linear_to_db(clampf(float(_settings.master_volume) / 100.0, 0.001, 1.0))
-	var sfx_db: float = linear_to_db(clampf(float(_settings.sfx_volume) / 100.0, 0.001, 1.0))
-	if AudioServer.get_bus_index("Master") >= 0:
-		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), master_db)
-	if AudioServer.get_bus_index("SFX") >= 0:
-		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), sfx_db)
+	# Volumen (Master + SFX, en vivo y al aplicar)
+	_apply_volumes()
 
 	# Velocidad de juego (TimeManager usa vars, no const)
 	if TimeManager:
@@ -341,9 +384,20 @@ static func apply_saved_settings_boot() -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-	var master_db: float = linear_to_db(clampf(float(settings.master_volume) / 100.0, 0.001, 1.0))
+	# Asegurar bus SFX y aplicar volúmenes al arrancar
+	if AudioServer.get_bus_index("SFX") < 0:
+		var count: int = AudioServer.bus_count
+		AudioServer.add_bus(count)
+		AudioServer.set_bus_name(count, "SFX")
+		AudioServer.set_bus_send(count, "Master")
+	var master_lin: float = clampf(float(settings.master_volume) / 100.0, 0.0, 1.0)
+	var sfx_lin: float = clampf(float(settings.get("sfx_volume", 70.0)) / 100.0, 0.0, 1.0)
+	var master_db: float = -80.0 if master_lin <= 0.001 else linear_to_db(master_lin)
+	var sfx_db: float = -80.0 if sfx_lin <= 0.001 else linear_to_db(sfx_lin)
 	if AudioServer.get_bus_index("Master") >= 0:
 		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), master_db)
+	if AudioServer.get_bus_index("SFX") >= 0:
+		AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), sfx_db)
 	if TimeManager:
 		match int(settings.game_speed):
 			0:

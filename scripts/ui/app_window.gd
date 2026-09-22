@@ -105,6 +105,8 @@ func _connect_ui_signals() -> void:
 	_signals_connected = true
 
 func _on_close_pressed() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
 	var tw := create_tween()
 	tw.set_parallel(true)
 	tw.tween_property(self, "scale", Vector2(0.94, 0.94), 0.12).set_ease(Tween.EASE_IN)

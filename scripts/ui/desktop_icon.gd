@@ -149,6 +149,8 @@ func _gui_input(event: InputEvent) -> void:
 						tw.tween_property(self, "scale", Vector2(1.08, 1.08), 0.08)
 						if VFXSystem:
 							VFXSystem.spawn_sparkles(global_position + size * 0.5, 6)
+						if SoundSystem:
+							SoundSystem.play_click()
 						activated.emit(app_name)
 					_clamp_to_desktop()
 					# Si se arrastró, guardar la nueva posición (persiste en el guardado)

@@ -40,15 +40,34 @@ func _process(delta: float) -> void:
 		_spawn_ambient_speck()
 
 func _connect_buttons() -> void:
-	btn_play.pressed.connect(func(): play_pressed.emit())
-	btn_continue.pressed.connect(func(): continue_pressed.emit())
-	btn_options.pressed.connect(func(): options_pressed.emit())
-	btn_credits.pressed.connect(func(): credits_pressed.emit())
-	btn_quit.pressed.connect(func(): quit_pressed.emit())
+	btn_play.pressed.connect(func():
+		_play_ui_click()
+		play_pressed.emit()
+	)
+	btn_continue.pressed.connect(func():
+		_play_ui_click()
+		continue_pressed.emit()
+	)
+	btn_options.pressed.connect(func():
+		_play_ui_click()
+		options_pressed.emit()
+	)
+	btn_credits.pressed.connect(func():
+		_play_ui_click()
+		credits_pressed.emit()
+	)
+	btn_quit.pressed.connect(func():
+		_play_ui_click()
+		quit_pressed.emit()
+	)
 	for btn in [btn_play, btn_continue, btn_options, btn_credits, btn_quit]:
 		if btn:
 			btn.mouse_entered.connect(_on_btn_hover.bind(btn))
 			btn.mouse_exited.connect(_on_btn_unhover.bind(btn))
+
+func _play_ui_click() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
 
 func _on_btn_hover(btn: Button) -> void:
 	var tw := create_tween()

@@ -148,6 +148,8 @@ func refresh() -> void:
 func _on_selected(idx: int) -> void:
 	if idx < 0 or idx >= _email_ids.size():
 		return
+	if SoundSystem:
+		SoundSystem.play_click(true)
 	var email_id: String = str(_email_ids[idx])
 	EmailSystem.mark_read(email_id)
 	_current_account = ""
@@ -171,6 +173,8 @@ func _on_selected(idx: int) -> void:
 	refresh()
 
 func _on_copy_account() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
 	if _current_account.is_empty():
 		_current_account = GameManager.escape_account_number
 	if _current_account.is_empty():

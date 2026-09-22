@@ -149,6 +149,8 @@ func refresh() -> void:
 func _on_selected(idx: int) -> void:
 	if idx < 0 or idx >= _clue_ids.size():
 		return
+	if SoundSystem:
+		SoundSystem.play_click(true)
 	var clue_id: String = str(_clue_ids[idx])
 	ClueSystem.mark_read(clue_id)
 	for clue in ClueSystem.CLUES:

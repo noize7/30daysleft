@@ -108,21 +108,30 @@ func _build_ui() -> void:
 	_btn_prev.text = "◀ Anterior"
 	_btn_prev.position = Vector2(12, 250)
 	_btn_prev.size = Vector2(100, 32)
-	_btn_prev.pressed.connect(_prev)
+	_btn_prev.pressed.connect(func():
+		if SoundSystem: SoundSystem.play_button()
+		_prev()
+	)
 	add_child(_btn_prev)
 
 	_btn_play = Button.new()
 	_btn_play.text = "▶ Play"
 	_btn_play.position = Vector2(120, 250)
 	_btn_play.size = Vector2(120, 32)
-	_btn_play.pressed.connect(_toggle_play)
+	_btn_play.pressed.connect(func():
+		if SoundSystem: SoundSystem.play_button()
+		_toggle_play()
+	)
 	add_child(_btn_play)
 
 	_btn_next = Button.new()
 	_btn_next.text = "Siguiente ▶"
 	_btn_next.position = Vector2(250, 250)
 	_btn_next.size = Vector2(100, 32)
-	_btn_next.pressed.connect(_next)
+	_btn_next.pressed.connect(func():
+		if SoundSystem: SoundSystem.play_button()
+		_next()
+	)
 	add_child(_btn_next)
 
 	var vol_lbl := Label.new()

@@ -34,10 +34,10 @@ func save_game() -> bool:
 		# Tanda 8: método de pago dual
 		"payment_method": GameManager.payment_method,
 		# Tanda 4: progreso narrativo
-		"unlocked_emails": EmailSystem.unlocked_ids.duplicate(),
-		"read_emails": EmailSystem.read_ids.duplicate(),
-		"unlocked_clues": ClueSystem.unlocked_ids.duplicate(),
-		"read_clues": ClueSystem.read_ids.duplicate(),
+		"unlocked_emails": EmailSystem.unlocked_ids.duplicate() if EmailSystem else [],
+		"read_emails": EmailSystem.read_ids.duplicate() if EmailSystem else [],
+		"unlocked_clues": ClueSystem.unlocked_ids.duplicate() if ClueSystem else [],
+		"read_clues": ClueSystem.read_ids.duplicate() if ClueSystem else [],
 		# Posiciones de los iconos del escritorio (arrastrados por el jugador)
 		"icon_positions": GameManager.icon_positions.duplicate(true),
 		# Escape por transferencia
@@ -45,6 +45,9 @@ func save_game() -> bool:
 		"escape_account_number": GameManager.escape_account_number,
 		"escape_transferred": GameManager.escape_transferred,
 		"escape_account_sent": GameManager.escape_account_sent,
+		# Tutorial + misiones
+		"tutorial_done": GameManager.tutorial_done,
+		"missions": _safe_mission_save(),
 	}
 
 	var json_text := JSON.stringify(data, "\t")
@@ -55,6 +58,15 @@ func save_game() -> bool:
 	file.store_string(json_text)
 	file.close()
 	return true
+
+func _safe_mission_save() -> Dictionary:
+	if MissionSystem == null:
+		return {}
+	if MissionSystem.has_method("get_save_data"):
+		var d = MissionSystem.get_save_data()
+		if typeof(d) == TYPE_DICTIONARY:
+			return d
+	return {}
 
 ## Carga el guardado y restaura GameManager + sistemas narrativos.
 ## Devuelve true si se cargó bien.
@@ -96,20 +108,26 @@ func load_game() -> bool:
 		pm = "online"
 	GameManager.payment_method = pm
 
-	# Narrativa
-	EmailSystem.unlocked_ids.clear()
-	for id in data.get("unlocked_emails", []):
-		EmailSystem.unlocked_ids.append(str(id))
-	EmailSystem.read_ids.clear()
-	for id in data.get("read_emails", []):
-		EmailSystem.read_ids.append(str(id))
+	# Narrativa (sin notificaciones al restaurar)
+	if EmailSystem:
+		EmailSystem._silent_unlock = true
+		EmailSystem.unlocked_ids.clear()
+		for id in data.get("unlocked_emails", []):
+			EmailSystem.unlocked_ids.append(str(id))
+		EmailSystem.read_ids.clear()
+		for id in data.get("read_emails", []):
+			EmailSystem.read_ids.append(str(id))
+		EmailSystem.call_deferred("_enable_notifications")
 
-	ClueSystem.unlocked_ids.clear()
-	for id in data.get("unlocked_clues", []):
-		ClueSystem.unlocked_ids.append(str(id))
-	ClueSystem.read_ids.clear()
-	for id in data.get("read_clues", []):
-		ClueSystem.read_ids.append(str(id))
+	if ClueSystem:
+		ClueSystem._silent_unlock = true
+		ClueSystem.unlocked_ids.clear()
+		for id in data.get("unlocked_clues", []):
+			ClueSystem.unlocked_ids.append(str(id))
+		ClueSystem.read_ids.clear()
+		for id in data.get("read_clues", []):
+			ClueSystem.read_ids.append(str(id))
+		ClueSystem.call_deferred("_enable_notifications")
 
 	# Posiciones de los iconos del escritorio
 	var ip = data.get("icon_positions", {})
@@ -128,6 +146,12 @@ func load_game() -> bool:
 	# Reinyectar correo de cuenta si ya se había enviado
 	if GameManager.escape_account_sent and EmailSystem:
 		EmailSystem.try_send_escape_account(GameManager.day)
+
+	# Tutorial + misiones
+	GameManager.tutorial_done = bool(data.get("tutorial_done", false))
+	GameManager.tutorial_active = false
+	if MissionSystem and data.has("missions") and MissionSystem.has_method("load_save_data"):
+		MissionSystem.load_save_data(data["missions"])
 
 	# Notificar UI
 	GameManager.day_changed.emit(GameManager.day)

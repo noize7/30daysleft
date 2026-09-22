@@ -1,0 +1,74 @@
+{
+  "missions": [
+	{
+	  "id": "tutorial_trabajo",
+	  "title": "Primer contacto",
+	  "description": "Abre la aplicación Trabajo desde el escritorio.",
+	  "type": "tutorial",
+	  "target": "icon_clicked:Trabajo",
+	  "reward_money": 0,
+	  "auto_start": true,
+	  "hidden": true
+	},
+	{
+	  "id": "tutorial_correo",
+	  "title": "Revisa el buzón",
+	  "description": "Abre la aplicación Correo.",
+	  "type": "tutorial",
+	  "target": "icon_clicked:Correo",
+	  "reward_money": 0,
+	  "auto_start": true,
+	  "hidden": true
+	},
+	{
+	  "id": "tutorial_archivos",
+	  "title": "Explora tus archivos",
+	  "description": "Abre la aplicación Archivos.",
+	  "type": "tutorial",
+	  "target": "icon_clicked:Archivos",
+	  "reward_money": 0,
+	  "auto_start": true,
+	  "hidden": true
+	},
+	{
+	  "id": "first_job",
+	  "title": "Gana tu primer sueldo",
+	  "description": "Completa al menos 1 trabajo en la app Trabajo.",
+	  "type": "work",
+	  "target": "jobs_completed:1",
+	  "reward_money": 25,
+	  "auto_start": true,
+	  "day_available": 1
+	},
+	{
+	  "id": "day1_survive",
+	  "title": "Sobrevive al día 1",
+	  "description": "Has terminado el día 1. Recompensa disponible a partir del día 2.",
+	  "type": "day",
+	  "target": "day_ended:1",
+	  "reward_money": 15,
+	  "auto_start": true,
+	  "day_available": 2
+	},
+	{
+	  "id": "check_email_day2",
+	  "title": "Revisa el correo",
+	  "description": "Abre Correo en el día 2 o posterior.",
+	  "type": "app",
+	  "target": "app_opened:Correo",
+	  "reward_money": 10,
+	  "auto_start": true,
+	  "day_available": 2
+	},
+	{
+	  "id": "earn_500",
+	  "title": "Ahorrador novato",
+	  "description": "Acumula al menos $500 en total.",
+	  "type": "money",
+	  "target": "money_reached:500",
+	  "reward_money": 50,
+	  "auto_start": true,
+	  "day_available": 1
+	}
+  ]
+}

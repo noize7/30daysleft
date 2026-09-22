@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://dcvfkdgkjsmdq"]
+
+[ext_resource type="Script" uid="uid://dmw4sm6ewjtw3" path="res://scripts/systems/sound_system.gd" id="1_sound"]
+[ext_resource type="AudioStream" uid="uid://b1l3t2dmn37c" path="res://assets/audio/sfx/mouse-click.mp3" id="2_g25eq"]
+[ext_resource type="AudioStream" uid="uid://tka743wfkgd0" path="res://assets/audio/sfx/pc-start-sound.mp3" id="2_irfyw"]
+[ext_resource type="AudioStream" uid="uid://yw2y83hnny8c" path="res://assets/audio/sfx/pc-apagada.mp3" id="3_kq7rv"]
+[ext_resource type="AudioStream" uid="uid://6b6p26dmkh20" path="res://assets/audio/sfx/glitch-sound1.mp3" id="4_1vedq"]
+[ext_resource type="AudioStream" uid="uid://rgr3f0edhqxc" path="res://assets/audio/sfx/glitch-sound2.mp3" id="5_g25eq"]
+[ext_resource type="AudioStream" uid="uid://dsflhylnyo6fe" path="res://assets/audio/sfx/Typewriter.mp3" id="5_mqrgu"]
+[ext_resource type="AudioStream" uid="uid://x581cp7dodxo" path="res://assets/audio/sfx/glitch-sound3.mp3" id="6_mqrgu"]
+[ext_resource type="AudioStream" uid="uid://dxqxjsfqp41al" path="res://assets/audio/sfx/notification.mp3" id="8_1vedq"]
+
+[node name="SoundSystem" type="Node" unique_id=296132621]
+script = ExtResource("1_sound")
+sfx_click = ExtResource("2_g25eq")
+sfx_click_soft = ExtResource("2_g25eq")
+sfx_button = ExtResource("2_g25eq")
+volume_click = 0.5
+sfx_power_on = ExtResource("2_irfyw")
+sfx_power_off = ExtResource("3_kq7rv")
+power_boost_db = 6.0
+sfx_typewriter = ExtResource("5_mqrgu")
+sfx_glitch = Array[AudioStream]([ExtResource("4_1vedq"), ExtResource("5_g25eq"), ExtResource("6_mqrgu")])
+sfx_notification = ExtResource("8_1vedq")

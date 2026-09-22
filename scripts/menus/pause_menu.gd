@@ -17,17 +17,34 @@ signal quit_pressed
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Por encima de diálogos (z=100) y del escritorio
+	z_index = 250
+	z_as_relative = false
+	mouse_filter = Control.MOUSE_FILTER_STOP
 	_apply_style()
-	btn_resume.pressed.connect(func(): resume_pressed.emit())
+	btn_resume.pressed.connect(func():
+		_play_ui_click()
+		resume_pressed.emit()
+	)
 	btn_save.pressed.connect(_on_save)
 	btn_load.pressed.connect(_on_load)
-	btn_main.pressed.connect(func(): main_menu_pressed.emit())
-	btn_quit.pressed.connect(func(): quit_pressed.emit())
+	btn_main.pressed.connect(func():
+		_play_ui_click()
+		main_menu_pressed.emit()
+	)
+	btn_quit.pressed.connect(func():
+		_play_ui_click()
+		quit_pressed.emit()
+	)
 	for btn in [btn_resume, btn_save, btn_load, btn_main, btn_quit]:
 		if btn:
 			btn.mouse_entered.connect(_hover.bind(btn))
 			btn.mouse_exited.connect(_unhover.bind(btn))
 	visible = false
+
+func _play_ui_click() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
 
 func _hover(btn: Button) -> void:
 	var tw := create_tween()
@@ -39,23 +56,31 @@ func _unhover(btn: Button) -> void:
 
 func show_pause() -> void:
 	visible = true
-	status_label.text = ""
+	# Siempre encima de diálogos / misiones / escritorio
+	z_index = 250
+	z_as_relative = false
+	move_to_front()
+	if status_label:
+		status_label.text = ""
 	modulate.a = 0.0
 	if has_node("Panel"):
 		$Panel.scale = Vector2(0.95, 0.95)
 		$Panel.pivot_offset = $Panel.size * 0.5
+	# Pausar TODO el juego (diálogos, misiones, tiempo, batería…)
+	get_tree().paused = true
 	var tw := create_tween()
+	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)  # la animación del menú sigue en pausa
 	tw.set_parallel(true)
 	tw.tween_property(self, "modulate:a", 1.0, 0.2)
 	if has_node("Panel"):
 		tw.tween_property($Panel, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	get_tree().paused = true
 
 func hide_pause() -> void:
 	visible = false
 	get_tree().paused = false
 
 func _on_save() -> void:
+	_play_ui_click()
 	if SaveManager and SaveManager.has_method("save_game"):
 		SaveManager.save_game()
 		status_label.text = "✓ Partida guardada"
@@ -66,6 +91,7 @@ func _on_save() -> void:
 	save_pressed.emit()
 
 func _on_load() -> void:
+	_play_ui_click()
 	if SaveManager and SaveManager.has_method("load_game"):
 		var ok = SaveManager.load_game()
 		if ok:

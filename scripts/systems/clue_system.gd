@@ -15,6 +15,8 @@ const CLUES: Array = [
 	{
 		"id": "clue_photo",
 		"unlock_day": 5,
+		"unlock_hour": 1,
+		"unlock_minute": 35,
 		"hidden": false,
 		"type": "photo",
 		"title": "Foto rota",
@@ -23,6 +25,8 @@ const CLUES: Array = [
 	{
 		"id": "clue_message",
 		"unlock_day": 8,
+		"unlock_hour": 2,
+		"unlock_minute": 20,
 		"hidden": false,
 		"type": "text",
 		"title": "Mensaje eliminado",
@@ -31,6 +35,8 @@ const CLUES: Array = [
 	{
 		"id": "clue_audio",
 		"unlock_day": 7,
+		"unlock_hour": 1,
+		"unlock_minute": 50,
 		"hidden": false,
 		"type": "audio",
 		"title": "Grabacion de voz",
@@ -39,6 +45,8 @@ const CLUES: Array = [
 	{
 		"id": "clue_receipt",
 		"unlock_day": 10,
+		"unlock_hour": 3,
+		"unlock_minute": 5,
 		"hidden": false,
 		"type": "document",
 		"title": "Recibo extraño",
@@ -96,6 +104,8 @@ const CLUES: Array = [
 	{
 		"id": "clue_note_early",
 		"unlock_day": 3,
+		"unlock_hour": 2,
+		"unlock_minute": 5,
 		"hidden": false,
 		"type": "text",
 		"title": "Nota en el escritorio",
@@ -104,6 +114,8 @@ const CLUES: Array = [
 	{
 		"id": "clue_corrupted",
 		"unlock_day": 6,
+		"unlock_hour": 1,
+		"unlock_minute": 40,
 		"hidden": false,
 		"type": "warning",
 		"sanity_delta": -6.0,
@@ -174,28 +186,63 @@ const CLUES: Array = [
 
 var unlocked_ids: Array = []
 var read_ids: Array = []
+## Si true, no reproducir SFX al desbloquear (arranque, carga, reset).
+var _silent_unlock: bool = true
 
 const CLUES_NEEDED_FOR_ESCAPE: int = 3
 
 func _ready() -> void:
 	GameManager.day_changed.connect(_on_day_changed)
 	GameManager.upgrade_changed.connect(_on_upgrade_changed)
+	_silent_unlock = true
 	unlock_for_day(1)
+	call_deferred("_enable_notifications")
 
-func unlock_for_day(day: int) -> void:
+func _enable_notifications() -> void:
+	_silent_unlock = false
+
+func unlock_for_day(day: int, silent: bool = false) -> void:
 	var changed := false
+	var newly: int = 0
+	var cur_h: int = 1
+	var cur_m: int = 0
+	if TimeManager:
+		cur_h = TimeManager.hour
+		cur_m = TimeManager.minute
+	var pc_on: bool = GameManager != null and GameManager.is_pc_on
 	for clue in CLUES:
 		var id: String = str(clue["id"])
 		if id in unlocked_ids:
 			continue
-		if int(clue["unlock_day"]) <= day:
-			unlocked_ids.append(id)
-			changed = true
+		var uday: int = int(clue.get("unlock_day", 999))
+		if uday > day:
+			continue
+		# Mismo día: respetar hora/minuto de llegada (default 1:00)
+		if uday == day:
+			var uh: int = int(clue.get("unlock_hour", 1))
+			var um: int = int(clue.get("unlock_minute", 0))
+			if not pc_on:
+				# PC apagada: no usar la hora del día anterior
+				if uh > 1 or (uh == 1 and um > 0):
+					continue
+			elif cur_h < uh or (cur_h == uh and cur_m < um):
+				continue
+		unlocked_ids.append(id)
+		changed = true
+		newly += 1
 	if changed:
 		clues_changed.emit()
+		if newly > 0 and not silent and not _silent_unlock:
+			if SoundSystem and SoundSystem.has_method("play_notification"):
+				SoundSystem.play_notification()
+
+## Llamado al cambiar de minuto para liberar archivos programados por hora.
+func check_timed_unlocks() -> void:
+	if GameManager:
+		unlock_for_day(GameManager.day)
 
 func _on_day_changed(new_day: int) -> void:
-	unlock_for_day(new_day)
+	unlock_for_day(new_day, true)
 
 ## Al mejorar RAM, refrescar UI de archivos (aparecen ocultos).
 func _on_upgrade_changed(category: String, _level: int) -> void:
@@ -242,6 +289,27 @@ func mark_read(clue_id: String) -> void:
 	read_ids.append(clue_id)
 	GameManager.change_sanity(sanity_delta)
 	clues_changed.emit()
+	# Reacciones del jugador al ver ciertas pistas (después de cualquier diálogo en curso)
+	_trigger_player_reaction(clue_id)
+
+## Diálogos cortos del jugador al descubrir pistas clave.
+func _trigger_player_reaction(clue_id: String) -> void:
+	if not DialogueSystem:
+		return
+	var reactions: Dictionary = {
+		"clue_photo": "Una foto cortada a la mitad…\n¿De quién será la otra mitad?",
+		"clue_message": "«No fue un accidente»…\n¿Qué demonios pasó esa noche?",
+		"clue_audio": "«No mires atrás»…\n¿A quién le hablaba?",
+		"clue_receipt": "Un recibo de esa noche.\nNo recuerdo haber estado ahí.",
+		"clue_diary": "Cada día la historia cambia un poco.\nEso… me suena demasiado familiar.",
+		"clue_list": "Mi apellido en esa lista…\nO el de alguien como yo.",
+		"clue_contract": "«El sujeto no recordará…»\n¿Yo soy el sujeto?",
+		"clue_key": "Una dirección. Un nombre en clave.\nSi llego al día 30… ya sé qué hacer."
+	}
+	if not reactions.has(clue_id):
+		return
+	# once_id evita repetir la reacción si se vuelve a abrir
+	DialogueSystem.show_line("TÚ", str(reactions[clue_id]), "player_react_" + clue_id)
 
 func is_read(clue_id: String) -> bool:
 	return clue_id in read_ids

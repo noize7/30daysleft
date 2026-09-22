@@ -414,6 +414,10 @@ func _on_icon(app_name: String) -> void:
 		return
 	if desktop == null:
 		return
+	# Reportar al sistema de diálogos/misiones (tutorial comprueba esto)
+	if DialogueSystem:
+		DialogueSystem.report_action("icon_clicked:%s" % app_name)
+		DialogueSystem.report_action("app_opened:%s" % app_name)
 	if desktop.has_method("open_app"):
 		desktop.open_app(app_name)
 	else:
@@ -437,6 +441,11 @@ func _on_power_pressed() -> void:
 		desktop.visible = true
 	await _desktop_flash()
 	_booting = false
+	# Diálogos / misiones solo cuando termine el sonido de encendido
+	if SoundSystem:
+		await SoundSystem.wait_power_on_finished()
+	# Tutorial en la primera vez que se enciende la PC de una partida nueva
+	_maybe_start_tutorial()
 
 
 func _play_boot_animation() -> void:
@@ -590,6 +599,9 @@ func _shutdown_pc_sequence(reason: String = "Batería agotada") -> void:
 func _toggle_pause() -> void:
 	if _pause_menu == null or not is_instance_valid(_pause_menu):
 		_pause_menu = PAUSE_SCENE.instantiate()
+		_pause_menu.process_mode = Node.PROCESS_MODE_ALWAYS
+		_pause_menu.z_index = 250
+		_pause_menu.z_as_relative = false
 		add_child(_pause_menu)
 		_pause_menu.resume_pressed.connect(func():
 			_pause_menu.hide_pause()
@@ -607,6 +619,9 @@ func _toggle_pause() -> void:
 	if _pause_menu.visible:
 		_pause_menu.hide_pause()
 	else:
+		# Por encima de diálogos (z=100) y de cualquier ventana
+		_pause_menu.z_index = 250
+		_pause_menu.move_to_front()
 		_pause_menu.show_pause()
 
 func _on_game_over(ending: String) -> void:
@@ -670,12 +685,12 @@ func _try_load_or_new() -> void:
 			_apply_saved_icon_positions()
 		else:
 			boot_label.text = "Nueva partida"
-			EmailSystem.unlock_for_day(1)
-			ClueSystem.unlock_for_day(1)
+			EmailSystem.unlock_for_day(1, true)
+			ClueSystem.unlock_for_day(1, true)
 			_reset_icon_layout()
 	else:
-		EmailSystem.unlock_for_day(1)
-		ClueSystem.unlock_for_day(1)
+		EmailSystem.unlock_for_day(1, true)
+		ClueSystem.unlock_for_day(1, true)
 		_reset_icon_layout()
 
 
@@ -691,3 +706,51 @@ func _desktop_flash() -> void:
 	tw.tween_property(flash, "color:a", 0.0, 0.45)
 	await tw.finished
 	flash.queue_free()
+
+## Inicia el tutorial la primera vez que se enciende la PC de una partida nueva.
+func _maybe_start_tutorial() -> void:
+	if GameManager.tutorial_done:
+		# Partida cargada o tutorial ya hecho → diálogo de día si corresponde
+		_try_day_start_dialogue()
+		if MissionSystem:
+			MissionSystem.start_new_game_missions()
+		return
+	GameManager.tutorial_active = true
+	GameManager.tutorial_done = false
+	if MissionSystem:
+		MissionSystem.start_new_game_missions()
+	# Pequeña pausa para que el escritorio se vea antes del diálogo
+	await get_tree().create_timer(0.6).timeout
+	if DialogueSystem:
+		DialogueSystem.start_sequence("tutorial")
+		# Cuando termine el tutorial, mostrar el saludo del día 1
+		if not DialogueSystem.dialogue_finished.is_connected(_on_tutorial_finished):
+			DialogueSystem.dialogue_finished.connect(_on_tutorial_finished, CONNECT_ONE_SHOT)
+
+func _on_tutorial_finished(seq_id: String) -> void:
+	if seq_id != "tutorial":
+		return
+	GameManager.tutorial_active = false
+	GameManager.tutorial_done = true
+	_try_day_start_dialogue()
+
+func _try_day_start_dialogue() -> void:
+	if not DialogueSystem:
+		return
+	match GameManager.day:
+		1:
+			DialogueSystem.try_day_event("day_1_start")
+		5:
+			DialogueSystem.try_day_event("day_5_warning")
+			DialogueSystem.try_day_event("day_5_player")
+		10:
+			DialogueSystem.try_day_event("day_10_player")
+		15:
+			DialogueSystem.try_day_event("day_15_half")
+			DialogueSystem.try_day_event("day_15_player")
+		20:
+			DialogueSystem.try_day_event("day_20_player")
+		25:
+			DialogueSystem.try_day_event("day_25_player")
+		29:
+			DialogueSystem.try_day_event("day_29_player")

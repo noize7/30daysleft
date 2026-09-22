@@ -28,6 +28,7 @@ func _ready() -> void:
 		start_job_button.pressed.connect(_on_start_job)
 	if click_area and not click_area.pressed.is_connected(_on_work_click):
 		click_area.pressed.connect(_on_work_click)
+	# Sonidos de UI se añaden en los handlers
 	if click_area:
 		click_area.visible = false
 	GameManager.job_level_changed.connect(func(_l): refresh())
@@ -70,6 +71,8 @@ func _sync_payment_ui() -> void:
 	_payment_option.select(idx)
 
 func _on_payment_selected(idx: int) -> void:
+	if SoundSystem:
+		SoundSystem.play_click(true)
 	var method: String = "online" if idx == 0 else "cash"
 	if GameManager.has_method("set_payment_method"):
 		GameManager.set_payment_method(method)
@@ -141,6 +144,8 @@ func refresh() -> void:
 	_sync_payment_ui()
 
 func _on_job_selected(idx: int) -> void:
+	if SoundSystem:
+		SoundSystem.play_click(true)
 	_selected_idx = idx
 	var available: Array = WorkSystem.get_available_jobs()
 	if idx < 0 or idx >= available.size():
@@ -163,6 +168,8 @@ func _on_job_selected(idx: int) -> void:
 		]
 
 func _on_start_job() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
 	if _is_working or not TimeManager.is_work_time:
 		return
 	var available: Array = WorkSystem.get_available_jobs()
@@ -210,6 +217,8 @@ func _on_start_job() -> void:
 func _on_work_click() -> void:
 	if not _is_working:
 		return
+	if SoundSystem:
+		SoundSystem.play_click()
 	_clicks_done += 1
 	if click_area:
 		click_area.text = "CLICK %d/%d" % [_clicks_done, _clicks_needed]

@@ -41,10 +41,10 @@ const CATEGORY_ICON_PATHS := {
 	"automation": "res://assets/Icons Pc/bot.png",
 	"cooling": "res://assets/Icons Pc/ventilador.png",
 	"storage": "res://assets/Icons Pc/Almacenamiento.png",
-	"optimizer": "res://assets/Icons Pc/Upgrade .png",
-	"noise_filter": "res://assets/Icons Pc/Ajustes.png",
-	"proxy": "res://assets/Icons Pc/Candado.png",
-	"log_cleaner": "res://assets/Icons Pc/txt-file.png",
+	"optimizer": "res://assets/Icons Pc/Optimization.png",
+	"noise_filter": "res://assets/Icons Pc/filtro.png",
+	"proxy": "res://assets/Icons Pc/proxy.png",
+	"log_cleaner": "res://assets/Icons Pc/Limpieza.png",
 }
 
 func get_category_icon(category: String) -> Texture2D:

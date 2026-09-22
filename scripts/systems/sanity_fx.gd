@@ -126,3 +126,6 @@ func _flash_glitch(intensity: float) -> void:
 		tw.tween_property(bar, "color:a", 0.0, randf_range(0.04, 0.2))
 		if _i > 0:
 			tw.tween_callback(bar.queue_free)
+	# SFX de glitch (con cooldown / probabilidad internos en SoundSystem)
+	if SoundSystem and intensity > 0.15:
+		SoundSystem.play_glitch()

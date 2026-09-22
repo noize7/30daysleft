@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://dds04m23vcr25"]
+
+[ext_resource type="Script" uid="uid://cbby2wwnwpi6x" path="res://scripts/ui/dialogue_box.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b8lkbiqp30m7s" path="res://assets/Icons Pc/bot.png" id="2_6iboe"]
+
+[node name="DialogueBox" type="Control" unique_id=2128423962]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="Panel" type="Panel" parent="." unique_id=981089144]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 414.0
+offset_top = -230.0
+offset_right = -4.0
+offset_bottom = -78.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HBox" type="HBoxContainer" parent="Panel" unique_id=1104079631]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="PortraitFrame" type="Panel" parent="Panel/HBox" unique_id=214921404]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Portrait" type="TextureRect" parent="Panel/HBox/PortraitFrame" unique_id=345242946]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.000002
+offset_top = -3.000002
+offset_right = 410.0
+offset_bottom = 409.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_6iboe")
+
+[node name="BotLabel" type="Label" parent="Panel/HBox/PortraitFrame/Portrait" unique_id=2100674805]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "BOT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="Panel/HBox" unique_id=1055285182]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="SpeakerLabel" type="Label" parent="Panel/HBox/VBox" unique_id=36091327]
+layout_mode = 2
+text = "BOT-01"
+
+[node name="BodyLabel" type="Label" parent="Panel/HBox/VBox" unique_id=2134874510]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Texto del diálogo…"
+autowrap_mode = 3
+
+[node name="WaitingLabel" type="Label" parent="Panel/HBox/VBox" unique_id=968574048]
+visible = false
+layout_mode = 2
+text = "→ Haz lo que te indico para continuar…"
+
+[node name="ContinueButton" type="Button" parent="Panel/HBox/VBox" unique_id=1910641234]
+custom_minimum_size = Vector2(140, 32)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Continuar ▶"
