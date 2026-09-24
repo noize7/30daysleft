@@ -42,11 +42,11 @@ const MUSIC_APP_SCENE := preload("res://scenes/apps/music_app.tscn")
 # --- EXPORTS: tamaños de fuente (ajusta en Inspector) ------------------------
 @export_group("Fuentes UI")
 ## Tamaño de fuente de la barra de tareas (día, dinero, reloj, batería)
-@export var taskbar_font_size: int = 27
+@export var taskbar_font_size: int = 32
 ## Tamaño de fuente del título de las ventanas
-@export var window_title_font_size: int = 25
+@export var window_title_font_size: int = 34
 ## Tamaño de fuente del contenido de los programas
-@export var app_font_size: int = 22
+@export var app_font_size: int = 26
 
 # Ventanas abiertas: nombre_app → Panel
 var _windows: Dictionary = {}
@@ -61,7 +61,7 @@ func _ready() -> void:
 	
 	if money_label:
 		money_label.mouse_filter = Control.MOUSE_FILTER_PASS
-		money_label.tooltip_text = "Dinero disponible\nC: Cordura (Salud mental)\nS: Sospecha (Peligro)"
+		money_label.tooltip_text = LocaleSystem.t("desktop.money_tooltip", "Dinero disponible\nC: Cordura (Salud mental)\nS: Sospecha (Peligro)") if LocaleSystem else "Dinero disponible\nC: Cordura (Salud mental)\nS: Sospecha (Peligro)"
 		
 	var cash_pickup = preload("res://scenes/ui/cash_pickup.tscn").instantiate()
 	cash_pickup.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
@@ -109,7 +109,7 @@ func _apply_xp_style() -> void:
 		start_button.add_theme_color_override("font_hover_color", Color.WHITE)
 		start_button.add_theme_font_size_override("font_size", taskbar_font_size)
 		if start_button.text.strip_edges() == "" or start_button.text.to_lower().find("inicio") >= 0:
-			start_button.text = "  Inicio"
+			start_button.text = "  " + (LocaleSystem.t("desktop.start", "Inicio") if LocaleSystem else "Inicio")
 
 	# Labels de la taskbar
 	for lbl in [clock_label, battery_label, day_label, money_label]:
@@ -174,7 +174,8 @@ func _refresh_day_label() -> void:
 	if day_label == null:
 		return
 	var left: int = maxi(0, GameManager.MAX_DAYS - GameManager.day + 1)
-	day_label.text = "Día %d/%d" % [GameManager.day, GameManager.MAX_DAYS]
+	var day_fmt: String = LocaleSystem.t("desktop.day", "Día %d") if LocaleSystem else "Día %d"
+	day_label.text = (day_fmt % GameManager.day) + "/%d" % GameManager.MAX_DAYS
 	if left <= 5:
 		day_label.add_theme_color_override("font_color", Color(1.0, 0.55, 0.4))
 	elif left <= 10:
@@ -268,7 +269,7 @@ func _on_sanity_changed(_s: float) -> void:
 func _on_suspicion_changed(_s: float) -> void:
 	_refresh_money_sanity_label()
 	if _s >= 70.0 and VFXSystem and randf() < 0.15:
-		VFXSystem.spawn_floating_text("Sospecha alta…", Vector2(540, 90), Color(1.0, 0.5, 0.3), 18)
+		VFXSystem.spawn_floating_text((LocaleSystem.t("work.high_suspicion", "Sospecha alta…") if LocaleSystem else "Sospecha alta…"), Vector2(540, 90), Color(1.0, 0.5, 0.3), 18)
 
 func _on_start_pressed() -> void:
 	if SoundSystem:
@@ -325,20 +326,20 @@ func _create_window(app_name: String) -> Panel:
 
 	win.name = "Window_" + app_name
 
-	var win_size := Vector2(700, 550)
+	var win_size := Vector2(1100, 800)
 	if app_name == "Trabajo":
 		# Un poco más alto para que el botón no se salga con jobs de cordura + fila de cobro
-		win_size = Vector2(740, 640)
+		win_size = Vector2(1140, 860)
 	elif app_name == "Mejoras":
-		win_size = Vector2(720, 610)
+		win_size = Vector2(1120, 840)
 	elif app_name == "Correo" or app_name == "Archivos":
-		win_size = Vector2(660, 500)
+		win_size = Vector2(1080, 780)
 	elif app_name == "Banco":
-		win_size = Vector2(620, 520)
+		win_size = Vector2(1000, 780)
 	elif app_name == "Opciones":
-		win_size = Vector2(700, 560)
+		win_size = Vector2(1100, 800)
 	elif app_name == "Música":
-		win_size = Vector2(620, 480)
+		win_size = Vector2(720, 600)
 
 	# La ventana nunca debe ser más grande que la pantalla disponible
 	# (deja margen para bordes y la barra de tareas)
@@ -355,7 +356,24 @@ func _create_window(app_name: String) -> Panel:
 	add_child(win)
 
 	if win.has_method("setup"):
-		win.setup(app_name, win_size)
+		var title_txt: String = app_name
+		if LocaleSystem:
+			match app_name:
+				"Trabajo":
+					title_txt = LocaleSystem.t("desktop.work", app_name)
+				"Correo":
+					title_txt = LocaleSystem.t("desktop.mail", app_name)
+				"Archivos":
+					title_txt = LocaleSystem.t("desktop.files", app_name)
+				"Mejoras":
+					title_txt = LocaleSystem.t("desktop.upgrades", app_name)
+				"Opciones":
+					title_txt = LocaleSystem.t("desktop.options", app_name)
+				"Banco":
+					title_txt = LocaleSystem.t("desktop.bank", app_name)
+				"Música":
+					title_txt = LocaleSystem.t("desktop.music", app_name)
+		win.setup(title_txt, win_size)
 	else:
 		win.size = win_size
 
@@ -477,7 +495,7 @@ func _build_work_content(parent: Control) -> void:
 	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	details.add_theme_color_override("font_color", Color(0.133, 0.133, 0.133))
 	details.add_theme_font_size_override("font_size", app_font_size)
-	details.text = "Selecciona un\ntrabajo de la lista"
+	details.text = LocaleSystem.t("work.select", "Selecciona un trabajo") if LocaleSystem else "Selecciona un trabajo"
 	parent.add_child(details)
 
 	# Barra de progreso del timer del trabajo
@@ -579,18 +597,18 @@ func _refresh_work_ui(parent: Control) -> void:
 	if progress_lbl:
 		var next_req: int = WorkSystem.get_next_level_requirement()
 		if next_req < 0:
-			progress_lbl.text = "Nivel maximo  •  Trabajos completados: %d" % GameManager.jobs_completed
+			progress_lbl.text = (LocaleSystem.t("work.max_level", "Nivel máximo  •  Trabajos: %d") if LocaleSystem else "Nivel máximo  •  Trabajos: %d") % GameManager.jobs_completed
 		else:
-			progress_lbl.text = "Progreso: %d / %d para Nivel %d" % [
+			progress_lbl.text = (LocaleSystem.t("work.progress", "Progreso: %d / %d para Nivel %d") if LocaleSystem else "Progreso: %d / %d para Nivel %d") % [
 				GameManager.jobs_completed, next_req, GameManager.job_level + 1
 			]
 
 	if status:
 		if TimeManager.is_work_time:
-			status.text = "HORARIO LABORAL (01:00 - 05:00)  —  Puedes trabajar"
+			status.text = LocaleSystem.t("work.on_hours", "HORARIO LABORAL (01:00–05:00) — Trabaja ahora") if LocaleSystem else "HORARIO LABORAL (01:00–05:00) — Trabaja ahora"
 			status.add_theme_color_override("font_color", Color(0.0, 0.392, 0.0))
 		else:
-			status.text = "Fuera de horario — trabajo bloqueado (solo 01:00-05:00)"
+			status.text = LocaleSystem.t("work.off_hours", "Fuera de horario — apaga el PC para avanzar al día siguiente") if LocaleSystem else "Fuera de horario — apaga el PC para avanzar al día siguiente"
 			status.add_theme_color_override("font_color", Color(0.545, 0.0, 0.0))
 
 	if list:
@@ -618,7 +636,7 @@ func _on_job_selected(idx: int, parent: Control) -> void:
 	var available: Array = WorkSystem.get_available_jobs()
 	if idx < 0 or idx >= available.size():
 		if details:
-			details.text = "Selecciona un\ntrabajo de la lista"
+			details.text = LocaleSystem.t("work.select", "Selecciona un trabajo") if LocaleSystem else "Selecciona un trabajo"
 		return
 	var job: Dictionary = available[idx]
 	if details:
@@ -658,7 +676,7 @@ func _on_start_job(parent: Control) -> void:
 
 	if start_btn:
 		start_btn.disabled = true
-		start_btn.text = "Trabajando..."
+		start_btn.text = (LocaleSystem.t("work.working", "Trabajando...") if LocaleSystem else "Trabajando...")
 	if click_btn:
 		click_btn.visible = true
 		click_btn.disabled = false
@@ -699,7 +717,7 @@ func _on_work_click(parent: Control) -> void:
 	if click_btn:
 		click_btn.text = "CLICK %d/%d" % [done, needed]
 		if done >= needed:
-			click_btn.text = "Completado!"
+			click_btn.text = (LocaleSystem.t("work.completed_short", "Completado!") if LocaleSystem else "Completado!")
 			click_btn.disabled = true
 
 ## Calcula pago según clicks y lo entrega al GameManager (PaymentSystem).
@@ -736,7 +754,7 @@ func _finish_job(parent: Control) -> void:
 		click_btn.visible = false
 		click_btn.disabled = false
 	if timer_lbl:
-		timer_lbl.text = "Trabajo terminado"
+		timer_lbl.text = LocaleSystem.t("work.job_done", "Trabajo terminado") if LocaleSystem else "Trabajo terminado"
 	if list:
 		list.mouse_filter = Control.MOUSE_FILTER_STOP
 
@@ -808,14 +826,14 @@ func _build_shop_content(parent: Control) -> void:
 	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	details.add_theme_color_override("font_color", Color(0.15, 0.15, 0.15))
 	details.add_theme_font_size_override("font_size", app_font_size)
-	details.text = "Selecciona una mejora"
+	details.text = LocaleSystem.t("shop.select", "Selecciona una mejora") if LocaleSystem else "Selecciona una mejora"
 	parent.add_child(details)
 
 	var buy_btn := Button.new()
 	buy_btn.name = "BuyButton"
 	buy_btn.position = Vector2(340, 260)
 	buy_btn.size = Vector2(190, 36)
-	buy_btn.text = "Comprar"
+	buy_btn.text = LocaleSystem.t("shop.buy", "Comprar") if LocaleSystem else "Comprar"
 	var bs := StyleBoxFlat.new()
 	bs.bg_color = Color(0.141, 0.369, 0.863)
 	bs.set_corner_radius_all(4)
@@ -858,7 +876,7 @@ func _refresh_shop_ui(parent: Control) -> void:
 	var buy_btn: Button = parent.get_node_or_null("BuyButton")
 
 	if money_info:
-		money_info.text = "Dinero disponible: $%.0f" % GameManager.money
+		money_info.text = (LocaleSystem.t("shop.money_available", "Dinero disponible: $%.0f") if LocaleSystem else "Dinero disponible: $%.0f") % GameManager.money
 
 	if list:
 		list.clear()
@@ -879,9 +897,9 @@ func _refresh_shop_ui(parent: Control) -> void:
 			var can: bool = UpgradeSystem.can_upgrade(cat) and GameManager.money >= float(cost)
 			buy_btn.disabled = not can
 			if not UpgradeSystem.can_upgrade(cat):
-				buy_btn.text = "Nivel maximo"
+				buy_btn.text = LocaleSystem.t("shop.max_level", "Nivel máximo") if LocaleSystem else "Nivel máximo"
 			else:
-				buy_btn.text = "Comprar ($%d)" % cost
+				buy_btn.text = (LocaleSystem.t("shop.buy_cost", "Comprar ($%d)") if LocaleSystem else "Comprar ($%d)") % cost
 
 ## Al seleccionar una fila de la tienda, muestra detalles.
 func _on_shop_selected(idx: int, parent: Control) -> void:
@@ -900,16 +918,16 @@ func _on_shop_selected(idx: int, parent: Control) -> void:
 				str(nxt.get("name", "")), str(nxt.get("desc", "")), int(nxt.get("cost", 0))
 			]
 		else:
-			txt += "\n\n(Nivel maximo alcanzado)"
+			txt += (LocaleSystem.t("shop.max_reached", "\\n\\n(Nivel maximo alcanzado)") if LocaleSystem else "\\n\\n(Nivel maximo alcanzado)")
 		details.text = txt
 	if buy_btn:
 		if nxt.is_empty():
 			buy_btn.disabled = true
-			buy_btn.text = "Nivel maximo"
+			buy_btn.text = LocaleSystem.t("shop.max_level", "Nivel máximo") if LocaleSystem else "Nivel máximo"
 		else:
 			var cost: int = int(nxt.get("cost", 0))
 			buy_btn.disabled = GameManager.money < float(cost)
-			buy_btn.text = "Comprar ($%d)" % cost
+			buy_btn.text = (LocaleSystem.t("shop.buy_cost", "Comprar ($%d)") if LocaleSystem else "Comprar ($%d)") % cost
 
 ## Intenta comprar la mejora seleccionada.
 func _on_shop_buy(parent: Control) -> void:
@@ -925,7 +943,7 @@ func _on_shop_buy(parent: Control) -> void:
 			feedback.text = "Compra realizada: %s" % UpgradeSystem.CATEGORY_LABELS.get(cat, cat)
 		else:
 			feedback.add_theme_color_override("font_color", Color(0.6, 0.0, 0.0))
-			feedback.text = "No se pudo comprar (sin dinero o nivel maximo)"
+			feedback.text = (LocaleSystem.t("shop.cannot_buy2", "No se pudo comprar (sin dinero o nivel maximo)") if LocaleSystem else "No se pudo comprar (sin dinero o nivel maximo)")
 	_refresh_shop_ui(parent)
 
 func _build_email_content(parent: Control) -> void:
@@ -953,7 +971,7 @@ func _build_email_content(parent: Control) -> void:
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.add_theme_color_override("font_color", Color(0.15, 0.15, 0.15))
 	body.add_theme_font_size_override("font_size", app_font_size)
-	body.text = "Selecciona un correo"
+	body.text = LocaleSystem.t("email.select", "Selecciona un correo") if LocaleSystem else "Selecciona un correo"
 	parent.add_child(body)
 
 	parent.set_meta("email_ids", [])
@@ -974,7 +992,7 @@ func _refresh_email_ui(parent: Control) -> void:
 	var list: ItemList = parent.get_node_or_null("EmailList")
 	if header:
 		var unread: int = EmailSystem.unread_count()
-		header.text = "Bandeja  |  %d sin leer  |  Cordura: %d%%" % [unread, int(GameManager.sanity)]
+		header.text = (LocaleSystem.t("email.inbox", "Correo  |  Sin leer: %d  |  C:%d%%") if LocaleSystem else "Correo  |  Sin leer: %d  |  C:%d%%") % [unread, int(GameManager.sanity)]
 	if list == null:
 		return
 	list.clear()
@@ -1029,7 +1047,7 @@ func _build_files_content(parent: Control) -> void:
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.add_theme_color_override("font_color", Color(0.15, 0.15, 0.15))
 	body.add_theme_font_size_override("font_size", app_font_size)
-	body.text = "Selecciona un archivo"
+	body.text = LocaleSystem.t("files.select_short", (LocaleSystem.t("files.select_short", "Selecciona un archivo") if LocaleSystem else "Selecciona un archivo")) if LocaleSystem else (LocaleSystem.t("files.select_short", "Selecciona un archivo") if LocaleSystem else "Selecciona un archivo")
 	parent.add_child(body)
 
 	parent.set_meta("clue_ids", [])
@@ -1071,7 +1089,7 @@ func _refresh_files_ui(parent: Control) -> void:
 			body.text = "No hay archivos visibles.\n\n[DIR] recuerdos/\nBloqueado: mejora la RAM a 8GB\nen Mejoras para abrir archivos ocultos."
 		else:
 			body.text = "Sin archivos desbloqueados aun.\nLas pistas aparecen con el paso de los dias."
-	elif ClueSystem.has_locked_hidden() and body and body.text == "Selecciona un archivo":
+	elif ClueSystem.has_locked_hidden() and body and body.text == (LocaleSystem.t("files.select_short", "Selecciona un archivo") if LocaleSystem else "Selecciona un archivo"):
 		body.text = "Hay una carpeta oculta: recuerdos/\nMejora la RAM a 8GB en Mejoras para abrirla."
 
 func _on_clue_selected(idx: int, parent: Control) -> void:

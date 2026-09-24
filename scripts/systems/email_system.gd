@@ -23,7 +23,9 @@ var EMAILS: Array = [
 		"type": "system",
 		"from": "sistema@local",
 		"subject": "Bienvenido de nuevo",
-		"body": "Tu sesión se reinició.\nNo recordamos el último apagado limpio.\n\nRevisa los archivos cuando puedas.\n\n— Sistema"
+		"subject_en": "Welcome back",
+		"body": "Tu sesión se reinició.\nNo recordamos el último apagado limpio.\n\nRevisa los archivos cuando puedas.\n\n— Sistema",
+		"body_en": "Your session restarted.\nWe don't remember the last clean shutdown.\n\nCheck your files when you can.\n\n— System"
 	},
 	{
 		"id": "day1_job",
@@ -34,7 +36,9 @@ var EMAILS: Array = [
 		"type": "job",
 		"from": "noreply@workgrid.mail",
 		"subject": "Nuevos encargos disponibles",
-		"body": "Hola.\n\nHay encuestas activas entre la 01:00 y las 05:00.\nEl pago se acredita al instante.\n\nWorkGrid"
+		"subject_en": "New jobs available",
+		"body": "Hola.\n\nHay encuestas activas entre la 01:00 y las 05:00.\nEl pago se acredita al instante.\n\nWorkGrid",
+		"body_en": "Hi.\n\nSurveys are active between 01:00 and 05:00.\nPay is credited instantly.\n\nWorkGrid"
 	},
 	{
 		"id": "day2_reminder",
@@ -45,7 +49,9 @@ var EMAILS: Array = [
 		"type": "job",
 		"from": "noreply@workgrid.mail",
 		"subject": "Recordatorio de horario",
-		"body": "El sistema detecta inactividad fuera de horario.\nRecuerda: solo se paga entre 01:00 y 05:00.\n\nWorkGrid"
+		"subject_en": "Schedule reminder",
+		"body": "El sistema detecta inactividad fuera de horario.\nRecuerda: solo se paga entre 01:00 y 05:00.\n\nWorkGrid",
+		"body_en": "The system detected inactivity outside work hours.\nRemember: pay only between 01:00 and 05:00.\n\nWorkGrid"
 	},
 	{
 		"id": "day3_odd",
@@ -56,7 +62,9 @@ var EMAILS: Array = [
 		"type": "warning",
 		"from": "desconocido",
 		"subject": "No abras la carpeta recuerdos",
-		"body": "Todavía no.\nNo estás listo.\n\nSi la abres, no podrás cerrarla."
+		"subject_en": "Don't open the memories folder",
+		"body": "Todavía no.\nNo estás listo.\n\nSi la abres, no podrás cerrarla.",
+		"body_en": "Not yet.\nYou're not ready.\n\nIf you open it, you won't be able to close it."
 	},
 	{
 		"id": "day5_memory",
@@ -67,7 +75,9 @@ var EMAILS: Array = [
 		"type": "photo",
 		"from": "tú@ayer",
 		"subject": "Foto rota",
-		"body": "Encontré una foto en el disco.\nEstá cortada por la mitad.\n\n¿Quién es la persona que falta?"
+		"subject_en": "Torn photo",
+		"body": "Encontré una foto en el disco.\nEstá cortada por la mitad.\n\n¿Quién es la persona que falta?",
+		"body_en": "I found a photo on the disk.\nIt's cut in half.\n\nWho is the missing person?"
 	},
 	{
 		"id": "day5_fake",
@@ -78,7 +88,14 @@ var EMAILS: Array = [
 		"type": "warning",
 		"from": "mamá",
 		"subject": "Ven a casa",
-		"body": "Cariño, la cena está lista.\nTodo está bien.\nNunca pasó nada.\n\n(Este mensaje no debería existir.)"
+		"subject_en": "Come home",
+		
+		"body": "Cariño, la cena está lista.\nTodo está bien.\nNunca pasó nada.\n\n(Este mensaje no debería existir.)",
+		"body_en": "Honey, dinner is ready.
+Everything is fine.
+Nothing ever happened.
+
+(This message should not exist.)"
 	},
 	{
 		"id": "day7_neighbor",
@@ -89,7 +106,12 @@ var EMAILS: Array = [
 		"type": "text",
 		"from": "vecino_402",
 		"subject": "Anoche escuché algo",
-		"body": "No quiero meterme en problemas,\npero anoche se escuchaban gritos en tu piso.\n\n¿Está todo bien?"
+		"subject_en": "I heard something last night",
+		"body": "No quiero meterme en problemas,\npero anoche se escuchaban gritos en tu piso.\n\n¿Está todo bien?",
+		"body_en": "I don't want to get into trouble,
+but last night there were screams from your floor.
+
+Is everything okay?"
 	},
 	{
 		"id": "day8_fake_call",
@@ -98,7 +120,13 @@ var EMAILS: Array = [
 		"type": "warning",
 		"from": "??? (llamada perdida)",
 		"subject": "3 llamadas perdidas",
-		"body": "Contesta.\nContesta.\nContesta.\n\n(No hay ningún número registrado.)"
+		"subject_en": "3 missed calls",
+		"body": "Contesta.\nContesta.\nContesta.\n\n(No hay ningún número registrado.)",
+		"body_en": "Answer.
+Answer.
+Answer.
+
+(There is no number on record.)"
 	},
 	{
 		"id": "day10_police",
@@ -107,7 +135,12 @@ var EMAILS: Array = [
 		"type": "police",
 		"from": "alertas@ciudad.gov",
 		"subject": "Aviso de investigación",
-		"body": "Se ha abierto un expediente en tu zona.\nColabora si te contactan.\n\nNo ignores este mensaje."
+		"subject_en": "Investigation notice",
+		"body": "Se ha abierto un expediente en tu zona.\nColabora si te contactan.\n\nNo ignores este mensaje.",
+		"body_en": "A case has been opened in your area.
+Cooperate if they contact you.
+
+Do not ignore this message."
 	},
 	{
 		"id": "day10_fake",
@@ -116,7 +149,13 @@ var EMAILS: Array = [
 		"type": "warning",
 		"from": "policía",
 		"subject": "YA SABEMOS DÓNDE ESTÁS",
-		"body": "Abre la puerta.\nAbre la puerta.\nAbre la puerta.\n\n(Cordura baja: posible alucinación.)"
+		"subject_en": "WE KNOW WHERE YOU ARE",
+		"body": "Abre la puerta.\nAbre la puerta.\nAbre la puerta.\n\n(Cordura baja: posible alucinación.)",
+		"body_en": "Open the door.
+Open the door.
+Open the door.
+
+(Low sanity: possible hallucination.)"
 	},
 	{
 		"id": "day12_bank",
@@ -125,7 +164,12 @@ var EMAILS: Array = [
 		"type": "document",
 		"from": "notificaciones@bancocentral",
 		"subject": "Movimiento inusual detectado",
-		"body": "Se han registrado depósitos irregulares en tu cuenta.\nRevisa el detalle en la app del Banco.\n\nEste aviso es automático."
+		"subject_en": "Unusual activity detected",
+		"body": "Se han registrado depósitos irregulares en tu cuenta.\nRevisa el detalle en la app del Banco.\n\nEste aviso es automático.",
+		"body_en": "Irregular deposits were recorded on your account.
+Check the details in the Bank app.
+
+This notice is automatic."
 	},
 	{
 		"id": "day15_truth",
@@ -134,7 +178,13 @@ var EMAILS: Array = [
 		"type": "medical",
 		"from": "archivo.medico",
 		"subject": "Informe incompleto",
-		"body": "Paciente: [REDACTADO]\nDiagnóstico: lagunas de memoria / trauma.\nRecomendación: no aislarse.\n\nPágina 2 ilegible."
+		"subject_en": "Incomplete report",
+		"body": "Paciente: [REDACTADO]\nDiagnóstico: lagunas de memoria / trauma.\nRecomendación: no aislarse.\n\nPágina 2 ilegible.",
+		"body_en": "Patient: [REDACTED]
+Diagnosis: memory gaps / trauma.
+Recommendation: do not isolate.
+
+Page 2 illegible."
 	},
 	{
 		"id": "day18_press",
@@ -143,7 +193,12 @@ var EMAILS: Array = [
 		"type": "document",
 		"from": "prensa.local",
 		"subject": "Nota de prensa: caso sin resolver",
-		"body": "\"Las autoridades siguen sin identificar sospechosos\",\ndice el artículo.\n\nHay una foto borrosa en la página 3."
+		"subject_en": "Press note: unsolved case",
+		"body": "\"Las autoridades siguen sin identificar sospechosos\",\ndice el artículo.\n\nHay una foto borrosa en la página 3.",
+		"body_en": "\"Authorities still have no suspects,\"
+the article says.
+
+There is a blurry photo on page 3."
 	},
 	{
 		"id": "day20_crisis",
@@ -152,7 +207,12 @@ var EMAILS: Array = [
 		"type": "system",
 		"from": "sistema@local",
 		"subject": "ERROR DE INTEGRIDAD",
-		"body": "Varios archivos no coinciden con el checksum.\nAlguien (o algo) está reescribiendo el disco.\n\nConfía solo en lo que puedas verificar."
+		"subject_en": "INTEGRITY ERROR",
+		"body": "Varios archivos no coinciden con el checksum.\nAlguien (o algo) está reescribiendo el disco.\n\nConfía solo en lo que puedas verificar.",
+		"body_en": "Several files do not match the checksum.
+Someone (or something) is rewriting the disk.
+
+Trust only what you can verify."
 	},
 	{
 		"id": "day20_fake",
@@ -161,7 +221,11 @@ var EMAILS: Array = [
 		"type": "warning",
 		"from": "tú",
 		"subject": "No hay salida",
-		"body": "Da igual el dinero.\nDa igual el día 30.\nEsto no es un juego.\n\n(¿O sí?)"
+		"subject_en": "There is no way out",
+		"body": "Da igual el dinero.\nDa igual el día 30.\nEsto no es un juego.\n\n(¿O sí?)",
+		"body_en": "The money doesn't matter.
+Day 30 doesn't matter.
+This is not a game."
 	},
 	{
 		"id": "day22_fake_boss",
@@ -170,7 +234,12 @@ var EMAILS: Array = [
 		"type": "warning",
 		"from": "jefe@workgrid.mail",
 		"subject": "Estás despedido",
-		"body": "Ya no queda trabajo para ti.\nNunca lo hubo.\n\n(Este remitente no existe en los registros.)"
+		"subject_en": "You're fired",
+		"body": "Ya no queda trabajo para ti.\nNunca lo hubo.\n\n(Este remitente no existe en los registros.)",
+		"body_en": "Don't come back to WorkGrid.
+Your access has been revoked.
+
+(This message is not in the server logs.)"
 	},
 	{
 		"id": "day25_final",
@@ -179,7 +248,11 @@ var EMAILS: Array = [
 		"type": "key",
 		"from": "contacto.seguro",
 		"subject": "Ruta de escape",
-		"body": "Si juntaste el dinero y las pistas,\nhay una salida.\n\nSi no… ellos llegarán primero."
+		"subject_en": "Escape route",
+		"body": "Si juntaste el dinero y las pistas,\nhay una salida.\n\nSi no… ellos llegarán primero.",
+		"body_en": "Five days remain.
+The escape account is still waiting for a transfer.
+Check the Bank."
 	},
 	{
 		"id": "day28_last_warning",
@@ -188,7 +261,11 @@ var EMAILS: Array = [
 		"type": "police",
 		"from": "alertas@ciudad.gov",
 		"subject": "Últimas 48 horas",
-		"body": "El expediente se cierra en 2 días.\nA partir de entonces la decisión no dependerá de ti.\n\nActúa ahora."
+		"subject_en": "Last 48 hours",
+		"body": "El expediente se cierra en 2 días.\nA partir de entonces la decisión no dependerá de ti.\n\nActúa ahora.",
+		"body_en": "Time is running out.
+If you have not transferred the money and recovered the clues,
+you will not make it out."
 	},
 	# --- Más correos (tanda contenido) ---
 	{
@@ -198,7 +275,12 @@ var EMAILS: Array = [
 		"type": "text",
 		"from": "vecino_402",
 		"subject": "¿Oyes eso?",
-		"body": "Hay un zumbido en las paredes.\nEmpezó anoche.\n¿También lo oyes tú?"
+		"subject_en": "Do you hear that?",
+		"body": "Hay un zumbido en las paredes.\nEmpezó anoche.\n¿También lo oyes tú?",
+		"body_en": "There's a hum in the walls.
+It only starts when the PC is on.
+
+Or maybe it's me."
 	},
 	{
 		"id": "day6_spam_fake",
@@ -208,7 +290,12 @@ var EMAILS: Array = [
 		"sanity_delta": -5.0,
 		"from": "premio@suerte.mail",
 		"subject": "HAS GANADO $1.000.000",
-		"body": "Haz clic aquí.\nHaz clic aquí.\nHaz clic aquí.\n\n(No hay enlace. No debería existir.)"
+		"subject_en": "YOU WON $1,000,000",
+		"body": "Haz clic aquí.\nHaz clic aquí.\nHaz clic aquí.\n\n(No hay enlace. No debería existir.)",
+		"body_en": "Click here to claim your prize.
+Urgent. Limited time.
+
+(Spam. Hallucination.)"
 	},
 	{
 		"id": "day9_photo_mail",
@@ -217,7 +304,11 @@ var EMAILS: Array = [
 		"type": "photo",
 		"from": "archivo.local",
 		"subject": "Adjunto: img_03.jpg",
-		"body": "Se recuperó una imagen dañada del disco.\nMírala en Archivos → Foto rota."
+		"subject_en": "Attachment: img_03.jpg",
+		"body": "Se recuperó una imagen dañada del disco.\nMírala en Archivos → Foto rota.",
+		"body_en": "I sent you a photo.
+Look at it in Files.
+Don't show it to anyone."
 	},
 	{
 		"id": "day11_whisper_fake",
@@ -227,7 +318,12 @@ var EMAILS: Array = [
 		"sanity_delta": -6.0,
 		"from": "dentro.de.ti",
 		"subject": "deja de mirar la pantalla",
-		"body": "no eres tú quien escribe\nno eres tú quien lee\n\n(Cordura inestable.)"
+		"subject_en": "stop looking at the screen",
+		"body": "no eres tú quien escribe\nno eres tú quien lee\n\n(Cordura inestable.)",
+		"body_en": "If you keep digging
+you'll find something that shouldn't be found.
+
+Close the app."
 	},
 	{
 		"id": "day13_work",
@@ -236,7 +332,10 @@ var EMAILS: Array = [
 		"type": "job",
 		"from": "noreply@workgrid.mail",
 		"subject": "Bonificación nocturna",
-		"body": "Los trabajos de nivel 3 pagan más esta semana.\nHorario sin cambios: 01:00–05:00."
+		"subject_en": "Night bonus",
+		"body": "Los trabajos de nivel 3 pagan más esta semana.\nHorario sin cambios: 01:00–05:00.",
+		"body_en": "Level 3 jobs pay more this week.
+Hours unchanged: 01:00–05:00."
 	},
 	{
 		"id": "day14_static_fake",
@@ -246,7 +345,12 @@ var EMAILS: Array = [
 		"sanity_delta": -4.0,
 		"from": "sistema@local",
 		"subject": "████████",
-		"body": "El mensaje se corrompió.\nSolo quedan caracteres basura.\n\n¿O es tu mente?"
+		"subject_en": "████████",
+		"body": "El mensaje se corrompió.\nSolo quedan caracteres basura.\n\n¿O es tu mente?",
+		"body_en": "The message corrupted.
+Only garbage characters remain.
+
+Or is it your mind?"
 	},
 	{
 		"id": "day16_doctor",
@@ -255,7 +359,11 @@ var EMAILS: Array = [
 		"type": "medical",
 		"from": "consulta@clinica",
 		"subject": "Recordatorio de cita",
-		"body": "Cita pendiente: evaluación de memoria.\nNo acudiste la última vez.\nLlama si recuerdas este mensaje."
+		"subject_en": "Appointment reminder",
+		"body": "Cita pendiente: evaluación de memoria.\nNo acudiste la última vez.\nLlama si recuerdas este mensaje.",
+		"body_en": "Pending appointment: memory evaluation.
+You missed the last one.
+Call if you remember this message."
 	},
 	{
 		"id": "day17_mirror_fake",
@@ -265,7 +373,12 @@ var EMAILS: Array = [
 		"sanity_delta": -7.0,
 		"from": "espejo",
 		"subject": "no te acerques",
-		"body": "Si miras demasiado tiempo\nalguien mira desde el otro lado.\n\nCierra Archivos."
+		"subject_en": "don't get closer",
+		"body": "Si miras demasiado tiempo\nalguien mira desde el otro lado.\n\nCierra Archivos.",
+		"body_en": "If you stare too long
+someone stares from the other side.
+
+Close Files."
 	},
 	{
 		"id": "day19_leak",
@@ -274,7 +387,11 @@ var EMAILS: Array = [
 		"type": "document",
 		"from": "fuente.anonima",
 		"subject": "Filtración",
-		"body": "El expediente habla de un testigo.\nEl nombre está tachado.\nLa fecha coincide con tu laguna."
+		"subject_en": "Leak",
+		"body": "El expediente habla de un testigo.\nEl nombre está tachado.\nLa fecha coincide con tu laguna.",
+		"body_en": "The file mentions a witness.
+The name is crossed out.
+The date matches your gap."
 	},
 	{
 		"id": "day21_loop_fake",
@@ -284,7 +401,11 @@ var EMAILS: Array = [
 		"sanity_delta": -5.0,
 		"from": "sistema@local",
 		"subject": "Día 1 otra vez",
-		"body": "Tu sesión se reinició.\nTu sesión se reinició.\nTu sesión se reinició."
+		"subject_en": "Day 1 again",
+		"body": "Tu sesión se reinició.\nTu sesión se reinició.\nTu sesión se reinició.",
+		"body_en": "Your session restarted.
+Your session restarted.
+Your session restarted."
 	},
 	{
 		"id": "day23_deadline",
@@ -293,7 +414,11 @@ var EMAILS: Array = [
 		"type": "police",
 		"from": "alertas@ciudad.gov",
 		"subject": "Plazo reducido",
-		"body": "El cierre del caso se adelanta.\nNo salgas de la zona.\nNo ignores este aviso."
+		"subject_en": "Deadline moved up",
+		"body": "El cierre del caso se adelanta.\nNo salgas de la zona.\nNo ignores este aviso.",
+		"body_en": "Case closure is being moved forward.
+Do not leave the area.
+Do not ignore this notice."
 	},
 	{
 		"id": "day26_help_fake",
@@ -303,7 +428,12 @@ var EMAILS: Array = [
 		"sanity_delta": -8.0,
 		"from": "contacto.seguro",
 		"subject": "Ruta falsa",
-		"body": "Transfiere el dinero a ESTA cuenta:\n000000000000\n\n(Remitente clonado. No confíes.)"
+		"subject_en": "False route",
+		"body": "Transfiere el dinero a ESTA cuenta:\n000000000000\n\n(Remitente clonado. No confíes.)",
+		"body_en": "Transfer the money to THIS account:
+000000000000
+
+(Cloned sender. Do not trust.)"
 	},
 	{
 		"id": "day29_countdown",
@@ -312,7 +442,118 @@ var EMAILS: Array = [
 		"type": "system",
 		"from": "sistema@local",
 		"subject": "1 día restante",
-		"body": "Mañana se evalúa el resultado.\nDinero transferido + pistas = salida.\nSin eso, no hay más reintentos."
+		"subject_en": "1 day remaining",
+		"body": "Mañana se evalúa el resultado.\nDinero transferido + pistas = salida.\nSin eso, no hay más reintentos.",
+		"body_en": "Tomorrow the result is evaluated.
+Money transferred + clues = exit.
+Without that, no more retries."
+	},
+	# --- Cadena narrativa principal: el ordenador revela información por etapas. ---
+	{
+		"id": "mystery_chain_01",
+		"expires_day": 5,
+		"unlock_day": 2,
+		"unlock_hour": 1,
+		"unlock_minute": 20,
+		"is_fake": false,
+		"type": "warning",
+		"from": "unknown@relay.mail",
+		"subject": "Sobre aquella noche",
+		"subject_en": "About that night",
+		"body": "No deberías intentar recordar el Hotel Meridian.\n\nDéjalo enterrado.",
+		"body_en": "You shouldn't try to remember the Meridian Hotel.
+
+Leave it buried."
+	},
+	{
+		"id": "mystery_chain_02",
+		"requires_flags": ["knows_meridian"],
+		"expires_day": 8,
+		"unlock_day": 5,
+		"unlock_hour": 2,
+		"unlock_minute": 10,
+		"is_fake": false,
+		"type": "document",
+		"from": "unknown@relay.mail",
+		"subject": "Revisa el Banco",
+		"subject_en": "Check the Bank",
+		"body": "No busques mi nombre.\nBusca un pago del 14/05.\n\nCuando lo encuentres, entenderás por qué te escribo.",
+		"body_en": "Don't look for my name.
+Look for a payment from 14/05.
+
+When you find it, you'll understand why I'm writing."
+	},
+	{
+		"id": "mystery_chain_03",
+		"requires_flags": ["tx_seen_meridian_payment"],
+		"expires_day": 12,
+		"unlock_day": 8,
+		"unlock_hour": 1,
+		"unlock_minute": 35,
+		"is_fake": false,
+		"type": "key",
+		"from": "unknown@relay.mail",
+		"subject": "Habitación 217",
+		"subject_en": "Room 217",
+		"body": "Ya encontraste el pago.\nLa habitación era la 217.\n\nNo abras nada si no estás preparado para recordar.",
+		"body_en": "You already found the payment.
+The room was 217.
+
+Don't open anything if you're not ready to remember."
+	},
+	{
+		"id": "mystery_chain_04",
+		"requires_flags": ["meridian_opened"],
+		"expires_day": 17,
+		"unlock_day": 12,
+		"unlock_hour": 2,
+		"unlock_minute": 5,
+		"is_fake": false,
+		"type": "warning",
+		"from": "unknown@relay.mail",
+		"subject": "El archivo",
+		"subject_en": "The file",
+		"body": "El archivo de Meridian está ahí.\nNo intentes adivinar la contraseña.\n\nLa respuesta está en lo que ya viste.",
+		"body_en": "The Meridian file is there.
+Don't try to guess the password.
+
+The answer is in what you already saw."
+	},
+	{
+		"id": "mystery_chain_05",
+		"requires_flags": ["meridian_log_seen"],
+		"expires_day": 24,
+		"unlock_day": 17,
+		"unlock_hour": 1,
+		"unlock_minute": 25,
+		"is_fake": false,
+		"type": "medical",
+		"from": "unknown@relay.mail",
+		"subject": "¿Quién es el sujeto?",
+		"subject_en": "Who is the subject?",
+		"body": "Lee los informes médicos.\nDespués vuelve a revisar tus archivos.\n\nHay una frase que aparece más de una vez: \"el sujeto\".",
+		"body_en": "Read the medical reports.
+Then check your files again.
+
+There's a phrase that appears more than once: \"the subject\"."
+	},
+	{
+		"id": "mystery_chain_06",
+		"requires_flags": ["knows_subject"],
+		"expires_day": 29,
+		"unlock_day": 24,
+		"unlock_hour": 3,
+		"unlock_minute": 0,
+		"is_fake": false,
+		"type": "police",
+		"from": "unknown@relay.mail",
+		"subject": "No queda mucho tiempo",
+		"subject_en": "Not much time left",
+		"body": "Si sigues investigando, vas a encontrar la respuesta.\nSi dejas de investigar, quizá consigas escapar.\n\nNo puedes hacer ambas cosas para siempre.",
+		"body_en": "If you keep investigating, you'll find the answer.
+If you stop investigating, you might escape.
+
+You can't do both forever."
 	},
 	# El correo de cuenta de escape se genera dinámicamente (ver try_send_escape_account).
 ]
@@ -329,6 +570,8 @@ var read_ids: Array = []
 var _silent_unlock: bool = true
 
 func _ready() -> void:
+	_ensure_email_english_fallback()
+
 	GameManager.day_changed.connect(_on_day_changed)
 	# Día 1 al empezar (sin sonido de notificación)
 	_silent_unlock = true
@@ -360,6 +603,15 @@ func unlock_for_day(day: int, silent: bool = false) -> void:
 		var uday: int = int(mail.get("unlock_day", 999))
 		if uday > day:
 			continue
+		var required_flags = mail.get("requires_flags", [])
+		if required_flags is Array and InvestigationSystem:
+			var requirements_met := true
+			for required_flag in required_flags:
+				if not InvestigationSystem.is_flag_set(str(required_flag)):
+					requirements_met = false
+					break
+			if not requirements_met:
+				continue
 		# Si es el mismo día, respetar hora/minuto de llegada
 		if uday == day:
 			var uh: int = int(mail.get("unlock_hour", 1))
@@ -421,6 +673,7 @@ func try_send_escape_account(day: int) -> void:
 		"type": "document",
 		"from": "contacto.seguro",
 		"subject": "Cuenta de transferencia",
+		"subject_en": "Cuenta de transferencia",
 		"body": body,
 		"copy_account": true
 	}
@@ -441,9 +694,14 @@ func try_send_escape_account(day: int) -> void:
 ## Lista de correos desbloqueados (dicts del catálogo).
 func get_inbox() -> Array:
 	var result: Array = []
+	var current_day := GameManager.day if GameManager else 1
 	for mail in EMAILS:
-		if str(mail["id"]) in unlocked_ids:
-			result.append(mail)
+		if str(mail["id"]) not in unlocked_ids:
+			continue
+		var expires_day := int(mail.get("expires_day", 999))
+		if current_day > expires_day and str(mail["id"]) not in read_ids:
+			continue
+		result.append(mail)
 	return result
 
 ## Marca un correo como leído. Puede subir o bajar cordura según el mail.
@@ -462,6 +720,10 @@ func mark_read(email_id: String) -> void:
 			if int(mail.get("unlock_day", 1)) >= 5 and email_id != ESCAPE_MAIL_ID:
 				GameManager.change_sanity(2.0)
 		break
+	if InvestigationSystem and InvestigationSystem.has_method("register_email_read"):
+		InvestigationSystem.register_email_read(email_id)
+	if ParanoiaSystem and ParanoiaSystem.has_method("register_discovery_event"):
+		ParanoiaSystem.register_discovery_event("email")
 	emails_changed.emit()
 
 func is_read(email_id: String) -> bool:
@@ -473,3 +735,57 @@ func unread_count() -> int:
 		if id not in read_ids:
 			n += 1
 	return n
+
+
+func localized_subject(email: Dictionary) -> String:
+	if LocaleSystem:
+		return LocaleSystem.field(email, "subject")
+	return str(email.get("subject", ""))
+
+func localized_body(email: Dictionary) -> String:
+	if LocaleSystem:
+		return LocaleSystem.field(email, "body")
+	return str(email.get("body", ""))
+
+
+## Ensures every email has subject_en/body_en (fallback to Spanish if missing).
+func _ensure_email_english_fallback() -> void:
+	var table := {
+		"day1_welcome": ["Welcome back", "Your session restarted.\nWe don't remember the last clean shutdown.\n\nCheck your files when you can.\n\n— System"],
+		"day1_job": ["New jobs available", "Hi.\n\nSurveys are active between 01:00 and 05:00.\nPay is credited instantly.\n\nWorkGrid"],
+		"day2_reminder": ["Schedule reminder", "The system detected inactivity outside work hours.\nRemember: pay only between 01:00 and 05:00.\n\nWorkGrid"],
+		"day3_odd": ["Don't open the memories folder", "Not yet.\nYou're not ready.\n\nIf you open it, you won't be able to close it."],
+		"day5_memory": ["Torn photo", "I found a photo on the disk.\nIt's cut in half.\n\nWho is the missing person?"],
+		"day5_fake": ["Come home", "Honey, dinner is ready.\nEverything is fine.\nNothing ever happened.\n\n(This message should not exist.)"],
+		"day7_neighbor": ["Noise complaint", "The downstairs neighbor reported noise at 3 AM.\nKeep it down."],
+		"day8_fake_call": ["Missed call", "You have 1 missed call.\nUnknown number.\n(Possible hallucination.)"],
+		"day10_police": ["Official inquiry", "We need to speak with you about an incident on 14/05.\nA reply is not required. Appearing is."],
+		"day10_fake": ["You're safe", "Nobody is looking for you.\nYou can rest.\n(Do not trust this.)"],
+		"day12_bank": ["Account movement", "A transfer was registered near Hotel Meridian.\nReview your statements."],
+		"day15_truth": ["Day 15", "Halfway.\nPeople who ask too much stop asking."],
+		"day18_press": ["We see you", "Online payments leave a trail.\nCash is quieter.\nChoose carefully."],
+		"day20_crisis": ["Delivery failed", "A package could not be delivered.\nOr it was delivered to the wrong person."],
+		"day20_fake": ["Everything is fine", "Your debt is cleared.\nYou can stop.\n(False.)"],
+		"day22_fake_boss": ["Urgent: boss", "Come to the office tomorrow.\n(There is no office.)"],
+		"day25_final": ["Five days left", "Five days remain.\nThe escape account is still waiting for a transfer."],
+		"day28_last_warning": ["Almost over", "Almost no time left.\nIf you fail, there will be no next boot."],
+		"mystery_chain_01": ["Re: Meridian", "Room 217. 23:47.\nDoes that mean anything to you?"],
+		"mystery_chain_02": ["Re: Meridian (2)", "The password is shorter than you think.\nThree digits."],
+		"mystery_chain_03": ["Receipt", "Cash. No signature.\nHotel Meridian."],
+		"mystery_chain_04": ["Follow-up", "If you found the log, you already know too much."],
+		"mystery_chain_05": ["Last warning", "Stop digging.\nOr finish it."],
+		"mystery_chain_06": ["Escape account", "Transfer to the account in this message.\nOnly bank transfer counts."],
+	}
+	for email in EMAILS:
+		var eid := str(email.get("id", ""))
+		if table.has(eid):
+			var pair: Array = table[eid]
+			if not email.has("subject_en"):
+				email["subject_en"] = pair[0]
+			if not email.has("body_en"):
+				email["body_en"] = pair[1]
+		else:
+			if not email.has("subject_en"):
+				email["subject_en"] = str(email.get("subject", ""))
+			if not email.has("body_en"):
+				email["body_en"] = str(email.get("body", ""))

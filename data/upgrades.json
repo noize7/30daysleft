@@ -1,77 +1,471 @@
 {
   "upgrades": {
     "battery": [
-      {"level": 1, "name": "Batería estándar", "capacity": 100, "cost": 0, "desc": "Capacidad base 100%"},
-      {"level": 2, "name": "Batería mejorada", "capacity": 140, "cost": 350, "desc": "Capacidad 140%"},
-      {"level": 3, "name": "Batería industrial", "capacity": 200, "cost": 1200, "desc": "Capacidad 200%"},
-      {"level": 4, "name": "Batería de litio pro", "capacity": 280, "cost": 3500, "desc": "Capacidad 280%"},
-      {"level": 5, "name": "Supercondensador", "capacity": 400, "cost": 8000, "desc": "Capacidad 400%"},
-      {"level": 6, "name": "Celda experimental", "capacity": 700, "cost": 18000, "desc": "Capacidad 700%"},
-      {"level": 7, "name": "Batería infinita (parche)", "capacity": 1000, "cost": 35000, "desc": "Capacidad 1000%"}
+      {
+        "level": 1,
+        "name": "Batería estándar",
+        "capacity": 100,
+        "cost": 0,
+        "desc": "Capacidad base 100%",
+        "name_en": "Standard battery",
+        "desc_en": "Capacidad base 100%"
+      },
+      {
+        "level": 2,
+        "name": "Batería mejorada",
+        "capacity": 140,
+        "cost": 350,
+        "desc": "Capacidad 140%",
+        "name_en": "Improved battery",
+        "desc_en": "Capacity 140%"
+      },
+      {
+        "level": 3,
+        "name": "Batería industrial",
+        "capacity": 200,
+        "cost": 1200,
+        "desc": "Capacidad 200%",
+        "name_en": "Industrial battery",
+        "desc_en": "Capacity 200%"
+      },
+      {
+        "level": 4,
+        "name": "Batería de litio pro",
+        "capacity": 280,
+        "cost": 3500,
+        "desc": "Capacidad 280%",
+        "name_en": "Pro lithium battery",
+        "desc_en": "Capacity 280%"
+      },
+      {
+        "level": 5,
+        "name": "Supercondensador",
+        "capacity": 400,
+        "cost": 8000,
+        "desc": "Capacidad 400%",
+        "name_en": "Super capacitor",
+        "desc_en": "Capacity 400%"
+      },
+      {
+        "level": 6,
+        "name": "Celda experimental",
+        "capacity": 700,
+        "cost": 18000,
+        "desc": "Capacidad 700%",
+        "name_en": "Experimental cell",
+        "desc_en": "Capacity 700%"
+      },
+      {
+        "level": 7,
+        "name": "Batería infinita (parche)",
+        "capacity": 1000,
+        "cost": 35000,
+        "desc": "Capacidad 1000%",
+        "name_en": "Infinite battery (patch)",
+        "desc_en": "Capacity 1000%"
+      }
     ],
     "cpu": [
-      {"level": 1, "name": "CPU básica", "multiplier": 1.0, "cost": 0, "desc": "Pago normal"},
-      {"level": 2, "name": "CPU rápida", "multiplier": 1.2, "cost": 600, "desc": "+20% pago"},
-      {"level": 3, "name": "CPU pro", "multiplier": 1.4, "cost": 2000, "desc": "+40% pago"},
-      {"level": 4, "name": "CPU overclock", "multiplier": 1.7, "cost": 5000, "desc": "+70% pago"},
-      {"level": 5, "name": "CPU cuántica", "multiplier": 2.1, "cost": 12000, "desc": "+110% pago"}
+      {
+        "level": 1,
+        "name": "CPU básica",
+        "multiplier": 1.0,
+        "cost": 0,
+        "desc": "Pago normal",
+        "name_en": "Basic CPU",
+        "desc_en": "Pago normal"
+      },
+      {
+        "level": 2,
+        "name": "CPU rápida",
+        "multiplier": 1.2,
+        "cost": 600,
+        "desc": "+20% pago",
+        "name_en": "Fast CPU",
+        "desc_en": "+20% pay"
+      },
+      {
+        "level": 3,
+        "name": "CPU pro",
+        "multiplier": 1.4,
+        "cost": 2000,
+        "desc": "+40% pago",
+        "name_en": "Pro CPU",
+        "desc_en": "+40% pay"
+      },
+      {
+        "level": 4,
+        "name": "CPU overclock",
+        "multiplier": 1.7,
+        "cost": 5000,
+        "desc": "+70% pago",
+        "name_en": "Overclocked CPU",
+        "desc_en": "+70% pay"
+      },
+      {
+        "level": 5,
+        "name": "CPU cuántica",
+        "multiplier": 2.1,
+        "cost": 12000,
+        "desc": "+110% pago",
+        "name_en": "Quantum CPU",
+        "desc_en": "+110% pay"
+      }
     ],
     "ram": [
-      {"level": 1, "name": "RAM 1GB", "cost": 0, "desc": "Apps básicas"},
-      {"level": 2, "name": "RAM 4GB", "cost": 450, "desc": "Mejor multitarea"},
-      {"level": 3, "name": "RAM 8GB", "cost": 1800, "desc": "Desbloquea archivos ocultos"},
-      {"level": 4, "name": "RAM 16GB", "cost": 4500, "desc": "Menos lag"},
-      {"level": 5, "name": "RAM 32GB", "cost": 10000, "desc": "Máximo rendimiento"}
+      {
+        "level": 1,
+        "name": "RAM 1GB",
+        "cost": 0,
+        "desc": "Apps básicas",
+        "name_en": "1GB RAM",
+        "desc_en": "Basic apps"
+      },
+      {
+        "level": 2,
+        "name": "RAM 4GB",
+        "cost": 450,
+        "desc": "Mejor multitarea",
+        "name_en": "4GB RAM",
+        "desc_en": "Mejor multitarea"
+      },
+      {
+        "level": 3,
+        "name": "RAM 8GB",
+        "cost": 1800,
+        "desc": "Desbloquea archivos ocultos",
+        "name_en": "8GB RAM",
+        "desc_en": "Desbloquea archivos ocultos"
+      },
+      {
+        "level": 4,
+        "name": "RAM 16GB",
+        "cost": 4500,
+        "desc": "Menos lag",
+        "name_en": "16GB RAM",
+        "desc_en": "Menos lag"
+      },
+      {
+        "level": 5,
+        "name": "RAM 32GB",
+        "cost": 10000,
+        "desc": "Máximo rendimiento",
+        "name_en": "32GB RAM",
+        "desc_en": "Máximo rendimiento"
+      }
     ],
     "internet": [
-      {"level": 1, "name": "Conexión lenta", "cost": 0, "desc": "Trabajos normales"},
-      {"level": 2, "name": "Banda ancha", "cost": 800, "desc": "Trabajos secretos"},
-      {"level": 3, "name": "Fibra oscura", "cost": 2800, "desc": "Acceso anticipado + tareas especiales"},
-      {"level": 4, "name": "Red satélite", "cost": 7000, "desc": "Mejor latencia"},
-      {"level": 5, "name": "Backbone oculto", "cost": 15000, "desc": "Acceso total"}
+      {
+        "level": 1,
+        "name": "Conexión lenta",
+        "cost": 0,
+        "desc": "Trabajos normales",
+        "name_en": "Slow connection",
+        "desc_en": "Normal jobs"
+      },
+      {
+        "level": 2,
+        "name": "Banda ancha",
+        "cost": 800,
+        "desc": "Trabajos secretos",
+        "name_en": "Broadband",
+        "desc_en": "Secret jobs"
+      },
+      {
+        "level": 3,
+        "name": "Fibra oscura",
+        "cost": 2800,
+        "desc": "Acceso anticipado + tareas especiales",
+        "name_en": "Dark fiber",
+        "desc_en": "Early access + special tasks"
+      },
+      {
+        "level": 4,
+        "name": "Red satélite",
+        "cost": 7000,
+        "desc": "Mejor latencia",
+        "name_en": "Satellite network",
+        "desc_en": "Better latency"
+      },
+      {
+        "level": 5,
+        "name": "Backbone oculto",
+        "cost": 15000,
+        "desc": "Acceso total",
+        "name_en": "Hidden backbone",
+        "desc_en": "Full access"
+      }
     ],
     "automation": [
-      {"level": 1, "name": "Sin bot", "passive_per_sec": 0.0, "cost": 0, "desc": "Sin pasivos"},
-      {"level": 2, "name": "Auto-clicker", "passive_per_sec": 0.4, "cost": 1000, "desc": "+$0.40/s"},
-      {"level": 3, "name": "Bot avanzado", "passive_per_sec": 1.2, "cost": 3500, "desc": "+$1.20/s"},
-      {"level": 4, "name": "Farm de scripts", "passive_per_sec": 3.0, "cost": 9000, "desc": "+$3.00/s"},
-      {"level": 5, "name": "IA autónoma", "passive_per_sec": 6.5, "cost": 20000, "desc": "+$6.50/s"}
+      {
+        "level": 1,
+        "name": "Sin bot",
+        "passive_per_sec": 0.0,
+        "cost": 0,
+        "desc": "Sin pasivos",
+        "name_en": "No bot",
+        "desc_en": "No passive income"
+      },
+      {
+        "level": 2,
+        "name": "Auto-clicker",
+        "passive_per_sec": 0.4,
+        "cost": 1000,
+        "desc": "+$0.40/s",
+        "name_en": "Auto-clicker",
+        "desc_en": "+$0.40/s"
+      },
+      {
+        "level": 3,
+        "name": "Bot avanzado",
+        "passive_per_sec": 1.2,
+        "cost": 3500,
+        "desc": "+$1.20/s",
+        "name_en": "Advanced bot",
+        "desc_en": "+$1.20/s"
+      },
+      {
+        "level": 4,
+        "name": "Farm de scripts",
+        "passive_per_sec": 3.0,
+        "cost": 9000,
+        "desc": "+$3.00/s",
+        "name_en": "Script farm",
+        "desc_en": "+$3.00/s"
+      },
+      {
+        "level": 5,
+        "name": "IA autónoma",
+        "passive_per_sec": 6.5,
+        "cost": 20000,
+        "desc": "+$6.50/s",
+        "name_en": "Autonomous AI",
+        "desc_en": "+$6.50/s"
+      }
     ],
     "cooling": [
-      {"level": 1, "name": "Ventilador stock", "cost": 0, "drain_mult": 1.0, "desc": "Sin bonus"},
-      {"level": 2, "name": "Cooler torre", "cost": 500, "drain_mult": 0.92, "desc": "-8% drenaje batería"},
-      {"level": 3, "name": "Refrigeración líquida", "cost": 2200, "drain_mult": 0.82, "desc": "-18% drenaje"},
-      {"level": 4, "name": "Phase-change", "cost": 6000, "drain_mult": 0.7, "desc": "-30% drenaje"}
+      {
+        "level": 1,
+        "name": "Ventilador stock",
+        "cost": 0,
+        "drain_mult": 1.0,
+        "desc": "Sin bonus",
+        "name_en": "Stock fan",
+        "desc_en": "Sin bonus"
+      },
+      {
+        "level": 2,
+        "name": "Cooler torre",
+        "cost": 500,
+        "drain_mult": 0.92,
+        "desc": "-8% drenaje batería",
+        "name_en": "Tower cooler",
+        "desc_en": "-8% battery drain"
+      },
+      {
+        "level": 3,
+        "name": "Refrigeración líquida",
+        "cost": 2200,
+        "drain_mult": 0.82,
+        "desc": "-18% drenaje",
+        "name_en": "Liquid cooling",
+        "desc_en": "-18% drenaje"
+      },
+      {
+        "level": 4,
+        "name": "Phase-change",
+        "cost": 6000,
+        "drain_mult": 0.7,
+        "desc": "-30% drenaje",
+        "name_en": "Phase-change",
+        "desc_en": "-30% drenaje"
+      }
     ],
     "storage": [
-      {"level": 1, "name": "HDD 128GB", "cost": 0, "desc": "Espacio básico"},
-      {"level": 2, "name": "SSD 256GB", "cost": 400, "desc": "Carga más rápida"},
-      {"level": 3, "name": "NVMe 1TB", "cost": 1600, "desc": "Más cache"},
-      {"level": 4, "name": "RAID 4TB", "cost": 5000, "desc": "Máximo almacenamiento"}
+      {
+        "level": 1,
+        "name": "HDD 128GB",
+        "cost": 0,
+        "desc": "Espacio básico",
+        "name_en": "128GB HDD",
+        "desc_en": "Basic space"
+      },
+      {
+        "level": 2,
+        "name": "SSD 256GB",
+        "cost": 400,
+        "desc": "Carga más rápida",
+        "name_en": "256GB SSD",
+        "desc_en": "Faster load"
+      },
+      {
+        "level": 3,
+        "name": "NVMe 1TB",
+        "cost": 1600,
+        "desc": "Más cache",
+        "name_en": "1TB NVMe",
+        "desc_en": "More cache"
+      },
+      {
+        "level": 4,
+        "name": "RAID 4TB",
+        "cost": 5000,
+        "desc": "Máximo almacenamiento",
+        "name_en": "4TB RAID",
+        "desc_en": "Maximum storage"
+      }
     ],
     "optimizer": [
-      {"level": 1, "name": "Sin optimizador", "cooldown_mult": 1.0, "cost": 0, "desc": "Cooldown normal entre trabajos"},
-      {"level": 2, "name": "Script básico", "cooldown_mult": 0.8, "cost": 900, "desc": "-20% tiempo de espera"},
-      {"level": 3, "name": "Optimizador pro", "cooldown_mult": 0.65, "cost": 3200, "desc": "-35% tiempo de espera"},
-      {"level": 4, "name": "Kernel tweak", "cooldown_mult": 0.5, "cost": 9000, "desc": "-50% tiempo de espera"}
+      {
+        "level": 1,
+        "name": "Sin optimizador",
+        "cooldown_mult": 1.0,
+        "cost": 0,
+        "desc": "Cooldown normal entre trabajos",
+        "name_en": "No optimizer",
+        "desc_en": "Cooldown normal entre trabajos"
+      },
+      {
+        "level": 2,
+        "name": "Script básico",
+        "cooldown_mult": 0.8,
+        "cost": 900,
+        "desc": "-20% tiempo de espera",
+        "name_en": "Basic script",
+        "desc_en": "-20% wait time"
+      },
+      {
+        "level": 3,
+        "name": "Optimizador pro",
+        "cooldown_mult": 0.65,
+        "cost": 3200,
+        "desc": "-35% tiempo de espera",
+        "name_en": "Pro optimizer",
+        "desc_en": "-35% wait time"
+      },
+      {
+        "level": 4,
+        "name": "Kernel tweak",
+        "cooldown_mult": 0.5,
+        "cost": 9000,
+        "desc": "-50% tiempo de espera",
+        "name_en": "Kernel tweak",
+        "desc_en": "-50% wait time"
+      }
     ],
     "noise_filter": [
-      {"level": 1, "name": "Sin filtro", "sanity_loss_mult": 1.0, "cost": 0, "desc": "Pérdida de cordura normal"},
-      {"level": 2, "name": "Filtro básico", "sanity_loss_mult": 0.75, "cost": 700, "desc": "-25% pérdida de cordura al trabajar"},
-      {"level": 3, "name": "Filtro avanzado", "sanity_loss_mult": 0.5, "cost": 2800, "desc": "-50% pérdida de cordura"},
-      {"level": 4, "name": "Aislamiento mental", "sanity_loss_mult": 0.3, "cost": 7500, "desc": "-70% pérdida de cordura"}
+      {
+        "level": 1,
+        "name": "Sin filtro",
+        "sanity_loss_mult": 1.0,
+        "cost": 0,
+        "desc": "Pérdida de cordura normal",
+        "name_en": "No filter",
+        "desc_en": "Pérdida de cordura normal"
+      },
+      {
+        "level": 2,
+        "name": "Filtro básico",
+        "sanity_loss_mult": 0.75,
+        "cost": 700,
+        "desc": "-25% pérdida de cordura al trabajar",
+        "name_en": "Basic filter",
+        "desc_en": "-25% sanity loss while working"
+      },
+      {
+        "level": 3,
+        "name": "Filtro avanzado",
+        "sanity_loss_mult": 0.5,
+        "cost": 2800,
+        "desc": "-50% pérdida de cordura",
+        "name_en": "Advanced filter",
+        "desc_en": "-50% pérdida de cordura"
+      },
+      {
+        "level": 4,
+        "name": "Aislamiento mental",
+        "sanity_loss_mult": 0.3,
+        "cost": 7500,
+        "desc": "-70% pérdida de cordura",
+        "name_en": "Mental isolation",
+        "desc_en": "-70% pérdida de cordura"
+      }
     ],
     "proxy": [
-      {"level": 1, "name": "Sin proxy", "suspicion_mult": 1.0, "cost": 0, "desc": "Sospecha normal al pagar Online"},
-      {"level": 2, "name": "Proxy gratuito", "suspicion_mult": 0.7, "cost": 1100, "desc": "-30% sospecha Online"},
-      {"level": 3, "name": "Proxy anónimo", "suspicion_mult": 0.45, "cost": 4000, "desc": "-55% sospecha Online"},
-      {"level": 4, "name": "Red torcida", "suspicion_mult": 0.25, "cost": 11000, "desc": "-75% sospecha Online"}
+      {
+        "level": 1,
+        "name": "Sin proxy",
+        "suspicion_mult": 1.0,
+        "cost": 0,
+        "desc": "Sospecha normal al pagar Online",
+        "name_en": "No proxy",
+        "desc_en": "Sospecha normal al pagar Online"
+      },
+      {
+        "level": 2,
+        "name": "Proxy gratuito",
+        "suspicion_mult": 0.7,
+        "cost": 1100,
+        "desc": "-30% sospecha Online",
+        "name_en": "Free proxy",
+        "desc_en": "-30% Online suspicion"
+      },
+      {
+        "level": 3,
+        "name": "Proxy anónimo",
+        "suspicion_mult": 0.45,
+        "cost": 4000,
+        "desc": "-55% sospecha Online",
+        "name_en": "Anonymous proxy",
+        "desc_en": "-55% Online suspicion"
+      },
+      {
+        "level": 4,
+        "name": "Red torcida",
+        "suspicion_mult": 0.25,
+        "cost": 11000,
+        "desc": "-75% sospecha Online",
+        "name_en": "Twisted network",
+        "desc_en": "-75% Online suspicion"
+      }
     ],
     "log_cleaner": [
-      {"level": 1, "name": "Sin limpieza", "clean_chance": 0.0, "cost": 0, "desc": "Sin limpieza de logs"},
-      {"level": 2, "name": "Script básico", "clean_chance": 0.15, "cost": 1500, "desc": "15% chance de bajar un poco la sospecha al día"},
-      {"level": 3, "name": "Limpiador pro", "clean_chance": 0.30, "cost": 5000, "desc": "30% chance de limpiar sospecha al día"},
-      {"level": 4, "name": "Borrado total", "clean_chance": 0.50, "cost": 13000, "desc": "50% chance de limpiar sospecha al día"}
+      {
+        "level": 1,
+        "name": "Sin limpieza",
+        "clean_chance": 0.0,
+        "cost": 0,
+        "desc": "Sin limpieza de logs",
+        "name_en": "No cleaning",
+        "desc_en": "Sin limpieza de logs"
+      },
+      {
+        "level": 2,
+        "name": "Script básico",
+        "clean_chance": 0.15,
+        "cost": 1500,
+        "desc": "15% chance de bajar un poco la sospecha al día",
+        "name_en": "Basic script",
+        "desc_en": "15% chance to slightly lower suspicion per day"
+      },
+      {
+        "level": 3,
+        "name": "Limpiador pro",
+        "clean_chance": 0.3,
+        "cost": 5000,
+        "desc": "30% chance de limpiar sospecha al día",
+        "name_en": "Pro cleaner",
+        "desc_en": "30% chance to clear suspicion per day"
+      },
+      {
+        "level": 4,
+        "name": "Borrado total",
+        "clean_chance": 0.5,
+        "cost": 13000,
+        "desc": "50% chance de limpiar sospecha al día",
+        "name_en": "Full wipe",
+        "desc_en": "50% chance to clear suspicion per day"
+      }
     ]
   }
 }

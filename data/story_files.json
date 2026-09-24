@@ -1,0 +1,31 @@
+{
+  "note": "Catalogo vivo en scripts/systems/investigation_system.gd. Estos IDs representan archivos narrativos protegidos.",
+  "files": [
+	{
+	  "id": "meridian_14_05",
+	  "title": "MERIDIAN_14-05.dat",
+	  "unlock_method": "password",
+	  "password": "217"
+	},
+	{
+	  "id": "meridian_log",
+	  "title": "MERIDIAN_LOG.txt",
+	  "unlock_method": "flag"
+	},
+	{
+	  "id": "incident_report",
+	  "title": "INCIDENT_REPORT.dat",
+	  "unlock_method": "clue"
+	},
+	{
+	  "id": "memory_fragment",
+	  "title": "MEMORY_FRAGMENT_01.dat",
+	  "unlock_method": "day"
+	},
+	{
+	  "id": "unknown_log",
+	  "title": "UNKNOWN_LOG.dat",
+	  "unlock_method": "paranoia"
+	}
+  ]
+}

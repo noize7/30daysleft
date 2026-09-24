@@ -1,0 +1,33 @@
+{
+  "note": "Catalogo vivo en scripts/systems/bank_system.gd.",
+  "transactions": [
+    {
+      "id": "starter_payment",
+      "day": 1,
+      "date": "01/05",
+      "merchant": "WORKGRID",
+      "amount": 125.0
+    },
+    {
+      "id": "meridian_payment",
+      "day": 5,
+      "date": "14/05",
+      "merchant": "HOTEL MERIDIAN",
+      "amount": -183.5
+    },
+    {
+      "id": "safehouse_payment",
+      "day": 16,
+      "date": "16/05",
+      "merchant": "MOTEL NORTH",
+      "amount": -72.0
+    },
+    {
+      "id": "unknown_credit",
+      "day": 21,
+      "date": "21/05",
+      "merchant": "UNKNOWN RELAY",
+      "amount": 450.0
+    }
+  ]
+}

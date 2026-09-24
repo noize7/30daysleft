@@ -18,6 +18,27 @@ func _ready() -> void:
 	if GameManager:
 		GameManager.sanity_changed.connect(_on_sanity)
 		_on_sanity(GameManager.sanity)
+	if ParanoiaSystem and not ParanoiaSystem.paranoia_event.is_connected(_on_paranoia_event):
+		ParanoiaSystem.paranoia_event.connect(_on_paranoia_event)
+
+func _on_paranoia_event(event_type: String) -> void:
+	if not GameManager or not GameManager.is_pc_on:
+		return
+	var intensity := ParanoiaSystem.get_visual_intensity() if ParanoiaSystem else 0.25
+	match event_type:
+		"screen_glitch", "ui_corruption":
+			_flash_glitch(maxf(0.18, intensity))
+			if _shader_mat:
+				_shader_mat.set_shader_parameter("intensity", maxf(0.12, intensity * 0.55))
+		"fake_file", "email_echo":
+			# El contenido lo reciben las aplicaciones; aquí solo damos una
+			# interferencia visual corta para unir el evento con el sistema.
+			_flash_glitch(maxf(0.12, intensity * 0.65))
+		"audio_distortion":
+			if SoundSystem:
+				SoundSystem.play_glitch(true)
+		_:
+			_flash_glitch(maxf(0.1, intensity * 0.5))
 
 func _build_nodes() -> void:
 	_vignette = ColorRect.new()

@@ -22,7 +22,10 @@ var _ambient_timer: float = 0.0
 var _title_pulse: float = 0.0
 
 func _ready() -> void:
+	if LocaleSystem and not LocaleSystem.language_changed.is_connected(_on_lang):
+		LocaleSystem.language_changed.connect(_on_lang)
 	_apply_style()
+	_apply_locale()
 	_decorate()
 	_connect_buttons()
 	_refresh_continue()
@@ -104,7 +107,7 @@ func _decorate() -> void:
 	if has_node("CenterPanel/VBox") and title_label:
 		var line := ColorRect.new()
 		line.name = "TitleLine"
-		line.custom_minimum_size = Vector2(380, 2)
+		line.custom_minimum_size = Vector2(480, 3)
 		line.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		line.color = Color(0.0, 0.7, 1.0, 0.6)
 		var vbox: VBoxContainer = $CenterPanel/VBox
@@ -151,15 +154,15 @@ func _apply_style() -> void:
 		ps.corner_radius_bottom_left = 40
 		ps.corner_radius_bottom_right = 40
 		ps.corner_radius_top_right = 0
-		ps.content_margin_left = 80
-		ps.content_margin_right = 80
-		ps.content_margin_top = 60
-		ps.content_margin_bottom = 60
+		ps.content_margin_left = 100
+		ps.content_margin_right = 100
+		ps.content_margin_top = 72
+		ps.content_margin_bottom = 72
 		$CenterPanel.add_theme_stylebox_override("panel", ps)
 
 	if title_label:
 		title_label.add_theme_color_override("font_color", Color(0.9, 0.95, 1.0))
-		title_label.add_theme_font_size_override("font_size", 54)
+		title_label.add_theme_font_size_override("font_size", 72)
 		title_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.7, 1.0, 0.6))
 		title_label.add_theme_constant_override("shadow_outline_size", 12)
 		title_label.add_theme_constant_override("shadow_offset_x", 0)
@@ -169,19 +172,19 @@ func _apply_style() -> void:
 		title_label.add_theme_constant_override("outline_size", 0)
 	if subtitle_label:
 		subtitle_label.add_theme_color_override("font_color", Color(0.4, 0.6, 0.8))
-		subtitle_label.add_theme_font_size_override("font_size", 16)
+		subtitle_label.add_theme_font_size_override("font_size", 22)
 		subtitle_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		subtitle_label.custom_minimum_size = Vector2(420, 0)
-		subtitle_label.text = "TREINTA DÍAS. UNA DEUDA. NINGUNA SEGUNDA OPORTUNIDAD."
+		subtitle_label.custom_minimum_size = Vector2(520, 0)
+		subtitle_label.text = LocaleSystem.t("menu.subtitle", "TREINTA DÍAS. UNA DEUDA. NINGUNA SEGUNDA OPORTUNIDAD.") if LocaleSystem else "TREINTA DÍAS. UNA DEUDA. NINGUNA SEGUNDA OPORTUNIDAD."
 
 	for btn in [btn_play, btn_continue, btn_options, btn_credits, btn_quit]:
 		if btn:
 			_style_button(btn)
-			btn.pivot_offset = Vector2(150, 27)
+			btn.pivot_offset = Vector2(190, 32)
 
 	if version_label:
 		version_label.add_theme_color_override("font_color", Color(0.2, 0.4, 0.6))
-		version_label.add_theme_font_size_override("font_size", 13)
+		version_label.add_theme_font_size_override("font_size", 18)
 		version_label.text = "30 DAYS LEFT  ·  v0.8"
 
 func _add_vignette() -> void:
@@ -238,6 +241,30 @@ func _style_button(btn: Button) -> void:
 	btn.add_theme_color_override("font_color", Color(0.7, 0.8, 0.95))
 	btn.add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0))
 	btn.add_theme_color_override("font_disabled_color", Color(0.3, 0.35, 0.45))
-	btn.add_theme_font_size_override("font_size", 18)
-	btn.custom_minimum_size = Vector2(300, 50)
+	btn.add_theme_font_size_override("font_size", 26)
+	btn.custom_minimum_size = Vector2(380, 64)
 	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+
+
+func _on_lang(_lang: String) -> void:
+	_apply_locale()
+
+func _apply_locale() -> void:
+	if LocaleSystem == null:
+		return
+	if title_label:
+		title_label.text = LocaleSystem.t("menu.title", "30 DAYS LEFT")
+	if subtitle_label:
+		subtitle_label.text = LocaleSystem.t("menu.subtitle", subtitle_label.text)
+	if btn_play:
+		btn_play.text = LocaleSystem.t("menu.new_game", "Nueva Partida")
+	if btn_continue:
+		btn_continue.text = LocaleSystem.t("menu.continue", "Continuar")
+	if btn_options:
+		btn_options.text = LocaleSystem.t("menu.options", "Opciones")
+	if btn_credits:
+		btn_credits.text = LocaleSystem.t("menu.credits", "Créditos")
+	if btn_quit:
+		btn_quit.text = LocaleSystem.t("menu.quit", "Salir")
+	if version_label:
+		version_label.text = LocaleSystem.t("menu.version", version_label.text)

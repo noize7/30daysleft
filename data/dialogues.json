@@ -7,108 +7,131 @@
 	  {
 		"id": "welcome",
 		"text": "¡Hola! Soy BOT-01, tu asistente de arranque.\nBienvenido a tu PC. Tienes 30 días. No los desperdicies.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "Hi! I'm BOT-01, your boot assistant.\nWelcome to your PC. You have 30 days. Don't waste them."
 	  },
 	  {
 		"id": "player_reply_1",
 		"speaker": "TÚ",
 		"text": "…¿Treinta días para qué? No recuerdo casi nada.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "...Thirty days for what? I barely remember anything.",
+		"speaker_en": "YOU"
 	  },
 	  {
 		"id": "explain_battery",
 		"text": "La barra de abajo es la BATERÍA.\nMientras la PC esté encendida se agota. Cuando llegue a 0, se apaga sola y termina el día.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "The bar below is the BATTERY.\nIt drains while the PC is on. At 0% it shuts down and the day ends."
 	  },
 	  {
 		"id": "click_trabajo",
 		"text": "Primero: toca el icono de TRABAJO en el escritorio. Ahí ganas dinero.",
 		"wait_for": "icon_clicked:Trabajo",
-		"highlight": "Trabajo"
+		"highlight": "Trabajo",
+		"text_en": "First: click the WORK icon on the desktop. That's how you earn money."
 	  },
 	  {
 		"id": "open_work_ok",
 		"text": "Perfecto. Elige un empleo, pulsa Empezar y haz los clicks que te pida.\nSolo pagan entre la 01:00 y las 05:00.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "Perfect. Pick a job, press Start, and complete the task.\nThey only pay between 01:00 and 05:00."
 	  },
 	  {
 		"id": "player_work",
 		"speaker": "TÚ",
 		"text": "Encargos nocturnos… como si no tuviera suficiente con no saber quién soy.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "Night gigs... as if not knowing who I am wasn't enough.",
+		"speaker_en": "YOU"
 	  },
 	  {
 		"id": "click_correo",
 		"text": "Ahora abre CORREO. Ahí llegan avisos, pistas… y también basura de tu propia mente.",
 		"wait_for": "icon_clicked:Correo",
-		"highlight": "Correo"
+		"highlight": "Correo",
+		"text_en": "Now open MAIL. Notices, clues... and junk from your own mind show up there."
 	  },
 	  {
 		"id": "correo_ok",
 		"text": "Bien. Revisa el buzón cada día. Algunos mensajes solo aparecen a ciertas horas.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "Good. Check your inbox every day. Some messages only appear at certain hours."
 	  },
 	  {
 		"id": "click_archivos",
 		"text": "Abre ARCHIVOS. Ahí se guardan pistas y documentos que recuperes del disco.",
 		"wait_for": "icon_clicked:Archivos",
-		"highlight": "Archivos"
+		"highlight": "Archivos",
+		"text_en": "Open FILES. Clues and documents you recover from the disk are stored there."
 	  },
 	  {
 		"id": "archivos_ok",
 		"text": "Algunos archivos están ocultos. Más adelante necesitarás más RAM para leerlos.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "Some files are hidden. Later you'll need more RAM to read them."
 	  },
 	  {
 		"id": "click_banco",
 		"text": "Abre BANCO. Ahí ves tu saldo y puedes transferir dinero a la cuenta de escape (cuando te llegue por correo).",
 		"wait_for": "icon_clicked:Banco",
-		"highlight": "Banco"
+		"highlight": "Banco",
+		"text_en": "Open BANK. Check your balance and transfer money to the escape account (when it arrives by mail)."
 	  },
 	  {
 		"id": "banco_ok",
 		"text": "El efectivo no sirve para escapar. Solo la transferencia a la cuenta correcta cuenta.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "Cash won't help you escape. Only a transfer to the right account counts."
 	  },
 	  {
 		"id": "player_bank",
 		"speaker": "TÚ",
 		"text": "Transferir… ¿huir de qué exactamente?",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "Transfer... escape from what, exactly?",
+		"speaker_en": "YOU"
 	  },
 	  {
 		"id": "click_mejoras",
 		"text": "Abre MEJORAS (Tienda). Compra upgrades: más batería, menos sospecha, filtros de ruido…",
 		"wait_for": "icon_clicked:Mejoras",
-		"highlight": "Mejoras"
+		"highlight": "Mejoras",
+		"text_en": "Open UPGRADES (Shop). Buy upgrades: more battery, less suspicion, noise filters..."
 	  },
 	  {
 		"id": "mejoras_ok",
 		"text": "Gasta con cabeza. El dinero también es tu ticket de salida.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "Spend carefully. Money is also your ticket out."
 	  },
 	  {
 		"id": "click_musica",
 		"text": "Por último, abre MÚSICA si quieres algo de ambiente mientras trabajas.",
 		"wait_for": "icon_clicked:Música",
-		"highlight": "Música"
+		"highlight": "Música",
+		"text_en": "Finally, open MUSIC if you want some ambience while you work."
 	  },
 	  {
 		"id": "musica_ok",
 		"text": "Opcional, pero ayuda a no volverse loco del todo.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "Optional, but it helps with the silence."
 	  },
 	  {
 		"id": "player_end",
 		"speaker": "TÚ",
 		"text": "Treinta días. Trabajar. Leer correos. No confiar en todo lo que vea.\n…Vamos.",
-		"wait_for": null
+		"wait_for": null,
+		"text_en": "Thirty days. A debt I don't remember. And a PC that knows more than I do.",
+		"speaker_en": "YOU"
 	  },
 	  {
 		"id": "tutorial_end",
 		"text": "Listo. Ya conoces todas las apps.\nLa batería vuelve a bajar con normalidad.\nDía 1: a trabajar. Buena suerte… la vas a necesitar.",
 		"wait_for": null,
-		"on_complete": "end_tutorial"
+		"on_complete": "end_tutorial",
+		"text_en": "Listo. Ya conoces todas las apps.\nLa batería vuelve a bajar con normalidad.\nDía 1: a trabajar. Buena suerte… la vas a necesitar."
 	  }
 	]
   },
@@ -117,7 +140,8 @@
 	  "id": "day_1_start",
 	  "speaker": "BOT-01",
 	  "text": "Día 1. Bueno… a trabajar.\nEmpieza por algo sencillo. No te quemes la batería el primer día.",
-	  "once": true
+	  "once": true,
+	  "text_en": "Day 1. Alright… time to work.\nStart simple. Don't burn through the battery on day one."
 	},
 	"day_1_player_thought": {
 	  "id": "day_1_player_thought",
@@ -128,7 +152,9 @@
 		"day": 1,
 		"hour_min": 1,
 		"minute_min": 20
-	  }
+	  },
+	  "speaker_en": "YOU",
+	  "text_en": "This screen… these icons… how long have I been here?\nDoesn't matter. I need to make money."
 	},
 	"day_2_mid": {
 	  "id": "day_2_mid",
@@ -139,7 +165,8 @@
 		"day": 2,
 		"hour_min": 2,
 		"minute_min": 40
-	  }
+	  },
+	  "text_en": "Day 2 · 2:40\nPhew… almost halfway through the shift.\nKeep the pace, but watch the battery."
 	},
 	"day_4_player_doubt": {
 	  "id": "day_4_player_doubt",
@@ -150,55 +177,71 @@
 		"day": 4,
 		"hour_min": 3,
 		"minute_min": 0
-	  }
+	  },
+	  "speaker_en": "YOU",
+	  "text_en": "Some emails don't make sense.\nWhat if part of this is only in my head?"
 	},
 	"day_5_warning": {
 	  "id": "day_5_warning",
 	  "speaker": "BOT-01",
-	  "text": "Día 5. La presión empieza a notarse.\nRevisa el correo. A veces hay ofertas… o amenazas.",
-	  "once": true
+	  "text": "Día 5. La presión empieza a notarse.\nRevisa el correo y los archivos a su hora. No todo llega al encender.",
+	  "once": true,
+	  "text_en": "Day 5. The pressure is starting to show.\nCheck mail and files on time. Not everything arrives at boot."
 	},
 	"day_5_player": {
 	  "id": "day_5_player",
 	  "speaker": "TÚ",
-	  "text": "Foto rota. Mensajes de alguien que no recuerdo.\nTengo que seguir leyendo, aunque duela.",
-	  "once": true
+	  "text": "Algo en el disco… hoy se siente distinto.\nMejor reviso Archivos y Correo cuando pueda.",
+	  "once": true,
+	  "text_en": "Something on the disk... today feels different.\nI should check Files and Mail when I can.",
+	  "speaker_en": "YOU"
 	},
 	"day_10_player": {
 	  "id": "day_10_player",
 	  "speaker": "TÚ",
 	  "text": "Policía. Expediente. ¿Estoy siendo buscado… o perseguido?",
-	  "once": true
+	  "once": true,
+	  "text_en": "Ten days. The messages get stranger.\nAnd my memory doesn't line up.",
+	  "speaker_en": "YOU"
 	},
 	"day_15_half": {
 	  "id": "day_15_half",
 	  "speaker": "BOT-01",
 	  "text": "Mitad del camino. 15 días restantes.\n¿Vas bien de dinero? ¿De cordura? ¿De sospecha?\nEl reloj no para.",
-	  "once": true
+	  "once": true,
+	  "text_en": "Halfway there. The debt doesn't wait.\nNeither do the ones looking for you."
 	},
 	"day_15_player": {
 	  "id": "day_15_player",
 	  "speaker": "TÚ",
 	  "text": "Quince días. Mitad del camino y todavía no sé si estoy salvándome o cavando más hondo.",
-	  "once": true
+	  "once": true,
+	  "text_en": "Fifteen days. I'm not sure if I'm investigating or inventing.",
+	  "speaker_en": "YOU"
 	},
 	"day_20_player": {
 	  "id": "day_20_player",
 	  "speaker": "TÚ",
 	  "text": "El disco miente. Los correos mienten.\nSolo puedo confiar en lo que verifique dos veces.",
-	  "once": true
+	  "once": true,
+	  "text_en": "Twenty days. The screen flickers more often.\nIs it the PC... or me?",
+	  "speaker_en": "YOU"
 	},
 	"day_25_player": {
 	  "id": "day_25_player",
 	  "speaker": "TÚ",
 	  "text": "Cinco días. Si la ruta de escape es real… no puedo fallar la transferencia.",
-	  "once": true
+	  "once": true,
+	  "text_en": "Five days left. Every file could be a trap.\nOr the only way out.",
+	  "speaker_en": "YOU"
 	},
 	"day_29_player": {
 	  "id": "day_29_player",
 	  "speaker": "TÚ",
 	  "text": "Mañana se acaba.\nO salgo… o ellos llegan primero.",
-	  "once": true
+	  "once": true,
+	  "text_en": "Tomorrow is the last day.\nIf I don't transfer enough... it's over.",
+	  "speaker_en": "YOU"
 	}
   }
 }

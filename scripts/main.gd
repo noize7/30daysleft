@@ -30,11 +30,11 @@ const START_POPUP_SCENE := preload("res://scenes/menus/start_popup.tscn")
 @export var icon_banco: Texture2D
 ## Textura del icono MusicPlayer (Tanda 8).
 @export var icon_musica: Texture2D
-@export_range(0.5, 3.0, 0.1) var icon_scale: float = 1.8
+@export_range(0.5, 4.0, 0.1) var icon_scale: float = 2.8
 
 @export_group("Tienda de mejoras")
 ## Escala de los iconos dentro de la lista de Mejoras (Inspector del nodo Main).
-@export_range(0.5, 3.0, 0.1) var shop_icon_scale: float = 1.2
+@export_range(0.5, 3.0, 0.1) var shop_icon_scale: float = 1.5
 
 ## Nombre de app -> nodo DesktopIcon (para reubicarlos tras cargar partida)
 var _desktop_icons: Dictionary = {}
@@ -79,7 +79,7 @@ func _ready() -> void:
 ## Carga user://settings.json y aplica velocidad / drenaje / dificultad / fullscreen.
 func _boot_apply_settings() -> void:
 	var path := "user://settings.json"
-	var settings := {
+	var settings: Dictionary = {
 		"master_volume": 80.0,
 		"game_speed": 1,
 		"difficulty": 1,
@@ -89,58 +89,60 @@ func _boot_apply_settings() -> void:
 	}
 	if FileAccess.file_exists(path):
 		var file := FileAccess.open(path, FileAccess.READ)
-		if file:
-			var parsed = JSON.parse_string(file.get_as_text())
+		if file != null:
+			var raw_text := file.get_as_text()
 			file.close()
+			var parsed: Variant = JSON.parse_string(raw_text)
 			if typeof(parsed) == TYPE_DICTIONARY:
+				var pd: Dictionary = parsed
 				for k in settings.keys():
-					if parsed.has(k):
-						settings[k] = parsed[k]
-	if bool(settings.fullscreen):
+					if pd.has(k):
+						settings[k] = pd[k]
+	if bool(settings.get("fullscreen", false)):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	if TimeManager:
-		match int(settings.game_speed):
+		match int(settings.get("game_speed", 1)):
 			0:
 				TimeManager.GAME_SECONDS_PER_REAL_SECOND = 20.0
 			1:
 				TimeManager.GAME_SECONDS_PER_REAL_SECOND = 28.0
 			2:
 				TimeManager.GAME_SECONDS_PER_REAL_SECOND = 45.0
-		var base_drain: float = 0.28
-		match int(settings.battery_drain):
+		var base_drain: float = 0.22
+		match int(settings.get("battery_drain", 1)):
 			0:
-				base_drain = 0.18
+				base_drain = 0.14
 			1:
-				base_drain = 0.28
+				base_drain = 0.22
 			2:
-				base_drain = 0.42
-		match int(settings.difficulty):
+				base_drain = 0.32
+		match int(settings.get("difficulty", 1)):
 			0:
 				base_drain *= 0.75
 			2:
 				base_drain *= 1.35
 		TimeManager.BATTERY_DRAIN_PER_REAL_SECOND = base_drain
 	if GameManager:
-		match int(settings.difficulty):
+		match int(settings.get("difficulty", 1)):
 			0:
 				GameManager.set_meta("suspicion_mult", 0.7)
 			1:
 				GameManager.set_meta("suspicion_mult", 1.0)
 			2:
 				GameManager.set_meta("suspicion_mult", 1.4)
-	if bool(settings.show_fps):
+	if bool(settings.get("show_fps", false)):
 		var existing = get_tree().root.get_node_or_null("FPSOverlay")
 		if existing == null:
 			var lbl := Label.new()
 			lbl.name = "FPSOverlay"
 			lbl.z_index = 100
-			lbl.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-			lbl.offset_left = -120.0
+			lbl.set_anchors_preset(Control.PRESET_TOP_LEFT)
+			lbl.offset_left = 12.0
 			lbl.offset_top = 8.0
-			lbl.offset_right = -8.0
-			lbl.offset_bottom = 32.0
+			lbl.offset_right = 160.0
+			lbl.offset_bottom = 36.0
 			lbl.add_theme_color_override("font_color", Color(0.2, 1.0, 0.3))
-			lbl.add_theme_font_size_override("font_size", 16)
+			lbl.add_theme_font_size_override("font_size", 22)
 			lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			get_tree().root.add_child(lbl)
 		set_process(true)
@@ -224,7 +226,7 @@ func _start_boot_sequence(_load_save: bool) -> void:
 	# Mientras se espera a que el jugador pulse encender, solo se ve el botón
 	boot_label.visible = false
 	power_button.visible = true
-	power_button.text = "ENCENDER"
+	power_button.text = LocaleSystem.t("desktop.power_on", "ENCENDER") if LocaleSystem else "ENCENDER"
 	_center_power_button()
 
 
@@ -232,7 +234,7 @@ func _style_boot() -> void:
 	boot_screen.color = Color(0.015, 0.03, 0.06)
 	boot_label.text = "30 DAYS LEFT"
 	boot_label.add_theme_color_override("font_color", Color(0.95, 0.97, 1.0))
-	boot_label.add_theme_font_size_override("font_size", 52)
+	boot_label.add_theme_font_size_override("font_size", 56)
 	boot_label.add_theme_color_override("font_shadow_color", Color(0.15, 0.4, 0.85, 0.45))
 	boot_label.add_theme_constant_override("shadow_offset_x", 0)
 	boot_label.add_theme_constant_override("shadow_offset_y", 3)
@@ -243,8 +245,8 @@ func _style_boot() -> void:
 
 
 func _style_power_button() -> void:
-	power_button.text = "ENCENDER"
-	power_button.custom_minimum_size = Vector2(240, 58)
+	power_button.text = LocaleSystem.t("desktop.power_on", "ENCENDER") if LocaleSystem else "ENCENDER"
+	power_button.custom_minimum_size = Vector2(300, 72)
 	_center_power_button()
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0.14, 0.58, 0.32)
@@ -264,7 +266,7 @@ func _style_power_button() -> void:
 	power_button.add_theme_stylebox_override("pressed", pressed)
 	power_button.add_theme_color_override("font_color", Color.WHITE)
 	power_button.add_theme_color_override("font_hover_color", Color.WHITE)
-	power_button.add_theme_font_size_override("font_size", 22)
+	power_button.add_theme_font_size_override("font_size", 28)
 
 
 
@@ -302,7 +304,7 @@ func _style_ending() -> void:
 	ending_label.grow_horizontal = Control.GROW_DIRECTION_END
 	ending_label.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	ending_label.add_theme_color_override("font_color", Color(0.95, 0.95, 0.97))
-	ending_label.add_theme_font_size_override("font_size", 22)
+	ending_label.add_theme_font_size_override("font_size", 30)
 	ending_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
 	ending_label.add_theme_constant_override("shadow_offset_x", 1)
 	ending_label.add_theme_constant_override("shadow_offset_y", 1)
@@ -332,16 +334,16 @@ func _style_ending() -> void:
 	rh.bg_color = Color(0.22, 0.48, 0.95)
 	restart_button.add_theme_stylebox_override("hover", rh)
 	restart_button.add_theme_color_override("font_color", Color.WHITE)
-	restart_button.add_theme_font_size_override("font_size", 18)
-	restart_button.text = "Menú principal"
+	restart_button.add_theme_font_size_override("font_size", 24)
+	restart_button.text = LocaleSystem.t("pause.main_menu", "Menú principal") if LocaleSystem else "Menú principal"
 
 ## Calcula la posición en rejilla del icono "index" sin solapes,
 ## usando el mismo cálculo de tamaño que DesktopIcon._rebuild().
 ## Con 7 iconos usamos 3 columnas para que ninguno quede fuera de pantalla.
 func _grid_icon_position(index: int) -> Vector2:
-	var icon_sz: float = 56.0 * icon_scale
-	var cell_w: float = maxf(icon_sz + 24.0, 96.0 * icon_scale) + 20.0
-	var cell_h: float = icon_sz + 36.0 * icon_scale + 16.0
+	var icon_sz: float = 64.0 * icon_scale
+	var cell_w: float = maxf(icon_sz + 28.0, 110.0 * icon_scale) + 24.0
+	var cell_h: float = icon_sz + 40.0 * icon_scale + 20.0
 	var margin: float = 24.0
 	var cols: int = 3
 	var col: int = index % cols
@@ -451,14 +453,14 @@ func _on_power_pressed() -> void:
 func _play_boot_animation() -> void:
 	boot_label.text = "30 DAYS LEFT"
 	boot_label.add_theme_color_override("font_color", Color(0.7, 0.85, 1.0))
-	boot_label.add_theme_font_size_override("font_size", 42)
+	boot_label.add_theme_font_size_override("font_size", 56)
 	var vp := get_viewport_rect().size
 
 	var status := Label.new()
 	status.name = "BootStatus"
 	status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	status.add_theme_color_override("font_color", Color(0.55, 0.9, 0.7))
-	status.add_theme_font_size_override("font_size", 20)
+	status.add_theme_font_size_override("font_size", 27)
 	status.size = Vector2(420, 32)
 	status.position = Vector2((vp.x - 420.0) * 0.5, vp.y * 0.48)
 	boot_screen.add_child(status)
@@ -497,12 +499,12 @@ func _play_boot_animation() -> void:
 		balls.append(ball)
 
 	var steps: Array = [
-		"Iniciando discos...",
-		"Cargando RAM...",
-		"Verificando batería...",
-		"Montando sistema...",
-		"Cargando escritorio...",
-		"Listo."
+		LocaleSystem.t("boot.disks", "Iniciando discos...") if LocaleSystem else "Iniciando discos...",
+		LocaleSystem.t("boot.ram", "Cargando RAM...") if LocaleSystem else "Cargando RAM...",
+		LocaleSystem.t("boot.battery", "Verificando batería...") if LocaleSystem else "Verificando batería...",
+		LocaleSystem.t("boot.system", "Montando sistema...") if LocaleSystem else "Montando sistema...",
+		LocaleSystem.t("boot.desktop", "Cargando escritorio...") if LocaleSystem else "Cargando escritorio...",
+		LocaleSystem.t("boot.ready_step", "Listo.") if LocaleSystem else "Listo."
 	]
 	var total_time := 3.5
 	var step_time := total_time / float(steps.size())
@@ -517,7 +519,7 @@ func _play_boot_animation() -> void:
 				var b: ColorRect = balls[bi]
 				var phase: float = Time.get_ticks_msec() / 200.0 + float(bi) * 0.9
 				b.position.y = sin(phase) * 6.0
-	status.text = "Sistema listo"
+	status.text = LocaleSystem.t("desktop.system_ready", "Sistema listo") if LocaleSystem else "Sistema listo"
 	bar.value = 100.0
 	await get_tree().create_timer(0.25).timeout
 
@@ -529,7 +531,7 @@ func _clear_boot_fx() -> void:
 			node.queue_free()
 	boot_label.text = "30 DAYS LEFT"
 	boot_label.add_theme_color_override("font_color", Color(0.95, 0.97, 1.0))
-	boot_label.add_theme_font_size_override("font_size", 52)
+	boot_label.add_theme_font_size_override("font_size", 56)
 
 
 func _on_pc_power(is_on: bool) -> void:
@@ -539,7 +541,7 @@ func _on_pc_power(is_on: bool) -> void:
 		# Evitar flash de apagado al pulsar "Nueva partida" / reset.
 		if GameManager.suppress_shutdown:
 			return
-		_shutdown_pc_sequence("Batería agotada")
+		_shutdown_pc_sequence(LocaleSystem.t("boot.battery_dead", "Batería agotada") if LocaleSystem else "Batería agotada")
 
 
 func _on_start_menu() -> void:
@@ -551,17 +553,21 @@ func _show_start_popup() -> void:
 		_start_popup = START_POPUP_SCENE.instantiate()
 		add_child(_start_popup)
 		_start_popup.shutdown_pressed.connect(func():
-			_shutdown_pc_sequence("Apagando el PC")
+			_shutdown_pc_sequence(LocaleSystem.t("desktop.shutdown", "Apagar PC") if LocaleSystem else "Apagar PC")
 		)
 	if _start_popup.has_method("show_popup"):
 		_start_popup.show_popup()
 	else:
 		_start_popup.visible = true
 
-func _shutdown_pc_sequence(reason: String = "Batería agotada") -> void:
+func _shutdown_pc_sequence(reason: String = "") -> void:
 	if _shutting_down:
 		return
 	_shutting_down = true
+	if reason.is_empty():
+		reason = LocaleSystem.t("boot.battery_dead", "Batería agotada") if LocaleSystem else "Batería agotada"
+	var shutting: String = LocaleSystem.t("desktop.shutting_down", "Apagando el PC.") if LocaleSystem else "Apagando el PC."
+	var shutting_base: String = shutting.trim_suffix(".")
 	if desktop.has_method("hide_desktop"):
 		desktop.hide_desktop()
 	else:
@@ -571,8 +577,8 @@ func _shutdown_pc_sequence(reason: String = "Batería agotada") -> void:
 	# Fijar el texto de apagado ANTES de mostrar la pantalla, para que nunca
 	# se vea "30 DAYS LEFT" de fondo ni por un instante.
 	boot_label.add_theme_color_override("font_color", Color(1.0, 0.75, 0.35))
-	boot_label.add_theme_font_size_override("font_size", 36)
-	boot_label.text = "%s\n\nApagando el PC." % reason
+	boot_label.add_theme_font_size_override("font_size", 56)
+	boot_label.text = "%s\n\n%s" % [reason, shutting]
 	boot_label.visible = true
 	boot_screen.visible = true
 	power_button.visible = false
@@ -584,15 +590,15 @@ func _shutdown_pc_sequence(reason: String = "Batería agotada") -> void:
 		var dots: String = ""
 		for _j in range(n):
 			dots += "."
-		boot_label.text = "%s\n\nApagando el PC%s" % [reason, dots]
+		boot_label.text = "%s\n\n%s%s" % [reason, shutting_base, dots]
 		await get_tree().create_timer(0.4).timeout
 	# Volver al estado de "solo botón de encender" (sin texto de fondo)
 	boot_label.visible = false
 	boot_label.text = "30 DAYS LEFT"
 	boot_label.add_theme_color_override("font_color", Color(0.95, 0.97, 1.0))
-	boot_label.add_theme_font_size_override("font_size", 52)
+	boot_label.add_theme_font_size_override("font_size", 56)
 	power_button.visible = true
-	power_button.text = "ENCENDER"
+	power_button.text = LocaleSystem.t("desktop.power_on", "ENCENDER") if LocaleSystem else "ENCENDER"
 	_shutting_down = false
 
 
@@ -640,9 +646,9 @@ func _on_game_over(ending: String) -> void:
 		"locura":
 			ending_label.text = "FINAL 2 de 3 — LOCURA\nHas perdido el contacto con la realidad."
 		"atrapado":
-			ending_label.text = "FINAL 3 de 3 — ATRAPADO\nSin transferencia completa o sin pistas.\nLa policía ha llegado."
+			ending_label.text = LocaleSystem.t("ending.caught", "FINAL 3 de 3 — ATRAPADO\nSin transferencia completa o sin pistas.\nLa policía ha llegado.") if LocaleSystem else "FINAL 3 de 3 — ATRAPADO\nSin transferencia completa o sin pistas.\nLa policía ha llegado."
 		"escape":
-			ending_label.text = "ESCAPE 1 de 3\nTransferiste el dinero y recuperaste las pistas.\nEscapaste a tiempo."
+			ending_label.text = LocaleSystem.t("ending.escape", "ESCAPE 1 de 3\nTransferiste el dinero y recuperaste las pistas.\nEscapaste a tiempo.") if LocaleSystem else "ESCAPE 1 de 3\nTransferiste el dinero y recuperaste las pistas.\nEscapaste a tiempo."
 		_:
 			ending_label.text = "FIN\n%s" % ending
 
@@ -681,7 +687,7 @@ func _on_restart() -> void:
 func _try_load_or_new() -> void:
 	if SaveManager.has_save():
 		if SaveManager.load_game():
-			boot_label.text = "Día %d" % GameManager.day
+			boot_label.text = ((LocaleSystem.t("desktop.day", "Día %d") if LocaleSystem else "Día %d") % GameManager.day)
 			_apply_saved_icon_positions()
 		else:
 			boot_label.text = "Nueva partida"

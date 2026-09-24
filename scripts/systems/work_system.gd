@@ -14,37 +14,37 @@ const SECRET_JOBS: Array = [
 		"id": "secret_data", "level": 2, "secret": true,
 		"name": "[SEC] Limpieza de datos",
 		"description": "Borra rastros en servidores grises. Riesgo medio.",
-		"min_pay": 100, "max_pay": 220, "duration": 12, "clicks_required": 9
+		"min_pay": 155, "max_pay": 341, "duration": 12, "clicks_required": 9
 	},
 	{
 		"id": "secret_scrape", "level": 2, "secret": true,
 		"name": "[SEC] Scraping gris",
 		"description": "Extrae datos de sitios sin API pública.",
-		"min_pay": 90, "max_pay": 200, "duration": 11, "clicks_required": 10
+		"min_pay": 139, "max_pay": 310, "duration": 11, "clicks_required": 10
 	},
 	{
 		"id": "secret_proxy", "level": 3, "secret": true,
 		"name": "[SEC] Proxy oscuro",
 		"description": "Enruta tráfico anónimo. Requiere banda ancha.",
-		"min_pay": 350, "max_pay": 700, "duration": 16, "clicks_required": 13
+		"min_pay": 542, "max_pay": 1085, "duration": 16, "clicks_required": 13
 	},
 	{
 		"id": "secret_crypto", "level": 3, "secret": true,
 		"name": "[SEC] Minería oculta",
 		"description": "Configura nodos de minería en VPS baratos.",
-		"min_pay": 400, "max_pay": 800, "duration": 17, "clicks_required": 14
+		"min_pay": 620, "max_pay": 1240, "duration": 17, "clicks_required": 14
 	},
 	{
 		"id": "secret_contract", "level": 4, "secret": true,
 		"name": "[SEC] Contrato sombra",
 		"description": "Encargo sin nombre. Paga muy bien. No preguntes.",
-		"min_pay": 1800, "max_pay": 4000, "duration": 22, "clicks_required": 18
+		"min_pay": 2790, "max_pay": 6200, "duration": 22, "clicks_required": 18
 	},
 	{
 		"id": "secret_zero", "level": 4, "secret": true,
 		"name": "[SEC] Zero-day report",
 		"description": "Documenta y vende un fallo de seguridad.",
-		"min_pay": 2500, "max_pay": 5500, "duration": 24, "clicks_required": 20
+		"min_pay": 3875, "max_pay": 8525, "duration": 24, "clicks_required": 20
 	},
 ]
 
@@ -97,3 +97,14 @@ func get_next_level_requirement() -> int:
 	if not GameManager.LEVEL_REQUIREMENTS.has(next_level):
 		return -1
 	return int(GameManager.LEVEL_REQUIREMENTS[next_level])
+
+
+func localized_job_name(job: Dictionary) -> String:
+	if LocaleSystem:
+		return LocaleSystem.field(job, "name")
+	return str(job.get("name", ""))
+
+func localized_job_desc(job: Dictionary) -> String:
+	if LocaleSystem:
+		return LocaleSystem.field(job, "description")
+	return str(job.get("description", ""))

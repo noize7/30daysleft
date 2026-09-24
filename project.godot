@@ -22,20 +22,25 @@ WorkSystem="*res://scripts/systems/work_system.gd"
 UpgradeSystem="*res://scripts/systems/upgrade_system.gd"
 EmailSystem="*res://scripts/systems/email_system.gd"
 ClueSystem="*res://scripts/systems/clue_system.gd"
+BankSystem="*res://scripts/systems/bank_system.gd"
+InvestigationSystem="*res://scripts/systems/investigation_system.gd"
+ParanoiaSystem="*res://scripts/systems/paranoia_system.gd"
 SaveManager="*res://scripts/managers/save_manager.gd"
 SanityFX="*res://scripts/systems/sanity_fx.gd"
 VFXSystem="*res://scripts/systems/vfx_system.gd"
 DialogueSystem="*res://scripts/systems/dialogue_system.gd"
+LocaleSystem="*res://scripts/systems/locale_system.gd"
 MissionSystem="*res://scripts/systems/mission_system.gd"
 SoundSystem="*res://scenes/systems/sound_system.tscn"
 
 [display]
 
-window/size/viewport_width=1080
-window/size/viewport_height=720
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+window/stretch/scale_mode="fractional"
 mouse_cursor/custom_image="res://assets/Icons Pc/cursor.png"
 
 [rendering]

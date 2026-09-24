@@ -28,6 +28,7 @@ var _type_tween: Tween = null
 var _fade_tween: Tween = null
 var _chars_per_second: float = 22.0  # typewriter más lento y legible
 var _typed_chars: int = 0
+var _skip_tutorial_btn: Button = null
 
 func _ready() -> void:
 	visible = false
@@ -40,6 +41,7 @@ func _ready() -> void:
 		continue_btn.pressed.connect(_on_continue)
 	if panel:
 		panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_ensure_skip_tutorial_button()
 
 func _apply_style() -> void:
 	# Panel oscuro tipo terminal
@@ -63,25 +65,25 @@ func _apply_style() -> void:
 	if portrait_label:
 		portrait_label.text = "BOT"
 		portrait_label.add_theme_color_override("font_color", Color(0.45, 0.85, 1.0))
-		portrait_label.add_theme_font_size_override("font_size", 22)
+		portrait_label.add_theme_font_size_override("font_size", 24)
 		portrait_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		portrait_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
 	if speaker_label:
 		speaker_label.add_theme_color_override("font_color", Color(0.4, 0.85, 1.0))
-		speaker_label.add_theme_font_size_override("font_size", 20)
+		speaker_label.add_theme_font_size_override("font_size", 24)
 	if body_label:
 		body_label.add_theme_color_override("font_color", Color(0.92, 0.95, 1.0))
-		body_label.add_theme_font_size_override("font_size", 18)
+		body_label.add_theme_font_size_override("font_size", 24)
 		body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		body_label.visible_characters = 0
 	if waiting_label:
 		waiting_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.4))
-		waiting_label.add_theme_font_size_override("font_size", 16)
+		waiting_label.add_theme_font_size_override("font_size", 24)
 		waiting_label.visible = false
 	if continue_btn:
 		continue_btn.text = "Continuar ▶"
-		continue_btn.add_theme_font_size_override("font_size", 17)
+		continue_btn.add_theme_font_size_override("font_size", 24)
 		# Estilo del botón un poco más visible
 		var btn_style := StyleBoxFlat.new()
 		btn_style.bg_color = Color(0.15, 0.35, 0.55, 0.95)
@@ -107,8 +109,8 @@ func _apply_style() -> void:
 func _reposition_button() -> void:
 	if panel:
 		# Más arriba: deja margen sobre la taskbar y da aire al botón
-		panel.offset_top = -230.0
-		panel.offset_bottom = -78.0
+		panel.offset_top = -300.0
+		panel.offset_bottom = -100.0
 	if continue_btn:
 		continue_btn.custom_minimum_size = Vector2(150, 34)
 		var vbox = panel.get_node_or_null("HBox/VBox") if panel else null
@@ -118,6 +120,10 @@ func _reposition_button() -> void:
 func show_dialogue(speaker: String, text: String, waiting: bool = false) -> void:
 	# Cancelar cualquier tween anterior para evitar parpadeos / race conditions
 	_kill_tweens()
+
+	# Nunca mostrar "Saltar tutorial" fuera del tutorial
+	if _skip_tutorial_btn:
+		_skip_tutorial_btn.visible = DialogueSystem != null and DialogueSystem.is_tutorial
 
 	visible = true
 	if speaker_label:
@@ -156,6 +162,8 @@ func show_dialogue(speaker: String, text: String, waiting: bool = false) -> void
 func hide_dialogue() -> void:
 	_kill_tweens()
 	_is_typing = false
+	if _skip_tutorial_btn:
+		_skip_tutorial_btn.visible = false
 	_fade_tween = create_tween()
 	_fade_tween.set_ease(Tween.EASE_IN)
 	_fade_tween.tween_property(self, "modulate:a", 0.0, 0.18)
@@ -215,7 +223,50 @@ func _finish_typing() -> void:
 	_update_controls_visibility()
 	typing_finished.emit()
 
+func _ensure_skip_tutorial_button() -> void:
+	if _skip_tutorial_btn != null and is_instance_valid(_skip_tutorial_btn):
+		return
+	_skip_tutorial_btn = Button.new()
+	_skip_tutorial_btn.name = "SkipTutorialButton"
+	_skip_tutorial_btn.text = "Saltar tutorial"
+	_skip_tutorial_btn.visible = false
+	_skip_tutorial_btn.custom_minimum_size = Vector2(50, 28)
+	_skip_tutorial_btn.add_theme_font_size_override("font_size", 25)
+	var sstyle := StyleBoxFlat.new()
+	sstyle.bg_color = Color(0.35, 0.12, 0.12, 0.9)
+	sstyle.set_corner_radius_all(5)
+	sstyle.content_margin_left = 10
+	sstyle.content_margin_right = 10
+	sstyle.content_margin_top = 4
+	sstyle.content_margin_bottom = 4
+	_skip_tutorial_btn.add_theme_stylebox_override("normal", sstyle)
+	var shover := sstyle.duplicate()
+	shover.bg_color = Color(0.5, 0.18, 0.18, 0.95)
+	_skip_tutorial_btn.add_theme_stylebox_override("hover", shover)
+	_skip_tutorial_btn.add_theme_color_override("font_color", Color(1.0, 0.85, 0.85))
+	_skip_tutorial_btn.pressed.connect(_on_skip_tutorial)
+	var vbox = panel.get_node_or_null("HBox/VBox") if panel else null
+	if vbox:
+		vbox.add_child(_skip_tutorial_btn)
+	else:
+		add_child(_skip_tutorial_btn)
+
+func _on_skip_tutorial() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
+	if DialogueSystem and DialogueSystem.has_method("skip_tutorial"):
+		DialogueSystem.skip_tutorial()
+
 func _update_controls_visibility() -> void:
+	var show_skip := (
+		DialogueSystem != null
+		and DialogueSystem.is_tutorial
+		and DialogueSystem.is_active
+		and str(DialogueSystem.current_sequence_id) == "tutorial"
+	)
+	if _skip_tutorial_btn:
+		_skip_tutorial_btn.visible = show_skip and not _is_typing
+
 	if _is_typing:
 		if continue_btn:
 			continue_btn.visible = false

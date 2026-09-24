@@ -12,8 +12,8 @@ signal closed
 @onready var content: Control = $Content
 
 @export var app_title: String = "Aplicación"
-@export var window_size: Vector2 = Vector2(620, 480)
-@export var title_font_size: int = 25
+@export var window_size: Vector2 = Vector2(920, 700)
+@export var title_font_size: int = 34
 
 var _signals_connected: bool = false
 var _dragging: bool = false
@@ -26,7 +26,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_clamp_to_viewport()
 
-func setup(title: String, wsize: Vector2 = Vector2(620, 480)) -> void:
+func setup(title: String, wsize: Vector2 = Vector2(920, 700)) -> void:
 	app_title = title
 	window_size = wsize
 	_apply_layout()
@@ -76,22 +76,38 @@ func _apply_layout() -> void:
 	var tl := get_node_or_null("TitleBar/TitleLabel") as Label
 	var cb := get_node_or_null("TitleBar/CloseButton") as Button
 	var ct := get_node_or_null("Content") as Control
-	var tb_h: float = 46.0
+	var tb_h: float = 52.0
 	if tb:
-		tb.position = Vector2(0, 0)
-		tb.size = Vector2(window_size.x, tb_h)
+		# Anclas a ancho completo para que la barra azul siempre llegue al borde derecho
+		tb.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+		tb.offset_left = 0.0
+		tb.offset_top = 0.0
+		tb.offset_right = 0.0
+		tb.offset_bottom = tb_h
 		tb.mouse_filter = Control.MOUSE_FILTER_STOP
 	if tl:
 		tl.text = app_title
-		tl.position = Vector2(14, 8)
-		tl.size = Vector2(window_size.x - 64, tb_h - 12)
+		tl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		tl.offset_left = 16.0
+		tl.offset_top = 10.0
+		tl.offset_right = -60.0
+		tl.offset_bottom = -6.0
 		tl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if cb:
-		cb.position = Vector2(window_size.x - 46, 7)
-		cb.size = Vector2(38, 34)
+		cb.anchor_left = 1.0
+		cb.anchor_right = 1.0
+		cb.anchor_top = 0.0
+		cb.anchor_bottom = 0.0
+		cb.offset_left = -52.0
+		cb.offset_right = -10.0
+		cb.offset_top = 8.0
+		cb.offset_bottom = 44.0
 	if ct:
-		ct.position = Vector2(12, tb_h + 6)
-		ct.size = Vector2(window_size.x - 24, window_size.y - tb_h - 18)
+		ct.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		ct.offset_left = 12.0
+		ct.offset_top = tb_h + 6.0
+		ct.offset_right = -12.0
+		ct.offset_bottom = -12.0
 
 func _connect_ui_signals() -> void:
 	if _signals_connected:
@@ -186,5 +202,5 @@ func _apply_xp_style() -> void:
 		cp.bg_color = Color(0.55, 0.08, 0.1)
 		cb.add_theme_stylebox_override("pressed", cp)
 		cb.add_theme_color_override("font_color", Color.WHITE)
-		cb.add_theme_font_size_override("font_size", 15)
+		cb.add_theme_font_size_override("font_size", 20)
 		cb.text = "X"

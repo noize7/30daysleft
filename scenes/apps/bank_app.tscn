@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bankapp30"]
 
-[ext_resource type="Script" uid="uid://dukm8ywx2p3ex" path="res://scripts/apps/bank_app.gd" id="1_bank"]
+[ext_resource type="Script" uid="uid://cthyv0j40t1ih" path="res://scripts/apps/bank_app.gd" id="1_bank"]
 
-[node name="BankApp" type="Control" unique_id=1753586847]
+[node name="BankApp" type="Control" unique_id=2061998735]
 clip_contents = true
 layout_mode = 3
 anchors_preset = 15
@@ -12,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_bank")
 
-[node name="Scroll" type="ScrollContainer" parent="." unique_id=1552838317]
+[node name="Scroll" type="ScrollContainer" parent="." unique_id=1202836171]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,43 +21,134 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="Root" type="VBoxContainer" parent="Scroll" unique_id=1428930072]
+[node name="Root" type="VBoxContainer" parent="Scroll" unique_id=309873043]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="Header" type="Label" parent="Scroll/Root" unique_id=957102131]
+[node name="Header" type="Label" parent="Scroll/Root" unique_id=636041851]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.25, 0.15, 1)
+theme_override_font_sizes/font_size = 32
 text = "Banco"
 
-[node name="BalanceLabel" type="Label" parent="Scroll/Root" unique_id=1584332284]
+[node name="BalanceLabel" type="Label" parent="Scroll/Root" unique_id=835631955]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.4, 0.15, 1)
+theme_override_font_sizes/font_size = 32
 text = "Saldo: $0"
 
-[node name="InfoLabel" type="Label" parent="Scroll/Root" unique_id=7804591]
+[node name="InfoLabel" type="Label" parent="Scroll/Root" unique_id=1000810324]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.2, 0.2, 0.25, 1)
+theme_override_font_sizes/font_size = 32
 text = "Gestión de pagos"
 autowrap_mode = 3
 
-[node name="MethodLabel" type="Label" parent="Scroll/Root" unique_id=1458183437]
+[node name="MethodLabel" type="Label" parent="Scroll/Root" unique_id=398827884]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.15, 0.2, 1)
+theme_override_font_sizes/font_size = 32
 text = "Método preferido: Transferencia"
 
-[node name="Methods" type="HBoxContainer" parent="Scroll/Root" unique_id=2047499734]
+[node name="Methods" type="HBoxContainer" parent="Scroll/Root" unique_id=564829022]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="BtnCash" type="Button" parent="Scroll/Root/Methods" unique_id=1393037025]
+[node name="BtnCash" type="Button" parent="Scroll/Root/Methods" unique_id=2105942590]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
 text = "Efectivo"
 
-[node name="BtnTransfer" type="Button" parent="Scroll/Root/Methods" unique_id=1573566261]
+[node name="BtnTransfer" type="Button" parent="Scroll/Root/Methods" unique_id=1313331854]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
 text = "Transferencia"
 
-[node name="StatusLabel" type="Label" parent="Scroll/Root" unique_id=1134452489]
+[node name="TransferBox" type="VBoxContainer" parent="Scroll/Root" unique_id=39477690]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="AccountLabel" type="Label" parent="Scroll/Root/TransferBox" unique_id=1425770320]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.15, 0.15, 0.2, 1)
+theme_override_font_sizes/font_size = 32
+text = "Cuenta a transferir:"
+
+[node name="AccountEdit" type="LineEdit" parent="Scroll/Root/TransferBox" unique_id=1691961703]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+placeholder_text = "12 dígitos (del correo)"
+max_length = 24
+
+[node name="AmountLabel" type="Label" parent="Scroll/Root/TransferBox" unique_id=1713742084]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.15, 0.2, 1)
+theme_override_font_sizes/font_size = 32
+text = "Cantidad:"
+
+[node name="AmountEdit" type="LineEdit" parent="Scroll/Root/TransferBox" unique_id=1386714271]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Ej: 100"
+max_length = 16
+
+[node name="BtnRow" type="HBoxContainer" parent="Scroll/Root/TransferBox" unique_id=399692173]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="BtnSend" type="Button" parent="Scroll/Root/TransferBox/BtnRow" unique_id=1199271694]
+custom_minimum_size = Vector2(100, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Transferir"
+
+[node name="BtnAll" type="Button" parent="Scroll/Root/TransferBox/BtnRow" unique_id=1393774045]
+custom_minimum_size = Vector2(100, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Todo el saldo"
+
+[node name="ProgressLabel" type="Label" parent="Scroll/Root/TransferBox" unique_id=623669266]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.15, 0.3, 0.15, 1)
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
+
+[node name="TransactionsBox" type="VBoxContainer" parent="Scroll/Root" unique_id=1423716307]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="TransactionsTitle" type="Label" parent="Scroll/Root/TransactionsBox" unique_id=1586093340]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.25, 0.15, 1)
+theme_override_font_sizes/font_size = 32
+text = "Movimientos recientes"
+
+[node name="TransactionsList" type="ItemList" parent="Scroll/Root/TransactionsBox" unique_id=876800437]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+fixed_icon_size = Vector2i(24, 24)
+
+[node name="StatusLabel" type="Label" parent="Scroll/Root" unique_id=686171811]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
 autowrap_mode = 3

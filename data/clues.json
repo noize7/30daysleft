@@ -2,15 +2,85 @@
   "note": "Catalogo vivo en scripts/systems/clue_system.gd (CLUES).",
   "clues_needed_for_escape": 3,
   "clues": [
-    {"id": "clue_photo", "unlock_day": 5, "type": "photo", "title": "Foto rota"},
-    {"id": "clue_audio", "unlock_day": 7, "type": "audio", "title": "Grabacion de voz"},
-    {"id": "clue_message", "unlock_day": 8, "type": "text", "title": "Mensaje eliminado"},
-    {"id": "clue_receipt", "unlock_day": 10, "type": "document", "title": "Recibo extraño"},
-    {"id": "clue_medical", "unlock_day": 12, "type": "medical", "title": "Archivo medico"},
-    {"id": "clue_diary", "unlock_day": 14, "type": "text", "title": "Pagina de diario"},
-    {"id": "clue_text", "unlock_day": 18, "type": "text", "title": "Texto raro"},
-    {"id": "clue_camera", "unlock_day": 20, "type": "photo", "title": "Camara oculta"},
-    {"id": "clue_key", "unlock_day": 24, "type": "key", "title": "La ultima pieza"},
-    {"id": "clue_map", "unlock_day": 27, "type": "key", "title": "Mapa marcado"}
+	{
+	  "id": "clue_photo",
+	  "unlock_day": 5,
+	  "type": "photo",
+	  "title": "Foto rota",
+	  "title_en": "Foto rota",
+	  "body_en": ""
+	},
+	{
+	  "id": "clue_audio",
+	  "unlock_day": 7,
+	  "type": "audio",
+	  "title": "Grabacion de voz",
+	  "title_en": "Grabacion de voz",
+	  "body_en": ""
+	},
+	{
+	  "id": "clue_message",
+	  "unlock_day": 8,
+	  "type": "text",
+	  "title": "Mensaje eliminado",
+	  "title_en": "Mensaje eliminado",
+	  "body_en": ""
+	},
+	{
+	  "id": "clue_receipt",
+	  "unlock_day": 10,
+	  "type": "document",
+	  "title": "Recibo extraño",
+	  "title_en": "Recibo extraño",
+	  "body_en": ""
+	},
+	{
+	  "id": "clue_medical",
+	  "unlock_day": 12,
+	  "type": "medical",
+	  "title": "Archivo medico",
+	  "title_en": "Archivo medico",
+	  "body_en": ""
+	},
+	{
+	  "id": "clue_diary",
+	  "unlock_day": 14,
+	  "type": "text",
+	  "title": "Pagina de diario",
+	  "title_en": "Pagina de diario",
+	  "body_en": ""
+	},
+	{
+	  "id": "clue_text",
+	  "unlock_day": 18,
+	  "type": "text",
+	  "title": "Texto raro",
+	  "title_en": "Texto raro",
+	  "body_en": ""
+	},
+	{
+	  "id": "clue_camera",
+	  "unlock_day": 20,
+	  "type": "photo",
+	  "title": "Camara oculta",
+	  "title_en": "Camara oculta",
+	  "body_en": ""
+	},
+	{
+	  "id": "clue_key",
+	  "unlock_day": 24,
+	  "type": "key",
+	  "title": "La ultima pieza",
+	  "title_en": "La ultima pieza",
+	  "body_en": ""
+	},
+	{
+	  "id": "clue_map",
+	  "unlock_day": 27,
+	  "type": "key",
+	  "title": "Mapa marcado",
+	  "title_en": "Mapa marcado",
+	  "body_en": ""
+	}
   ]
 }

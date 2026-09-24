@@ -47,11 +47,11 @@ func _apply_style() -> void:
 
 	if title_label:
 		title_label.add_theme_color_override("font_color", Color(0.85, 0.92, 1.0))
-		title_label.add_theme_font_size_override("font_size", 28)
-		title_label.text = "CRÉDITOS"
+		title_label.add_theme_font_size_override("font_size", 40)
+		title_label.text = LocaleSystem.t("credits.title", "CRÉDITOS") if LocaleSystem else "CRÉDITOS"
 	if credits_label:
 		credits_label.add_theme_color_override("font_color", Color(0.7, 0.78, 0.9))
-		credits_label.add_theme_font_size_override("font_size", 17)
+		credits_label.add_theme_font_size_override("font_size", 22)
 		credits_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 	if btn_back:
@@ -72,4 +72,4 @@ func _apply_style() -> void:
 		h.bg_color = Color(0.28, 0.42, 0.72)
 		btn_back.add_theme_stylebox_override("hover", h)
 		btn_back.add_theme_color_override("font_color", Color.WHITE)
-		btn_back.add_theme_font_size_override("font_size", 18)
+		btn_back.add_theme_font_size_override("font_size", 24)

@@ -32,6 +32,13 @@ const CATEGORY_ORDER := [
 	"optimizer", "noise_filter", "proxy", "log_cleaner"
 ]
 
+func get_category_label(category: String) -> String:
+	var fallback: String = CATEGORY_LABELS.get(category, category)
+	if LocaleSystem == null:
+		return fallback
+	return LocaleSystem.t("shop.cat_%s" % category, fallback)
+
+
 ## Iconos de cada categoría. Sustituye los PNG en assets/Icons Pc/ con los tuyos.
 const CATEGORY_ICON_PATHS := {
 	"battery": "res://assets/Icons Pc/Bateria.png",
@@ -41,10 +48,10 @@ const CATEGORY_ICON_PATHS := {
 	"automation": "res://assets/Icons Pc/bot.png",
 	"cooling": "res://assets/Icons Pc/ventilador.png",
 	"storage": "res://assets/Icons Pc/Almacenamiento.png",
-	"optimizer": "res://assets/Icons Pc/Optimization.png",
-	"noise_filter": "res://assets/Icons Pc/filtro.png",
-	"proxy": "res://assets/Icons Pc/proxy.png",
-	"log_cleaner": "res://assets/Icons Pc/Limpieza.png",
+	"optimizer": "res://assets/Icons Pc/Upgrade .png",
+	"noise_filter": "res://assets/Icons Pc/Ajustes.png",
+	"proxy": "res://assets/Icons Pc/Candado.png",
+	"log_cleaner": "res://assets/Icons Pc/txt-file.png",
 }
 
 func get_category_icon(category: String) -> Texture2D:
@@ -216,12 +223,13 @@ func get_suspicion_mult() -> float:
 func get_status_line(category: String) -> String:
 	var cur: Dictionary = get_current(category)
 	var nxt: Dictionary = get_next(category)
-	var label: String = CATEGORY_LABELS.get(category, category)
-	var cur_name: String = str(cur.get("name", "?"))
+	var label: String = get_category_label(category)
+	var cur_name: String = LocaleSystem.field(cur, "name", str(cur.get("name", "?"))) if LocaleSystem else str(cur.get("name", "?"))
 	if nxt.is_empty():
 		return "%s: %s  [MAX]" % [label, cur_name]
 	var cost: int = int(nxt.get("cost", 0))
-	return "%s: %s  →  %s ($%d)" % [label, cur_name, str(nxt.get("name", "")), cost]
+	var nxt_name: String = LocaleSystem.field(nxt, "name", str(nxt.get("name", ""))) if LocaleSystem else str(nxt.get("name", ""))
+	return "%s: %s  →  %s ($%d)" % [label, cur_name, nxt_name, cost]
 
 func get_desc_line(category: String) -> String:
 	var cur: Dictionary = get_current(category)

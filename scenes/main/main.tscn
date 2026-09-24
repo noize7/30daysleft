@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://4dsj517jgmv"]
 
-[ext_resource type="Script" uid="uid://b10y07mhywcnp" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="Script" uid="uid://dyymbhci2wv5u" path="res://scripts/ui/desktop_ui.gd" id="2_desktop"]
+[ext_resource type="Script" uid="uid://d2v7qerg76vs0" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://d8fwirae7l3e" path="res://scripts/ui/desktop_ui.gd" id="2_desktop"]
 [ext_resource type="Texture2D" uid="uid://bv4l763ynn0ph" path="res://assets/Icons Pc/Portafolio.png" id="2_yyfjg"]
 [ext_resource type="Texture2D" uid="uid://6l823x5eu2s0" path="res://assets/Icons Pc/Mensajes.png" id="3_b1x3f"]
 [ext_resource type="Texture2D" uid="uid://bcrr4c7f70ux5" path="res://assets/Icons Pc/carpeta.png" id="4_a8run"]
@@ -27,7 +27,8 @@ icon_mejoras = ExtResource("5_ouso4")
 icon_opciones = ExtResource("6_blune")
 icon_banco = ExtResource("7_th5th")
 icon_musica = ExtResource("8_ouso4")
-icon_scale = 1.5
+icon_scale = 1.8
+shop_icon_scale = 1.8
 
 [node name="BootScreen" type="ColorRect" parent="." unique_id=1364334444]
 layout_mode = 1
@@ -45,6 +46,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 32
 text = "30 DAYS LEFT"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -62,9 +64,11 @@ offset_right = 120.0
 offset_bottom = 29.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 32
 text = "ENCENDER"
 
 [node name="DesktopUI" type="Control" parent="." unique_id=240477645]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -85,8 +89,8 @@ mouse_filter = 2
 color = Color(0.227451, 0.431373, 0.647059, 1)
 
 [node name="WindowsXpWallpaperV0Breluv06Gbc31" type="Sprite2D" parent="DesktopUI" unique_id=1372756719]
-position = Vector2(640.5, 360)
-scale = Vector2(1.1861111, 1)
+position = Vector2(959.5, 540)
+scale = Vector2(1.7768519, 1.5000001)
 texture = ExtResource("9_b1x3f")
 
 [node name="Icons" type="Control" parent="DesktopUI" unique_id=799132579]
@@ -104,7 +108,7 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -47.0
+offset_top = -78.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -119,6 +123,7 @@ offset_left = 0.27999973
 offset_top = -4.0160007
 offset_right = -0.040008545
 offset_bottom = -3.9890022
+theme_override_font_sizes/font_size = 32
 text = "Inicio"
 
 [node name="DayLabel" type="Label" parent="DesktopUI/Taskbar" unique_id=550124047]
@@ -132,9 +137,10 @@ offset_left = 0.27999878
 offset_top = -0.0030002594
 offset_right = 0.11997986
 offset_bottom = 0.01599884
+theme_override_font_sizes/font_size = 32
 text = "Dia 1"
 horizontal_alignment = 1
-vertical_alignment = 2
+vertical_alignment = 1
 
 [node name="MoneyLabel" type="Label" parent="DesktopUI/Taskbar" unique_id=1224722879]
 layout_mode = 1
@@ -147,9 +153,10 @@ offset_left = 0.07998657
 offset_top = 0.009999752
 offset_right = 0.039978027
 offset_bottom = -0.018001556
+theme_override_font_sizes/font_size = 32
 text = "$0"
 horizontal_alignment = 1
-vertical_alignment = 2
+vertical_alignment = 1
 
 [node name="BatteryBar" type="ProgressBar" parent="DesktopUI/Taskbar" unique_id=645615170]
 layout_mode = 1
@@ -176,6 +183,7 @@ offset_left = -0.2000122
 offset_top = 0.017999649
 offset_right = -0.4000244
 offset_bottom = -0.010002136
+theme_override_font_sizes/font_size = 32
 text = "100%"
 vertical_alignment = 1
 
@@ -185,11 +193,13 @@ anchors_preset = -1
 anchor_left = 0.88600004
 anchor_right = 0.952
 anchor_bottom = 0.78700006
-offset_left = 0.11993408
-offset_top = 3.0
-offset_right = -0.16003418
-offset_bottom = 0.010997772
+offset_left = -25.120117
+offset_top = 8.0
+offset_right = -25.400024
+offset_bottom = 5.010998
+theme_override_font_sizes/font_size = 32
 text = "01:00 AM"
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Control" type="Control" parent="DesktopUI/Taskbar" unique_id=779381508]
@@ -206,8 +216,8 @@ grow_horizontal = 0
 grow_vertical = 0
 
 [node name="Bateria" type="Sprite2D" parent="DesktopUI/Taskbar/Control" unique_id=1233009631]
-position = Vector2(17.999998, 21.999998)
-scale = Vector2(0.05, 0.05)
+position = Vector2(32.60002, 34.667015)
+scale = Vector2(0.112109184, 0.10052147)
 texture = ExtResource("10_a8run")
 
 [node name="EndingScreen" type="ColorRect" parent="." unique_id=930666541]
@@ -228,6 +238,7 @@ anchor_bottom = 1.0
 offset_bottom = -80.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 32
 text = "FIN"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -238,4 +249,5 @@ offset_left = 440.0
 offset_top = 520.0
 offset_right = 640.0
 offset_bottom = 570.0
+theme_override_font_sizes/font_size = 32
 text = "Reiniciar"

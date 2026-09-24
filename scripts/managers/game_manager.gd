@@ -182,18 +182,18 @@ func complete_job(pay: float, job_data: Dictionary = {}) -> void:
 	jobs_completed_changed.emit(jobs_completed)
 	_check_job_level_up()
 
-	# --- Pago dual (Tanda 8) ---
+	# --- Pago dual (Tanda 8 + riesgos de efectivo) ---
 	if payment_method == "online":
 		add_money(final_pay)
 		# Cada cobro online suma sospecha (mitigado por Proxy)
-		var base_susp: float = 1.5 + (final_pay / 500.0)
+		var base_susp: float = 0.45 + (final_pay / 1200.0)
 		var susp_mult: float = 1.0
 		if UpgradeSystem and UpgradeSystem.has_method("get_online_suspicion_mult"):
 			susp_mult = UpgradeSystem.get_online_suspicion_mult()
 		change_suspicion(base_susp * susp_mult)
 	else:
-		# cash: no suma sospecha, y el dinero se recoge manualmente
-		cash_payment_pending.emit(final_pay)
+		# cash: no suma sospecha, pero puede retrasarse o fallar la entrega
+		_process_cash_payment(final_pay)
 
 	# Pérdida de cordura por tipo de trabajo (mitigado por Filtro de ruido)
 	var sanity_cost: float = float(job_data.get("sanity_cost", 0.0))
@@ -307,6 +307,9 @@ func set_payment_method(method: String) -> void:
 
 ## Eventos narrativos fijos por día (presión gradual de cordura/sospecha).
 func _apply_day_events(d: int) -> void:
+	# La presión narrativa se coordina con la paranoia interna; nunca se muestra como barra.
+	if ParanoiaSystem and ParanoiaSystem.has_method("register_discovery_event") and d >= 5:
+		ParanoiaSystem.register_discovery_event("story")
 	# Desbloquear correos y pistas del nuevo día (silencioso: el reloj avisará si llegan a cierta hora)
 	if EmailSystem:
 		EmailSystem.unlock_for_day(d, true)
@@ -321,37 +324,65 @@ func _apply_day_events(d: int) -> void:
 	# Presión narrativa en días clave (DayEventManager)
 	match d:
 		5:
-			change_sanity(-5.0)
-			change_suspicion(5.0)
+			change_sanity(-2.0)
+			change_suspicion(2.0)
 		8:
-			# Correo policial ya se desbloquea por EmailSystem
-			change_suspicion(3.0)
+			change_suspicion(1.5)
 		10:
-			change_sanity(-8.0)
-			change_suspicion(8.0)
+			change_sanity(-3.5)
+			change_suspicion(3.0)
 		14:
-			change_sanity(-6.0)  # Crisis mental leve
+			change_sanity(-3.0)
 		18, 19, 20:
-			change_sanity(-8.0)
-			change_suspicion(6.0)
-			# Posible llegada falsa de efectivo si sanity baja
-			if sanity < 40.0 and payment_method == "cash" and randf() < 0.35:
+			change_sanity(-3.5)
+			change_suspicion(2.5)
+			if sanity < 40.0 and payment_method == "cash" and randf() < 0.25:
 				_fake_cash_delivery()
 		25:
-			change_sanity(-12.0)
-			change_suspicion(12.0)
+			change_sanity(-5.0)
+			change_suspicion(5.0)
 		28, 29, 30:
-			change_sanity(-10.0)
-			change_suspicion(10.0)
+			change_sanity(-4.0)
+			change_suspicion(4.0)
 		_:
-			# Presión diaria más constante (el loop se siente vivo)
+			# Presión diaria suave (el pico llega a partir del día 12–15)
 			if d > 1:
-				change_sanity(-1.5)
-				if d % 2 == 0:
-					change_suspicion(1.5)
+				change_sanity(-0.4)
 				if d % 3 == 0:
-					change_sanity(-1.5)
-					change_suspicion(1.0)
+					change_suspicion(0.6)
+				if d >= 12 and d % 2 == 0:
+					change_sanity(-0.6)
+					change_suspicion(0.8)
+
+## Procesa pago en efectivo: puede llegar normal, retrasado o fallar parcialmente.
+## Riesgos aumentan con cordura baja y día avanzado.
+func _process_cash_payment(amount: float) -> void:
+	var fail_chance: float = 0.03 + clampf((100.0 - sanity) * 0.0015, 0.0, 0.12)
+	fail_chance += clampf(float(day - 12) * 0.005, 0.0, 0.08)
+	var delay_chance: float = 0.12 + clampf((100.0 - sanity) * 0.001, 0.0, 0.10)
+	var roll := randf()
+	if roll < fail_chance:
+		# Entrega fallida: se pierde entre 30% y 70% del pago
+		var loss_pct: float = randf_range(0.30, 0.70)
+		var received: float = amount * (1.0 - loss_pct)
+		if received > 1.0:
+			cash_payment_pending.emit(received)
+		# Feedback narrativo
+		if DialogueSystem and DialogueSystem.has_method("show_line"):
+			DialogueSystem.show_line("BOT-01", "El mensajero no llegó. Solo recuperaste parte del dinero ($%.0f de $%.0f)." % [received, amount], "cash_fail_" + str(Time.get_ticks_msec()))
+		change_sanity(-2.5)
+	elif roll < fail_chance + delay_chance:
+		# Retraso: llega después de unos segundos (simula espera)
+		var delayed_amount := amount
+		get_tree().create_timer(randf_range(4.0, 11.0)).timeout.connect(func():
+			if not is_game_over:
+				cash_payment_pending.emit(delayed_amount)
+		)
+		if DialogueSystem and DialogueSystem.has_method("show_line") and randf() < 0.4:
+			DialogueSystem.show_line("BOT-01", "El pago en efectivo va con retraso. Espera cerca de la puerta…", "cash_delay_" + str(Time.get_ticks_msec()))
+	else:
+		# Entrega normal
+		cash_payment_pending.emit(amount)
 
 ## Alucinación: "llegada falsa" de efectivo cuando la cordura está baja.
 func _fake_cash_delivery() -> void:
@@ -428,6 +459,12 @@ func reset_game() -> void:
 		DialogueSystem.reset()
 	if MissionSystem and MissionSystem.has_method("reset"):
 		MissionSystem.reset()
+	if InvestigationSystem and InvestigationSystem.has_method("reset"):
+		InvestigationSystem.reset()
+	if ParanoiaSystem and ParanoiaSystem.has_method("reset"):
+		ParanoiaSystem.reset()
+	if BankSystem and BankSystem.has_method("reset"):
+		BankSystem.reset()
 	day_changed.emit(day)
 	money_changed.emit(money)
 	battery_changed.emit(battery)

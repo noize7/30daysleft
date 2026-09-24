@@ -1,0 +1,864 @@
+{
+  "menu": {
+    "title": {
+      "es": "30 DAYS LEFT",
+      "en": "30 DAYS LEFT"
+    },
+    "subtitle": {
+      "es": "TREINTA DÍAS. UNA DEUDA. NINGUNA SEGUNDA OPORTUNIDAD.",
+      "en": "THIRTY DAYS. ONE DEBT. NO SECOND CHANCE."
+    },
+    "new_game": {
+      "es": "Nueva Partida",
+      "en": "New Game"
+    },
+    "continue": {
+      "es": "Continuar",
+      "en": "Continue"
+    },
+    "options": {
+      "es": "Opciones",
+      "en": "Options"
+    },
+    "credits": {
+      "es": "Créditos",
+      "en": "Credits"
+    },
+    "quit": {
+      "es": "Salir",
+      "en": "Quit"
+    },
+    "version": {
+      "es": "30 DAYS LEFT  ·  v0.8",
+      "en": "30 DAYS LEFT  ·  v0.8"
+    }
+  },
+  "pause": {
+    "title": {
+      "es": "Pausa",
+      "en": "Paused"
+    },
+    "resume": {
+      "es": "Reanudar",
+      "en": "Resume"
+    },
+    "save": {
+      "es": "Guardar partida",
+      "en": "Save game"
+    },
+    "load": {
+      "es": "Cargar partida",
+      "en": "Load game"
+    },
+    "main_menu": {
+      "es": "Menú principal",
+      "en": "Main menu"
+    },
+    "quit": {
+      "es": "Salir del juego",
+      "en": "Quit game"
+    }
+  },
+  "options": {
+    "title": {
+      "es": "Opciones",
+      "en": "Options"
+    },
+    "master_volume": {
+      "es": "Volumen general",
+      "en": "Master volume"
+    },
+    "sfx_volume": {
+      "es": "Efectos",
+      "en": "SFX"
+    },
+    "game_speed": {
+      "es": "Velocidad del tiempo",
+      "en": "Game speed"
+    },
+    "difficulty": {
+      "es": "Dificultad",
+      "en": "Difficulty"
+    },
+    "battery": {
+      "es": "Drenaje de batería",
+      "en": "Battery drain"
+    },
+    "fullscreen": {
+      "es": "Pantalla completa",
+      "en": "Fullscreen"
+    },
+    "show_fps": {
+      "es": "Mostrar FPS",
+      "en": "Show FPS"
+    },
+    "auto_save": {
+      "es": "Autoguardado",
+      "en": "Auto-save"
+    },
+    "language": {
+      "es": "Idioma",
+      "en": "Language"
+    },
+    "background": {
+      "es": "Fondo",
+      "en": "Background"
+    },
+    "apply": {
+      "es": "Aplicar",
+      "en": "Apply"
+    },
+    "back": {
+      "es": "Volver",
+      "en": "Back"
+    },
+    "defaults": {
+      "es": "Valores por defecto",
+      "en": "Defaults"
+    },
+    "lang_es": {
+      "es": "Español",
+      "en": "Spanish"
+    },
+    "lang_en": {
+      "es": "English",
+      "en": "English"
+    },
+    "speed_slow": {
+      "es": "Lenta (x0.75)",
+      "en": "Slow (x0.75)"
+    },
+    "speed_normal": {
+      "es": "Normal (x1)",
+      "en": "Normal (x1)"
+    },
+    "speed_fast": {
+      "es": "Rápida (x1.5)",
+      "en": "Fast (x1.5)"
+    },
+    "diff_easy": {
+      "es": "Fácil (más batería / menos sospecha)",
+      "en": "Easy (more battery / less suspicion)"
+    },
+    "diff_normal": {
+      "es": "Normal",
+      "en": "Normal"
+    },
+    "diff_hard": {
+      "es": "Difícil (drenaje alto / sospecha rápida)",
+      "en": "Hard (high drain / fast suspicion)"
+    },
+    "drain_low": {
+      "es": "Bajo",
+      "en": "Low"
+    },
+    "drain_normal": {
+      "es": "Normal",
+      "en": "Normal"
+    },
+    "drain_high": {
+      "es": "Alto",
+      "en": "High"
+    },
+    "bg_classic": {
+      "es": "Clásico",
+      "en": "Classic"
+    },
+    "bg_snow": {
+      "es": "Nevado",
+      "en": "Snowy"
+    }
+  },
+  "desktop": {
+    "start": {
+      "es": "Inicio",
+      "en": "Start"
+    },
+    "day": {
+      "es": "Día %d",
+      "en": "Day %d"
+    },
+    "work": {
+      "es": "Trabajo",
+      "en": "Work"
+    },
+    "mail": {
+      "es": "Correo",
+      "en": "Mail"
+    },
+    "files": {
+      "es": "Archivos",
+      "en": "Files"
+    },
+    "upgrades": {
+      "es": "Mejoras",
+      "en": "Upgrades"
+    },
+    "options": {
+      "es": "Opciones",
+      "en": "Options"
+    },
+    "bank": {
+      "es": "Banco",
+      "en": "Bank"
+    },
+    "music": {
+      "es": "Música",
+      "en": "Music"
+    },
+    "shutdown": {
+      "es": "Apagar PC",
+      "en": "Shut down"
+    },
+    "cancel": {
+      "es": "Cancelar",
+      "en": "Cancel"
+    },
+    "power_on": {
+      "es": "ENCENDER",
+      "en": "POWER ON"
+    },
+    "system_ready": {
+      "es": "Sistema listo",
+      "en": "System ready"
+    },
+    "shutting_down": {
+      "es": "Apagando el PC.",
+      "en": "Shutting down the PC."
+    },
+    "money_tooltip": {
+      "es": "Dinero disponible\nC: Cordura (Salud mental)\nS: Sospecha (Peligro)",
+      "en": "Available money\nC: Sanity (Mental health)\nS: Suspicion (Danger)"
+    }
+  },
+  "work": {
+    "header": {
+      "es": "Centro de Trabajo",
+      "en": "Work Center"
+    },
+    "start": {
+      "es": ">  Empezar trabajo",
+      "en": ">  Start job"
+    },
+    "select": {
+      "es": "Selecciona un trabajo",
+      "en": "Select a job"
+    },
+    "click": {
+      "es": "CLICK para trabajar",
+      "en": "CLICK to work"
+    },
+    "online": {
+      "es": "Online",
+      "en": "Online"
+    },
+    "cash": {
+      "es": "Efectivo",
+      "en": "Cash"
+    },
+    "header_level": {
+      "es": "Centro de Trabajo  |  Nivel %d",
+      "en": "Work Center  |  Level %d"
+    },
+    "max_level": {
+      "es": "Nivel máximo  •  Trabajos: %d",
+      "en": "Max level  •  Jobs: %d"
+    },
+    "on_hours": {
+      "es": "HORARIO LABORAL (01:00–05:00) — Trabaja ahora",
+      "en": "WORK HOURS (01:00–05:00) — Work now"
+    },
+    "off_hours": {
+      "es": "Fuera de horario — apaga el PC para avanzar al día siguiente",
+      "en": "Off hours — shut down the PC to advance to the next day"
+    },
+    "hold_hint": {
+      "es": "Mantén. Suelta en la zona AMARILLA. Centro = perfecto.",
+      "en": "Hold. Release in the YELLOW zone. Center = perfect."
+    },
+    "spam_hint": {
+      "es": "Clica rápido. Si paras, pierdes el combo.",
+      "en": "Click fast. If you stop, you lose the combo."
+    },
+    "digit_hint": {
+      "es": "Elige el dígito correcto del código",
+      "en": "Pick the correct digit of the code"
+    },
+    "hold_action": {
+      "es": "MANTÉN… y suelta en la zona",
+      "en": "HOLD… and release in the zone"
+    },
+    "job_done": {
+      "es": "Trabajo terminado",
+      "en": "Job finished"
+    },
+    "progress": {
+      "es": "Progreso: %d / %d para Nivel %d",
+      "en": "Progress: %d / %d to Level %d"
+    },
+    "working": {
+      "es": "Trabajando...",
+      "en": "Working..."
+    },
+    "completed": {
+      "es": "¡COMPLETADO!",
+      "en": "COMPLETED!"
+    },
+    "completed_short": {
+      "es": "Completado!",
+      "en": "Done!"
+    },
+    "objective_done": {
+      "es": "¡Objetivo cumplido! Terminando…",
+      "en": "Objective met! Finishing…"
+    },
+    "online_method": {
+      "es": "Online (rápido, +sospecha)",
+      "en": "Online (fast, +suspicion)"
+    },
+    "cash_method": {
+      "es": "Efectivo (sin sospecha, riesgo retraso/fallo)",
+      "en": "Cash (no suspicion, delay/fail risk)"
+    },
+    "sanity_cost": {
+      "es": "\n⚠ Coste de cordura: ~%.1f",
+      "en": "\n⚠ Sanity cost: ~%.1f"
+    },
+    "job_details": {
+      "es": "%s\n\n%s\n\nPago: $%d - $%d\nDuración: ~%ds\nObjetivo: %d aciertos%s",
+      "en": "%s\n\n%s\n\nPay: $%d - $%d\nDuration: ~%ds\nGoal: %d hits%s"
+    },
+    "hold_release": {
+      "es": "MANTÉN Y SUELTA",
+      "en": "HOLD AND RELEASE"
+    },
+    "spam_click": {
+      "es": "¡SPAM CLICK!",
+      "en": "SPAM CLICK!"
+    },
+    "spam_click_n": {
+      "es": "¡SPAM CLICK!  0/%d",
+      "en": "SPAM CLICK!  0/%d"
+    },
+    "spam_n": {
+      "es": "¡SPAM!  %d/%d  x%d",
+      "en": "SPAM!  %d/%d  x%d"
+    },
+    "combo_broken": {
+      "es": "Combo roto — ¡sigue clicando!",
+      "en": "Combo broken — keep clicking!"
+    },
+    "seq_error": {
+      "es": "¡Error! Se reinicia la secuencia…",
+      "en": "Error! Sequence reset…"
+    },
+    "safe_zone": {
+      "es": "¡Bien! Zona segura.",
+      "en": "Nice! Safe zone."
+    },
+    "perfect": {
+      "es": "★★ PERFECTO ★★  Zona nueva",
+      "en": "★★ PERFECT ★★  New zone"
+    },
+    "outside": {
+      "es": "Fuera… espera el marcador",
+      "en": "Miss… wait for the marker"
+    },
+    "pick_category": {
+      "es": "Elige la categoría correcta",
+      "en": "Pick the correct category"
+    },
+    "digit_next": {
+      "es": "Correcto… siguiente dígito",
+      "en": "Correct… next digit"
+    },
+    "digit_wrong": {
+      "es": "Dígito incorrecto — código reiniciado",
+      "en": "Wrong digit — code reset"
+    },
+    "mg_timing": {
+      "es": "Barra móvil: zona verde = ok, zona dorada = PERFECTO.",
+      "en": "Moving bar: green zone = ok, gold zone = PERFECT."
+    },
+    "mg_hold": {
+      "es": "Mantén pulsado y suelta dentro de la zona segura.",
+      "en": "Hold and release inside the safe zone."
+    },
+    "mg_spam": {
+      "es": "Clics rápidos. Mantén el ritmo o pierdes el combo.",
+      "en": "Fast clicks. Keep the rhythm or lose the combo."
+    },
+    "mg_classify": {
+      "es": "Clasifica cada ítem a izquierda o derecha.",
+      "en": "Classify each item left or right."
+    },
+    "mg_code": {
+      "es": "Descifra el código eligiendo el dígito correcto.",
+      "en": "Crack the code by picking the right digit."
+    },
+    "legitimate": {
+      "es": "Legítimo",
+      "en": "Legitimate"
+    },
+    "hallucination": {
+      "es": "Alucinación",
+      "en": "Hallucination"
+    },
+    "correct": {
+      "es": "Correcto",
+      "en": "Correct"
+    },
+    "incorrect": {
+      "es": "Incorrecto…",
+      "en": "Incorrect…"
+    },
+    "high_suspicion": {
+      "es": "Sospecha alta…",
+      "en": "High suspicion…"
+    },
+    "start_job": {
+      "es": ">  Empezar trabajo",
+      "en": ">  Start job"
+    },
+    "zone_perfect_hint": {
+      "es": "Zona VERDE = ok · Zona DORADA = PERFECTO (+combo)",
+      "en": "GREEN zone = ok · GOLD zone = PERFECT (+combo)"
+    },
+    "rhythm_hint": {
+      "es": "Clica con ritmo. Los combos aumentan la paga.",
+      "en": "Click with rhythm. Combos increase pay."
+    },
+    "perfect_zone": {
+      "es": "★★ PERFECTO ★★  Zona nueva",
+      "en": "★★ PERFECT ★★  New zone"
+    },
+    "try_gold": {
+      "es": "Bien. Intenta la zona dorada…",
+      "en": "Good. Try the gold zone…"
+    },
+    "your_turn": {
+      "es": "Tu turno — repite la secuencia (%d pasos)",
+      "en": "Your turn — repeat the sequence (%d steps)"
+    },
+    "desc_click": {
+      "es": "Ritmo + combo. Clica con buen tempo para multiplicar.",
+      "en": "Rhythm + combo. Click with good timing to multiply."
+    },
+    "desc_sequence": {
+      "es": "Memoriza y repite la secuencia (botones o teclas 1-4).",
+      "en": "Memorize and repeat the sequence (buttons or keys 1-4)."
+    }
+  },
+  "files": {
+    "locked": {
+      "es": "Archivo protegido",
+      "en": "Protected file"
+    },
+    "password": {
+      "es": "Contraseña",
+      "en": "Password"
+    },
+    "confirm": {
+      "es": "Confirmar",
+      "en": "Confirm"
+    },
+    "cancel": {
+      "es": "Cancelar",
+      "en": "Cancel"
+    },
+    "verified": {
+      "es": "[VERIFICADO]",
+      "en": "[VERIFIED]"
+    },
+    "hallucination": {
+      "es": "[¿ALUCINACIÓN?]",
+      "en": "[HALLUCINATION?]"
+    },
+    "need_password": {
+      "es": "Contraseña de otra pista.",
+      "en": "Password found in another clue."
+    },
+    "select": {
+      "es": "Selecciona un archivo de la lista.",
+      "en": "Select a file from the list."
+    },
+    "preview": {
+      "es": "Vista previa",
+      "en": "Preview"
+    },
+    "locked_hint": {
+      "es": "Archivo bloqueado — vuelve a abrirlo cuando tengas la contraseña.",
+      "en": "File locked — open it again when you have the password."
+    },
+    "enter_password": {
+      "es": "Introduce la contraseña.",
+      "en": "Enter the password."
+    },
+    "wrong_password": {
+      "es": "Contraseña incorrecta.",
+      "en": "Wrong password."
+    },
+    "ghost_file": {
+      "es": "Se detectó un archivo que no figura en el índice.",
+      "en": "A file not listed in the index was detected."
+    },
+    "dont_open": {
+      "es": "Este archivo no estaba aquí antes.\n\nNO LO ABRAS.\n\n...ya lo abriste.",
+      "en": "This file wasn't here before.\n\nDON'T OPEN IT.\n\n...you already did."
+    },
+    "select_short": {
+      "es": "Selecciona un archivo",
+      "en": "Select a file"
+    },
+    "read_stats": {
+      "es": "Leídas: %d  ·  Investigación: %d  ·  %s",
+      "en": "Read: %d  ·  Investigation: %d  ·  %s"
+    },
+    "sanity_bonus": {
+      "es": "\n\n(+5 cordura al leer)",
+      "en": "\n\n(+5 sanity on read)"
+    }
+  },
+  "dialogue": {
+    "continue": {
+      "es": "Continuar ▶",
+      "en": "Continue ▶"
+    },
+    "skip_tutorial": {
+      "es": "Saltar tutorial",
+      "en": "Skip tutorial"
+    },
+    "you": {
+      "es": "TÚ",
+      "en": "YOU"
+    }
+  },
+  "common": {
+    "restart": {
+      "es": "Reiniciar",
+      "en": "Restart"
+    },
+    "fin": {
+      "es": "FIN",
+      "en": "THE END"
+    }
+  },
+  "bank": {
+    "title": {
+      "es": "Banco",
+      "en": "Bank"
+    },
+    "balance": {
+      "es": "Saldo: $%.2f",
+      "en": "Balance: $%.2f"
+    },
+    "info": {
+      "es": "Transfiere a la cuenta del correo.\nMeta de escape: $%.0f",
+      "en": "Transfer to the account from the email.\nEscape goal: $%.0f"
+    },
+    "method_cash": {
+      "es": "Método preferido: Efectivo",
+      "en": "Preferred method: Cash"
+    },
+    "method_transfer": {
+      "es": "Método preferido: Transferencia",
+      "en": "Preferred method: Transfer"
+    },
+    "cash": {
+      "es": "Efectivo",
+      "en": "Cash"
+    },
+    "transfer": {
+      "es": "Transferencia",
+      "en": "Transfer"
+    },
+    "recent": {
+      "es": "Movimientos recientes",
+      "en": "Recent transactions"
+    },
+    "no_movements": {
+      "es": "No hay movimientos disponibles.",
+      "en": "No transactions available."
+    },
+    "account_label": {
+      "es": "Cuenta a transferir:",
+      "en": "Account to transfer to:"
+    },
+    "account_placeholder": {
+      "es": "12 dígitos (del correo)",
+      "en": "12 digits (from email)"
+    },
+    "amount_label": {
+      "es": "Cantidad:",
+      "en": "Amount:"
+    },
+    "amount_placeholder": {
+      "es": "Ej: 100",
+      "en": "E.g.: 100"
+    },
+    "send": {
+      "es": "Transferir",
+      "en": "Transfer"
+    },
+    "all_balance": {
+      "es": "Todo el saldo",
+      "en": "All balance"
+    },
+    "escape_progress": {
+      "es": "Progreso escape: $%.2f / $%.0f",
+      "en": "Escape progress: $%.2f / $%.0f"
+    },
+    "management": {
+      "es": "Gestión de pagos",
+      "en": "Payment management"
+    },
+    "cash_no_escape": {
+      "es": "Efectivo no sirve para el escape. Usa Transferencia.",
+      "en": "Cash cannot be used for escape. Use Transfer."
+    },
+    "hint_transfer": {
+      "es": "Introduce la cuenta y la cantidad, luego Transferir.",
+      "en": "Enter the account and amount, then Transfer."
+    },
+    "need_account": {
+      "es": "Introduce el número de cuenta del correo.",
+      "en": "Enter the account number from the email."
+    },
+    "invalid_amount": {
+      "es": "Cantidad no válida.",
+      "en": "Invalid amount."
+    },
+    "insufficient": {
+      "es": "Saldo insuficiente (tienes $%.2f).",
+      "en": "Insufficient balance (you have $%.2f)."
+    }
+  },
+  "music": {
+    "title": {
+      "es": "Reproductor de música",
+      "en": "Music Player"
+    },
+    "prev": {
+      "es": "◀ Anterior",
+      "en": "◀ Previous"
+    },
+    "play": {
+      "es": "▶ Play",
+      "en": "▶ Play"
+    },
+    "pause": {
+      "es": "❚❚ Pause",
+      "en": "❚❚ Pause"
+    },
+    "next": {
+      "es": "Siguiente ▶",
+      "en": "Next ▶"
+    },
+    "volume": {
+      "es": "Volumen",
+      "en": "Volume"
+    },
+    "no_track": {
+      "es": "Sin pista",
+      "en": "No track"
+    },
+    "playing": {
+      "es": "Sonando: %s  (loop)",
+      "en": "Playing: %s  (loop)"
+    },
+    "paused": {
+      "es": "Pausado / Listo: %s",
+      "en": "Paused / Ready: %s"
+    },
+    "pc_off": {
+      "es": "PC apagada — la música se detuvo.\nEnciende el PC y pulsa Play.",
+      "en": "PC is off — music stopped.\nTurn on the PC and press Play."
+    },
+    "distorted": {
+      "es": "La música se distorsiona… (cordura baja)",
+      "en": "Music distorts… (low sanity)"
+    },
+    "missing_file": {
+      "es": "No se encontró: %s\nPon el OGG en assets/audio/music/ y reimporta en Godot.",
+      "en": "Not found: %s\nPut the OGG in assets/audio/music/ and reimport in Godot."
+    }
+  },
+  "shop": {
+    "title": {
+      "es": "Tienda de mejoras  |  Meta: $%.0f",
+      "en": "Upgrade shop  |  Goal: $%.0f"
+    },
+    "select": {
+      "es": "Selecciona una mejora",
+      "en": "Select an upgrade"
+    },
+    "buy": {
+      "es": "Comprar",
+      "en": "Buy"
+    },
+    "buy_cost": {
+      "es": "Comprar ($%d)",
+      "en": "Buy ($%d)"
+    },
+    "max_level": {
+      "es": "Nivel máximo",
+      "en": "Max level"
+    },
+    "money_available": {
+      "es": "Dinero disponible: $%.0f",
+      "en": "Available money: $%.0f"
+    },
+    "goal_hint": {
+      "es": "Meta de escape: $%.0f — transfiérela en el Banco a la cuenta del correo.",
+      "en": "Escape goal: $%.0f — transfer it in the Bank to the email account."
+    },
+    "purchased": {
+      "es": "✓ Compra: %s",
+      "en": "✓ Purchase: %s"
+    },
+    "cannot_buy": {
+      "es": "No se pudo comprar (dinero o nivel máx).",
+      "en": "Could not buy (no money or max level)."
+    },
+    "cat_battery": {
+      "es": "Batería",
+      "en": "Battery"
+    },
+    "cat_cpu": {
+      "es": "CPU",
+      "en": "CPU"
+    },
+    "cat_ram": {
+      "es": "RAM",
+      "en": "RAM"
+    },
+    "cat_internet": {
+      "es": "Internet",
+      "en": "Internet"
+    },
+    "cat_automation": {
+      "es": "Automatización",
+      "en": "Automation"
+    },
+    "cat_cooling": {
+      "es": "Refrigeración",
+      "en": "Cooling"
+    },
+    "cat_storage": {
+      "es": "Almacenamiento",
+      "en": "Storage"
+    },
+    "cat_optimizer": {
+      "es": "Optimizador",
+      "en": "Optimizer"
+    },
+    "cat_noise_filter": {
+      "es": "Filtro de ruido",
+      "en": "Noise filter"
+    },
+    "cat_proxy": {
+      "es": "Proxy anónimo",
+      "en": "Anonymous proxy"
+    },
+    "cat_log_cleaner": {
+      "es": "Limpieza de logs",
+      "en": "Log cleaner"
+    },
+    "max_reached": {
+      "es": "\n\n(Nivel maximo alcanzado)",
+      "en": "\n\n(Max level reached)"
+    },
+    "cannot_buy2": {
+      "es": "No se pudo comprar (sin dinero o nivel maximo)",
+      "en": "Could not buy (no money or max level)"
+    }
+  },
+  "email": {
+    "inbox": {
+      "es": "Correo  |  Sin leer: %d  |  C:%d%%",
+      "en": "Mail  |  Unread: %d  |  S:%d%%"
+    },
+    "select": {
+      "es": "Selecciona un correo",
+      "en": "Select an email"
+    },
+    "from": {
+      "es": "De:",
+      "en": "From:"
+    },
+    "fake_header": {
+      "es": "⚠ POSIBLE ALUCINACIÓN — este mensaje puede no ser real\n\n",
+      "en": "⚠ POSSIBLE HALLUCINATION — this message may not be real\n\n"
+    },
+    "verified_header": {
+      "es": "✓ VERIFICADO por el sistema\n\n",
+      "en": "✓ VERIFIED by the system\n\n"
+    },
+    "fake_note": {
+      "es": "\n\n— — —\nEste correo no aparece en los logs del servidor.",
+      "en": "\n\n— — —\nThis email does not appear in server logs."
+    },
+    "copy_account": {
+      "es": "Copiar cuenta",
+      "en": "Copy account"
+    },
+    "copied": {
+      "es": "¡Copiado!",
+      "en": "Copied!"
+    },
+    "copy_tooltip": {
+      "es": "Copiar número de cuenta",
+      "en": "Copy account number"
+    },
+    "interference": {
+      "es": "\n\n[INTERFERENCIA]\n¿Por qué sigues buscando?",
+      "en": "\n\n[INTERFERENCE]\nWhy do you keep searching?"
+    }
+  },
+  "boot": {
+    "disks": {
+      "es": "Iniciando discos...",
+      "en": "Starting disks..."
+    },
+    "ram": {
+      "es": "Cargando RAM...",
+      "en": "Loading RAM..."
+    },
+    "battery": {
+      "es": "Verificando batería...",
+      "en": "Checking battery..."
+    },
+    "system": {
+      "es": "Montando sistema...",
+      "en": "Mounting system..."
+    },
+    "desktop": {
+      "es": "Cargando escritorio...",
+      "en": "Loading desktop..."
+    },
+    "ready_step": {
+      "es": "Listo.",
+      "en": "Ready."
+    },
+    "battery_dead": {
+      "es": "Batería agotada",
+      "en": "Battery depleted"
+    }
+  },
+  "ending": {
+    "caught": {
+      "es": "FINAL 3 de 3 — ATRAPADO\nSin transferencia completa o sin pistas.\nLa policía ha llegado.",
+      "en": "ENDING 3 of 3 — CAUGHT\nIncomplete transfer or missing clues.\nThe police have arrived."
+    },
+    "escape": {
+      "es": "ESCAPE 1 de 3\nTransferiste el dinero y recuperaste las pistas.\nEscapaste a tiempo.",
+      "en": "ESCAPE 1 of 3\nYou transferred the money and recovered the clues.\nYou escaped in time."
+    }
+  },
+  "credits": {
+    "title": {
+      "es": "CRÉDITOS",
+      "en": "CREDITS"
+    }
+  }
+}

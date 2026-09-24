@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c4lvwh1uo18tp"]
 
-[ext_resource type="Script" uid="uid://y2xbnivmugwi" path="res://scripts/menus/options_menu.gd" id="1_opt"]
+[ext_resource type="Script" uid="uid://dplk8obaqkit8" path="res://scripts/menus/options_menu.gd" id="1_opt"]
 
 [node name="OptionsMenu" type="Control" unique_id=1171395597]
 process_mode = 3
@@ -29,10 +29,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -300.0
-offset_right = 320.0
-offset_bottom = 300.0
+offset_left = -387.5
+offset_top = -394.5
+offset_right = 387.5
+offset_bottom = 394.5
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -51,6 +51,7 @@ theme_override_constants/separation = 10
 
 [node name="TitleLabel" type="Label" parent="Panel/VBox" unique_id=1724830370]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Opciones"
 horizontal_alignment = 1
 
@@ -63,6 +64,7 @@ layout_mode = 2
 [node name="VolLabel" type="Label" parent="Panel/VBox/VolumeRow" unique_id=354386739]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Volumen maestro"
 
 [node name="VolumeSlider" type="HSlider" parent="Panel/VBox/VolumeRow" unique_id=950835488]
@@ -73,6 +75,7 @@ value = 80.0
 [node name="VolumeValue" type="Label" parent="Panel/VBox/VolumeRow" unique_id=1787929804]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "80%"
 horizontal_alignment = 2
 
@@ -82,6 +85,7 @@ layout_mode = 2
 [node name="SfxLabel" type="Label" parent="Panel/VBox/SfxRow" unique_id=2004471140]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Volumen SFX"
 
 [node name="SfxSlider" type="HSlider" parent="Panel/VBox/SfxRow" unique_id=1037452080]
@@ -92,6 +96,7 @@ value = 70.0
 [node name="SfxValue" type="Label" parent="Panel/VBox/SfxRow" unique_id=1795702370]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "70%"
 horizontal_alignment = 2
 
@@ -101,11 +106,13 @@ layout_mode = 2
 [node name="SpeedLabel" type="Label" parent="Panel/VBox/SpeedRow" unique_id=1459165937]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Velocidad del juego"
 
 [node name="SpeedOption" type="OptionButton" parent="Panel/VBox/SpeedRow" unique_id=2027716727]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 
 [node name="DiffRow" type="HBoxContainer" parent="Panel/VBox" unique_id=1116351013]
 layout_mode = 2
@@ -113,11 +120,13 @@ layout_mode = 2
 [node name="DiffLabel" type="Label" parent="Panel/VBox/DiffRow" unique_id=533318781]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Dificultad"
 
 [node name="DiffOption" type="OptionButton" parent="Panel/VBox/DiffRow" unique_id=1967234920]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 
 [node name="DrainRow" type="HBoxContainer" parent="Panel/VBox" unique_id=252226572]
 layout_mode = 2
@@ -125,11 +134,13 @@ layout_mode = 2
 [node name="DrainLabel" type="Label" parent="Panel/VBox/DrainRow" unique_id=1429951928]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Drenaje de batería"
 
 [node name="DrainOption" type="OptionButton" parent="Panel/VBox/DrainRow" unique_id=383690206]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 
 [node name="LangRow" type="HBoxContainer" parent="Panel/VBox" unique_id=339535595]
 layout_mode = 2
@@ -137,23 +148,27 @@ layout_mode = 2
 [node name="LangLabel" type="Label" parent="Panel/VBox/LangRow" unique_id=1565490707]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Idioma"
 
 [node name="LangOption" type="OptionButton" parent="Panel/VBox/LangRow" unique_id=1398029134]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 
-[node name="BgRow" type="HBoxContainer" parent="Panel/VBox"]
+[node name="BgRow" type="HBoxContainer" parent="Panel/VBox" unique_id=309497731]
 layout_mode = 2
 
-[node name="BgLabel" type="Label" parent="Panel/VBox/BgRow"]
+[node name="BgLabel" type="Label" parent="Panel/VBox/BgRow" unique_id=746647125]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "Fondo de pantalla"
 
-[node name="BgOption" type="OptionButton" parent="Panel/VBox/BgRow"]
+[node name="BgOption" type="OptionButton" parent="Panel/VBox/BgRow" unique_id=1677113878]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
 
 [node name="Sep2" type="HSeparator" parent="Panel/VBox" unique_id=586997058]
 layout_mode = 2
@@ -165,6 +180,7 @@ theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 28
 theme_override_colors/checkbox_checked_color = Color(0, 1, 0, 1)
 theme_override_colors/checkbox_unchecked_color = Color(1, 0, 0, 1)
 text = "Pantalla completa"
@@ -176,6 +192,7 @@ theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 28
 theme_override_colors/checkbox_checked_color = Color(0, 1, 0, 1)
 theme_override_colors/checkbox_unchecked_color = Color(1, 0.019607844, 0.13333334, 1)
 text = "Mostrar FPS"
@@ -191,6 +208,7 @@ theme_override_colors/icon_normal_color = Color(1, 0, 0, 1)
 theme_override_colors/icon_pressed_color = Color(0, 1, 0, 1)
 theme_override_colors/icon_hover_color = Color(1, 1, 0.1254902, 1)
 theme_override_colors/icon_hover_pressed_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 28
 theme_override_colors/checkbox_checked_color = Color(0, 1, 0, 1)
 theme_override_colors/checkbox_unchecked_color = Color(1, 0, 0, 1)
 button_pressed = true

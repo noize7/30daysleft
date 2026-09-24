@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://workapp30"]
 
-[ext_resource type="Script" uid="uid://ewxc01ckln8r" path="res://scripts/apps/work_app.gd" id="1_work"]
+[ext_resource type="Script" uid="uid://hcigk55aw5mf" path="res://scripts/apps/work_app.gd" id="1_work"]
 
 [node name="WorkApp" type="Control" unique_id=1890084347]
 layout_mode = 3
@@ -26,14 +26,17 @@ theme_override_constants/separation = 6
 
 [node name="Header" type="Label" parent="Root" unique_id=2101622434]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Centro de Trabajo"
 
 [node name="LevelProgress" type="Label" parent="Root" unique_id=1924518663]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Progreso"
 
 [node name="WorkStatus" type="Label" parent="Root" unique_id=1300524154]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Horario"
 
 [node name="MainRow" type="HBoxContainer" parent="Root" unique_id=1941324231]
@@ -46,18 +49,21 @@ custom_minimum_size = Vector2(260, 160)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
 
 [node name="JobDetails" type="Label" parent="Root/MainRow" unique_id=1172859427]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
 text = "Selecciona un trabajo"
 autowrap_mode = 3
 
 [node name="TimerBar" type="ProgressBar" parent="Root" unique_id=1029345244]
 custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 show_percentage = false
 
 [node name="TimerRow" type="HBoxContainer" parent="Root" unique_id=334175576]
@@ -67,10 +73,12 @@ theme_override_constants/separation = 10
 [node name="TimerLabel" type="Label" parent="Root/TimerRow" unique_id=1933932543]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
 
 [node name="ClickArea" type="Button" parent="Root/TimerRow" unique_id=1465953423]
 custom_minimum_size = Vector2(180, 32)
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "CLICK para trabajar"
 
 [node name="BottomRow" type="HBoxContainer" parent="Root" unique_id=1260263441]
@@ -80,8 +88,10 @@ theme_override_constants/separation = 12
 [node name="StartJobButton" type="Button" parent="Root/BottomRow" unique_id=526679791]
 custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = ">  Empezar trabajo"
 
 [node name="RewardLabel" type="Label" parent="Root/BottomRow" unique_id=776908970]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32

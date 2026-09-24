@@ -70,7 +70,7 @@ func start_sequence(sequence_id: String) -> void:
 			"speaker": _data["day_events"][sequence_id].get("speaker", "BOT-01"),
 			"steps": [{
 				"id": sequence_id,
-				"text": _data["day_events"][sequence_id].get("text", ""),
+				"text": (LocaleSystem.field(_data["day_events"][sequence_id], "text") if LocaleSystem else _data["day_events"][sequence_id].get("text", "")),
 				"wait_for": null
 			}]
 		}
@@ -161,7 +161,7 @@ func _show_current_step() -> void:
 		return
 
 	_current_step = _steps[_step_index]
-	var text: String = str(_current_step.get("text", ""))
+	var text: String = (LocaleSystem.field(_current_step, "text") if LocaleSystem else str(_current_step.get("text", "")))
 	# Prioridad: speaker del paso > speaker de la secuencia > BOT-01
 	var speaker: String = "BOT-01"
 	if _data.has("tutorial") and current_sequence_id == "tutorial":
@@ -225,6 +225,13 @@ func _end_tutorial_flag() -> void:
 	if MissionSystem and MissionSystem.has_method("on_tutorial_finished"):
 		MissionSystem.on_tutorial_finished()
 
+## Permite saltar el tutorial completo (desde el botón de la UI).
+func skip_tutorial() -> void:
+	if not is_tutorial or not is_active:
+		return
+	_end_tutorial_flag()
+	_finish_sequence()
+
 func _finish_sequence() -> void:
 	is_active = false
 	waiting_for = ""
@@ -245,7 +252,7 @@ func _process_queue() -> void:
 	if next.get("type") == "sequence":
 		start_sequence(str(next.get("id", "")))
 	elif next.get("type") == "line":
-		show_line(str(next.get("speaker", "BOT-01")), str(next.get("text", "")))
+		show_line(str(next.get("speaker", "BOT-01")), (LocaleSystem.field(next, "text") if LocaleSystem else str(next.get("text", ""))))
 
 ## Helpers para disparar eventos de día desde TimeManager / GameManager
 func try_day_event(event_id: String) -> void:
@@ -283,3 +290,13 @@ func reset() -> void:
 	if _dialogue_ui and is_instance_valid(_dialogue_ui):
 		_dialogue_ui.queue_free()
 		_dialogue_ui = null
+
+
+func _localized_speaker(step: Dictionary) -> String:
+	var sp := str(step.get("speaker", "BOT-01"))
+	if LocaleSystem and LocaleSystem.is_english():
+		if sp == "TÚ" or sp == "TU":
+			return "YOU"
+		if step.has("speaker_en"):
+			return str(step["speaker_en"])
+	return sp

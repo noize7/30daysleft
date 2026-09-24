@@ -36,18 +36,18 @@ func set_icon_scale(new_scale: float) -> void:
 func _style() -> void:
 	if title_label:
 		title_label.add_theme_color_override("font_color", Color(0.0, 0.0, 0.45))
-		title_label.add_theme_font_size_override("font_size", 26)
+		title_label.add_theme_font_size_override("font_size", 35)
 	if money_label:
 		money_label.add_theme_color_override("font_color", Color(0.0, 0.4, 0.0))
-		money_label.add_theme_font_size_override("font_size", 21)
+		money_label.add_theme_font_size_override("font_size", 28)
 	if details_label:
 		details_label.add_theme_color_override("font_color", Color(0.12, 0.12, 0.12))
-		details_label.add_theme_font_size_override("font_size", 19)
+		details_label.add_theme_font_size_override("font_size", 26)
 	if feedback_label:
-		feedback_label.add_theme_font_size_override("font_size", 19)
+		feedback_label.add_theme_font_size_override("font_size", 26)
 	if goal_label:
 		goal_label.add_theme_color_override("font_color", Color(0.25, 0.25, 0.25))
-		goal_label.add_theme_font_size_override("font_size", 18)
+		goal_label.add_theme_font_size_override("font_size", 24)
 	if shop_list:
 		var s: int = int(round(28.0 * icon_scale))
 		shop_list.fixed_icon_size = Vector2i(s, s)
@@ -68,11 +68,11 @@ func _style() -> void:
 
 func refresh() -> void:
 	if title_label:
-		title_label.text = "Tienda de mejoras  |  Meta: $%.0f" % GameManager.MONEY_GOAL
+		title_label.text = (LocaleSystem.t("shop.title", "Tienda de mejoras  |  Meta: $%.0f") if LocaleSystem else "Tienda de mejoras  |  Meta: $%.0f") % GameManager.MONEY_GOAL
 	if money_label:
-		money_label.text = "Dinero disponible: $%.0f" % GameManager.money
+		money_label.text = (LocaleSystem.t("shop.money_available", "Dinero disponible: $%.0f") if LocaleSystem else "Dinero disponible: $%.0f") % GameManager.money
 	if goal_label:
-		goal_label.text = "Meta de escape: $%.0f — transfiérela en el Banco a la cuenta del correo." % GameManager.MONEY_GOAL
+		goal_label.text = (LocaleSystem.t("shop.goal_hint", "Meta de escape: $%.0f — transfiérela en el Banco a la cuenta del correo.") if LocaleSystem else "Meta de escape: $%.0f — transfiérela en el Banco a la cuenta del correo.") % GameManager.MONEY_GOAL
 	if shop_list == null:
 		return
 	shop_list.clear()
@@ -104,10 +104,10 @@ func _update_details(idx: int) -> void:
 	var cur: Dictionary = UpgradeSystem.get_current(cat)
 	var nxt: Dictionary = UpgradeSystem.get_next(cat)
 	if details_label:
-		var txt: String = "Actual:\n%s\n\n%s" % [str(cur.get("name", "")), str(cur.get("desc", ""))]
+		var txt: String = "Actual:\n%s\n\n%s" % [(LocaleSystem.field(cur, "name", str(cur.get("name", ""))) if LocaleSystem else str(cur.get("name", ""))), (LocaleSystem.field(cur, "desc", str(cur.get("desc", ""))) if LocaleSystem else str(cur.get("desc", "")))]
 		if not nxt.is_empty():
 			txt += "\n\nSiguiente:\n%s\n%s\nCoste: $%d" % [
-				str(nxt.get("name", "")), str(nxt.get("desc", "")), int(nxt.get("cost", 0))
+				(LocaleSystem.field(nxt, "name", str(nxt.get("name", ""))) if LocaleSystem else str(nxt.get("name", ""))), (LocaleSystem.field(nxt, "desc", str(nxt.get("desc", ""))) if LocaleSystem else str(nxt.get("desc", ""))), int(nxt.get("cost", 0))
 			]
 		else:
 			txt += "\n\n(Nivel máximo alcanzado)"
@@ -115,11 +115,11 @@ func _update_details(idx: int) -> void:
 	if buy_button:
 		if not UpgradeSystem.can_upgrade(cat):
 			buy_button.disabled = true
-			buy_button.text = "Nivel máximo"
+			buy_button.text = LocaleSystem.t("shop.max_level", "Nivel máximo") if LocaleSystem else "Nivel máximo"
 		else:
 			var cost: int = UpgradeSystem.get_next_cost(cat)
 			buy_button.disabled = GameManager.money < float(cost)
-			buy_button.text = "Comprar ($%d)" % cost
+			buy_button.text = (LocaleSystem.t("shop.buy_cost", "Comprar ($%d)") if LocaleSystem else "Comprar ($%d)") % cost
 
 func _on_buy() -> void:
 	if SoundSystem:
@@ -130,14 +130,14 @@ func _on_buy() -> void:
 	var ok: bool = UpgradeSystem.try_buy(cat)
 	if feedback_label:
 		if ok:
-			feedback_label.text = "✓ Compra: %s" % UpgradeSystem.CATEGORY_LABELS.get(cat, cat)
+			feedback_label.text = (LocaleSystem.t("shop.purchased", "✓ Compra: %s") if LocaleSystem else "✓ Compra: %s") % UpgradeSystem.get_category_label(cat) if UpgradeSystem.has_method("get_category_label") else UpgradeSystem.CATEGORY_LABELS.get(cat, cat)
 			feedback_label.add_theme_color_override("font_color", Color(0.0, 0.45, 0.0))
 			if is_instance_valid(VFXSystem):
 				VFXSystem.spawn_sparkles(buy_button.global_position + buy_button.size * 0.5, 12)
 				VFXSystem.spawn_toast("Mejora instalada", 1.8, Color(0.6, 1.0, 0.7))
 				VFXSystem.flash_screen(Color(0.4, 0.9, 0.5, 0.12), 0.2)
 		else:
-			feedback_label.text = "No se pudo comprar (dinero o nivel máx)."
+			feedback_label.text = LocaleSystem.t("shop.cannot_buy", "No se pudo comprar (dinero o nivel máx).") if LocaleSystem else "No se pudo comprar (dinero o nivel máx)."
 			feedback_label.add_theme_color_override("font_color", Color(0.6, 0.0, 0.0))
 	refresh()
 	buy_requested.emit(cat)

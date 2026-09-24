@@ -1,23 +1,203 @@
 {
   "note": "El catalogo vivo esta en scripts/systems/email_system.gd (EMAILS). Este JSON es referencia.",
   "emails": [
-	{"id": "day1_welcome", "unlock_day": 1, "is_fake": false, "type": "system"},
-	{"id": "day1_job", "unlock_day": 1, "is_fake": false, "type": "job"},
-	{"id": "day2_reminder", "unlock_day": 2, "is_fake": false, "type": "job"},
-	{"id": "day3_odd", "unlock_day": 3, "is_fake": false, "type": "warning"},
-	{"id": "day5_memory", "unlock_day": 5, "is_fake": false, "type": "photo"},
-	{"id": "day5_fake", "unlock_day": 5, "is_fake": true, "type": "warning"},
-	{"id": "day7_neighbor", "unlock_day": 7, "is_fake": false, "type": "text"},
-	{"id": "day8_fake_call", "unlock_day": 8, "is_fake": true, "type": "warning"},
-	{"id": "day10_police", "unlock_day": 10, "is_fake": false, "type": "police"},
-	{"id": "day10_fake", "unlock_day": 10, "is_fake": true, "type": "warning"},
-	{"id": "day12_bank", "unlock_day": 12, "is_fake": false, "type": "document"},
-	{"id": "day15_truth", "unlock_day": 15, "is_fake": false, "type": "medical"},
-	{"id": "day18_press", "unlock_day": 18, "is_fake": false, "type": "document"},
-	{"id": "day20_crisis", "unlock_day": 20, "is_fake": false, "type": "system"},
-	{"id": "day20_fake", "unlock_day": 20, "is_fake": true, "type": "warning"},
-	{"id": "day22_fake_boss", "unlock_day": 22, "is_fake": true, "type": "warning"},
-	{"id": "day25_final", "unlock_day": 25, "is_fake": false, "type": "key"},
-	{"id": "day28_last_warning", "unlock_day": 28, "is_fake": false, "type": "police"}
+    {
+      "id": "day1_welcome",
+      "unlock_day": 1,
+      "is_fake": false,
+      "type": "system",
+      "subject_en": "System notice",
+      "body_en": "Your session is active.\nYou have 30 days.\nWork. Pay. Don't disappear."
+    },
+    {
+      "id": "day1_job",
+      "unlock_day": 1,
+      "is_fake": false,
+      "type": "job",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day2_reminder",
+      "unlock_day": 2,
+      "is_fake": false,
+      "type": "job",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day3_odd",
+      "unlock_day": 3,
+      "is_fake": false,
+      "type": "warning",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day5_memory",
+      "unlock_day": 5,
+      "is_fake": false,
+      "type": "photo",
+      "subject_en": "Recovered fragment",
+      "body_en": "A partial file was restored.\nCheck Files after 01:30.\nIt may not be complete."
+    },
+    {
+      "id": "day5_fake",
+      "unlock_day": 5,
+      "is_fake": true,
+      "type": "warning",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day7_neighbor",
+      "unlock_day": 7,
+      "is_fake": false,
+      "type": "text",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day8_fake_call",
+      "unlock_day": 8,
+      "is_fake": true,
+      "type": "warning",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day10_police",
+      "unlock_day": 10,
+      "is_fake": false,
+      "type": "police",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day10_fake",
+      "unlock_day": 10,
+      "is_fake": true,
+      "type": "warning",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day12_bank",
+      "unlock_day": 12,
+      "is_fake": false,
+      "type": "document",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day15_truth",
+      "unlock_day": 15,
+      "is_fake": false,
+      "type": "medical",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day18_press",
+      "unlock_day": 18,
+      "is_fake": false,
+      "type": "document",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day20_crisis",
+      "unlock_day": 20,
+      "is_fake": false,
+      "type": "system",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day20_fake",
+      "unlock_day": 20,
+      "is_fake": true,
+      "type": "warning",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day22_fake_boss",
+      "unlock_day": 22,
+      "is_fake": true,
+      "type": "warning",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "day25_final",
+      "unlock_day": 25,
+      "is_fake": false,
+      "type": "key",
+      "subject_en": "Five days",
+      "body_en": "Five days remain.\nThe escape account is still waiting for a transfer."
+    },
+    {
+      "id": "day28_last_warning",
+      "unlock_day": 28,
+      "is_fake": false,
+      "type": "police",
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "mystery_chain_01",
+      "unlock_day": 2,
+      "is_fake": false,
+      "type": "warning",
+      "expires_day": 5,
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "mystery_chain_02",
+      "unlock_day": 5,
+      "is_fake": false,
+      "type": "document",
+      "expires_day": 8,
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "mystery_chain_03",
+      "unlock_day": 8,
+      "is_fake": false,
+      "type": "key",
+      "expires_day": 12,
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "mystery_chain_04",
+      "unlock_day": 12,
+      "is_fake": false,
+      "type": "warning",
+      "expires_day": 17,
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "mystery_chain_05",
+      "unlock_day": 17,
+      "is_fake": false,
+      "type": "medical",
+      "expires_day": 24,
+      "subject_en": "",
+      "body_en": ""
+    },
+    {
+      "id": "mystery_chain_06",
+      "unlock_day": 24,
+      "is_fake": false,
+      "type": "police",
+      "expires_day": 29,
+      "subject_en": "",
+      "body_en": ""
+    }
   ]
 }

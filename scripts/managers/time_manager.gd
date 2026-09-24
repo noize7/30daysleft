@@ -13,7 +13,7 @@ var minute: int = 0
 var second: int = 0
 
 # Base: ~0.28 %/s → ~6 min para vaciar 100 % (ajustable por opciones y cooling)
-var BATTERY_DRAIN_PER_REAL_SECOND: float = 0.28
+var BATTERY_DRAIN_PER_REAL_SECOND: float = 0.22
 # Fuera de horario laboral la batería cae más rápido → empuja a apagar y avanzar día
 var OFF_HOURS_DRAIN_MULT: float = 1.55
 # 28 segundos de juego por cada segundo real

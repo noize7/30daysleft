@@ -28,7 +28,7 @@ signal activated(app_name: String)
 ## Color del cuadrado cuando no hay textura asignada
 @export var fallback_color: Color = Color(0.2, 0.4, 0.8)
 ## Escala visual (0.5 = pequeño, 1.0 = normal, 2.0 = grande)
-@export_range(0.5, 3.0, 0.1) var icon_scale: float = 1.5
+@export_range(0.5, 4.0, 0.1) var icon_scale: float = 2.8
 
 # --- Estado interno del arrastre --------------------------------------------
 var _dragging: bool = false               # ¿Se está arrastrando ahora?
@@ -45,7 +45,33 @@ func _ready() -> void:
 	mouse_default_cursor_shape = Control.CURSOR_ARROW
 	mouse_entered.connect(_on_hover_enter)
 	mouse_exited.connect(_on_hover_exit)
+	if LocaleSystem and not LocaleSystem.language_changed.is_connected(_on_lang):
+		LocaleSystem.language_changed.connect(_on_lang)
 	_rebuild()
+
+func _on_lang(_lang: String) -> void:
+	_rebuild()
+
+func _localized_label(name: String) -> String:
+	if LocaleSystem == null:
+		return name
+	match name:
+		"Trabajo":
+			return LocaleSystem.t("desktop.work", name)
+		"Correo":
+			return LocaleSystem.t("desktop.mail", name)
+		"Archivos":
+			return LocaleSystem.t("desktop.files", name)
+		"Mejoras":
+			return LocaleSystem.t("desktop.upgrades", name)
+		"Opciones":
+			return LocaleSystem.t("desktop.options", name)
+		"Banco":
+			return LocaleSystem.t("desktop.bank", name)
+		"Música":
+			return LocaleSystem.t("desktop.music", name)
+		_:
+			return name
 
 func _on_hover_enter() -> void:
 	var tw := create_tween()
@@ -73,10 +99,10 @@ func _rebuild() -> void:
 	for child in get_children():
 		child.queue_free()
 
-	# Tamaños proporcionales a la escala
-	var icon_sz: float = 56.0 * icon_scale
-	var total_w: float = maxf(icon_sz + 24.0, 96.0 * icon_scale)
-	var total_h: float = icon_sz + 36.0 * icon_scale
+	# Tamaños proporcionales a la escala (base más grande para legibilidad)
+	var icon_sz: float = 64.0 * icon_scale
+	var total_w: float = maxf(icon_sz + 28.0, 110.0 * icon_scale)
+	var total_h: float = icon_sz + 40.0 * icon_scale
 	custom_minimum_size = Vector2(total_w, total_h)
 	size = Vector2(total_w, total_h)
 	pivot_offset = Vector2(total_w * 0.5, total_h * 0.5)
@@ -110,7 +136,7 @@ func _rebuild() -> void:
 
 	# --- Etiqueta con el nombre de la app ------------------------------------
 	var lbl := Label.new()
-	lbl.text = app_name
+	lbl.text = _localized_label(app_name)
 	lbl.position = Vector2(0, icon_sz + 8.0 * icon_scale)
 	lbl.size = Vector2(total_w, 30.0 * icon_scale)
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -119,7 +145,7 @@ func _rebuild() -> void:
 	lbl.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
 	lbl.add_theme_constant_override("shadow_offset_x", 1)
 	lbl.add_theme_constant_override("shadow_offset_y", 1)
-	lbl.add_theme_font_size_override("font_size", int(18 * icon_scale))
+	lbl.add_theme_font_size_override("font_size", int(20 * icon_scale))
 	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(lbl)
 

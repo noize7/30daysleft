@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://filesapp30"]
 
-[ext_resource type="Script" uid="uid://cnpwjiai2cdvy" path="res://scripts/apps/files_app.gd" id="1_files"]
+[ext_resource type="Script" uid="uid://dhetcv2n7lrow" path="res://scripts/apps/files_app.gd" id="1_files"]
 
 [node name="FilesApp" type="Control" unique_id=1782102943]
 layout_mode = 3
@@ -26,6 +26,7 @@ theme_override_constants/separation = 6
 
 [node name="Header" type="Label" parent="Root" unique_id=1418449574]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Archivos"
 
 [node name="StatusLabel" type="Label" parent="Root" unique_id=1705887489]
@@ -45,6 +46,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.85
+theme_override_font_sizes/font_size = 32
 
 [node name="RightCol" type="VBoxContainer" parent="Root/MainRow" unique_id=1812588453]
 layout_mode = 2
@@ -55,10 +57,12 @@ theme_override_constants/separation = 6
 
 [node name="BodyTitle" type="Label" parent="Root/MainRow/RightCol" unique_id=971916328]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Vista previa"
 
 [node name="ClueBody" type="Label" parent="Root/MainRow/RightCol" unique_id=1747151052]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
 text = "Selecciona un archivo de la lista."
 autowrap_mode = 3

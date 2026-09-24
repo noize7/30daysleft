@@ -212,7 +212,7 @@ func spawn_toast(text: String, duration: float = 2.2, color: Color = Color(0.95,
 	panel.add_theme_stylebox_override("panel", st)
 	var lbl := Label.new()
 	lbl.text = text
-	lbl.add_theme_font_size_override("font_size", 15)
+	lbl.add_theme_font_size_override("font_size", 20)
 	lbl.add_theme_color_override("font_color", color)
 	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_child(lbl)

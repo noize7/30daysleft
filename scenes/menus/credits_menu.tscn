@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://creditsmenu30"]
 
-[ext_resource type="Script" uid="uid://csqa47uk60et7" path="res://scripts/menus/credits_menu.gd" id="1_cred"]
+[ext_resource type="Script" uid="uid://cy2rdk8xmrdm7" path="res://scripts/menus/credits_menu.gd" id="1_cred"]
 
 [node name="CreditsMenu" type="Control" unique_id=1220556973]
 layout_mode = 3
@@ -51,6 +51,7 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="Panel/VBox" unique_id=2110827974]
 layout_mode = 2
+theme_override_font_sizes/font_size = 48
 text = "Créditos"
 horizontal_alignment = 1
 
@@ -60,6 +61,7 @@ layout_mode = 2
 [node name="CreditsLabel" type="Label" parent="Panel/VBox" unique_id=1160813913]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
 text = "..."
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -67,4 +69,5 @@ autowrap_mode = 3
 
 [node name="BtnBack" type="Button" parent="Panel/VBox" unique_id=2140915424]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Volver"

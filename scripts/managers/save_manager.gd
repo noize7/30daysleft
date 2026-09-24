@@ -21,7 +21,7 @@ func save_game() -> bool:
 		DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 
 	var data := {
-		"version": 2,
+		"version": 3,
 		"day": GameManager.day,
 		"money": GameManager.money,
 		"sanity": GameManager.sanity,
@@ -38,6 +38,9 @@ func save_game() -> bool:
 		"read_emails": EmailSystem.read_ids.duplicate() if EmailSystem else [],
 		"unlocked_clues": ClueSystem.unlocked_ids.duplicate() if ClueSystem else [],
 		"read_clues": ClueSystem.read_ids.duplicate() if ClueSystem else [],
+		"investigation": InvestigationSystem.get_save_data() if InvestigationSystem else {},
+		"paranoia": ParanoiaSystem.get_save_data() if ParanoiaSystem else {},
+		"bank": BankSystem.get_save_data() if BankSystem else {},
 		# Posiciones de los iconos del escritorio (arrastrados por el jugador)
 		"icon_positions": GameManager.icon_positions.duplicate(true),
 		# Escape por transferencia
@@ -129,6 +132,16 @@ func load_game() -> bool:
 			ClueSystem.read_ids.append(str(id))
 		ClueSystem.call_deferred("_enable_notifications")
 
+	# Progreso de investigación / paranoia / movimientos bancarios
+	var investigation_data = data.get("investigation", {})
+	if InvestigationSystem and investigation_data is Dictionary:
+		InvestigationSystem.load_save_data(investigation_data)
+	var paranoia_data = data.get("paranoia", {})
+	if ParanoiaSystem and paranoia_data is Dictionary:
+		ParanoiaSystem.load_save_data(paranoia_data)
+	var bank_data = data.get("bank", {})
+	if BankSystem and bank_data is Dictionary:
+		BankSystem.load_save_data(bank_data)
 	# Posiciones de los iconos del escritorio
 	var ip = data.get("icon_positions", {})
 	if typeof(ip) == TYPE_DICTIONARY:

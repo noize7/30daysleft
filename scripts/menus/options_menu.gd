@@ -50,6 +50,7 @@ func _ready() -> void:
 	_load_settings()
 	_apply_xp_style()
 	_populate_options()
+	_apply_locale_labels()
 	_load_into_ui()
 	_connect_autosave()
 	btn_apply.pressed.connect(func():
@@ -69,10 +70,59 @@ func _ready() -> void:
 	)
 	volume_slider.value_changed.connect(_on_vol_changed)
 	sfx_slider.value_changed.connect(_on_sfx_changed)
+	if LocaleSystem and not LocaleSystem.language_changed.is_connected(_on_language_changed):
+		LocaleSystem.language_changed.connect(_on_language_changed)
 	_ui_ready = true
 	_apply_runtime_settings(false)
 	# Si se abre como app de escritorio, al mostrar de nuevo recargar UI
 	visibility_changed.connect(_on_visibility_changed)
+
+func _on_language_changed(_lang: String) -> void:
+	_populate_options()
+	_apply_locale_labels()
+	_load_into_ui()
+
+func _t(key: String, fallback: String) -> String:
+	if LocaleSystem:
+		return LocaleSystem.t(key, fallback)
+	return fallback
+
+func _apply_locale_labels() -> void:
+	if title_label:
+		title_label.text = _t("options.title", "Opciones")
+	var vol_lbl := get_node_or_null("Panel/VBox/VolumeRow/VolLabel") as Label
+	if vol_lbl:
+		vol_lbl.text = _t("options.master_volume", "Volumen general")
+	var sfx_lbl := get_node_or_null("Panel/VBox/SfxRow/SfxLabel") as Label
+	if sfx_lbl:
+		sfx_lbl.text = _t("options.sfx_volume", "Efectos")
+	var speed_lbl := get_node_or_null("Panel/VBox/SpeedRow/SpeedLabel") as Label
+	if speed_lbl:
+		speed_lbl.text = _t("options.game_speed", "Velocidad del tiempo")
+	var diff_lbl := get_node_or_null("Panel/VBox/DiffRow/DiffLabel") as Label
+	if diff_lbl:
+		diff_lbl.text = _t("options.difficulty", "Dificultad")
+	var drain_lbl := get_node_or_null("Panel/VBox/DrainRow/DrainLabel") as Label
+	if drain_lbl:
+		drain_lbl.text = _t("options.battery", "Drenaje de batería")
+	var lang_lbl := get_node_or_null("Panel/VBox/LangRow/LangLabel") as Label
+	if lang_lbl:
+		lang_lbl.text = _t("options.language", "Idioma")
+	var bg_lbl := get_node_or_null("Panel/VBox/BgRow/BgLabel") as Label
+	if bg_lbl:
+		bg_lbl.text = _t("options.background", "Fondo")
+	if fullscreen_check:
+		fullscreen_check.text = _t("options.fullscreen", "Pantalla completa")
+	if show_fps_check:
+		show_fps_check.text = _t("options.show_fps", "Mostrar FPS")
+	if auto_save_check:
+		auto_save_check.text = _t("options.auto_save", "Autoguardado")
+	if btn_apply:
+		btn_apply.text = _t("options.apply", "Aplicar")
+	if btn_back:
+		btn_back.text = _t("options.back", "Volver")
+	if btn_defaults:
+		btn_defaults.text = _t("options.defaults", "Valores por defecto")
 
 func _on_visibility_changed() -> void:
 	if visible and _ui_ready:
@@ -146,34 +196,46 @@ func _ensure_fps_label() -> void:
 	_fps_label.offset_right = -8
 	_fps_label.offset_bottom = 32
 	_fps_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.3))
-	_fps_label.add_theme_font_size_override("font_size", 32)
+	_fps_label.add_theme_font_size_override("font_size", 43)
 	_fps_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tree.root.add_child(_fps_label)
 
 func _populate_options() -> void:
+	var sel_speed := speed_option.selected if speed_option else 1
+	var sel_diff := difficulty_option.selected if difficulty_option else 1
+	var sel_drain := battery_drain_option.selected if battery_drain_option else 1
+	var sel_lang := language_option.selected if language_option else 0
+	var sel_bg := bg_option.selected if bg_option else 0
+
 	speed_option.clear()
-	speed_option.add_item("Lenta (x0.75)", 0)
-	speed_option.add_item("Normal (x1)", 1)
-	speed_option.add_item("Rápida (x1.5)", 2)
+	speed_option.add_item(_t("options.speed_slow", "Lenta (x0.75)"), 0)
+	speed_option.add_item(_t("options.speed_normal", "Normal (x1)"), 1)
+	speed_option.add_item(_t("options.speed_fast", "Rápida (x1.5)"), 2)
 
 	difficulty_option.clear()
-	difficulty_option.add_item("Fácil (más batería / menos sospecha)", 0)
-	difficulty_option.add_item("Normal", 1)
-	difficulty_option.add_item("Difícil (drenaje alto / sospecha rápida)", 2)
+	difficulty_option.add_item(_t("options.diff_easy", "Fácil (más batería / menos sospecha)"), 0)
+	difficulty_option.add_item(_t("options.diff_normal", "Normal"), 1)
+	difficulty_option.add_item(_t("options.diff_hard", "Difícil (drenaje alto / sospecha rápida)"), 2)
 
 	battery_drain_option.clear()
-	battery_drain_option.add_item("Bajo", 0)
-	battery_drain_option.add_item("Normal", 1)
-	battery_drain_option.add_item("Alto", 2)
+	battery_drain_option.add_item(_t("options.drain_low", "Bajo"), 0)
+	battery_drain_option.add_item(_t("options.drain_normal", "Normal"), 1)
+	battery_drain_option.add_item(_t("options.drain_high", "Alto"), 2)
 
 	language_option.clear()
-	language_option.add_item("Español", 0)
-	language_option.add_item("English (próximamente)", 1)
-	language_option.set_item_disabled(1, true)
+	language_option.add_item(_t("options.lang_es", "Español"), 0)
+	language_option.add_item(_t("options.lang_en", "English"), 1)
+	language_option.set_item_disabled(1, false)
 
 	bg_option.clear()
-	bg_option.add_item("Clásico", 0)
-	bg_option.add_item("Nevado", 1)
+	bg_option.add_item(_t("options.bg_classic", "Clásico"), 0)
+	bg_option.add_item(_t("options.bg_snow", "Nevado"), 1)
+
+	speed_option.selected = clampi(sel_speed, 0, 2)
+	difficulty_option.selected = clampi(sel_diff, 0, 2)
+	battery_drain_option.selected = clampi(sel_drain, 0, 2)
+	language_option.selected = clampi(sel_lang, 0, 1)
+	bg_option.selected = clampi(sel_bg, 0, 1)
 
 func _load_into_ui() -> void:
 	_applying_ui = true
@@ -185,7 +247,7 @@ func _load_into_ui() -> void:
 	fullscreen_check.button_pressed = bool(_settings.fullscreen)
 	show_fps_check.button_pressed = bool(_settings.show_fps)
 	auto_save_check.button_pressed = bool(_settings.auto_save)
-	language_option.selected = clampi(int(_settings.language), 0, 0)
+	language_option.selected = clampi(int(_settings.language), 0, 1)
 	bg_option.selected = clampi(int(_settings.background), 0, 1)
 	_on_vol_changed(float(_settings.master_volume))
 	_on_sfx_changed(float(_settings.sfx_volume))
@@ -201,6 +263,8 @@ func _capture_from_ui() -> void:
 	_settings.show_fps = show_fps_check.button_pressed
 	_settings.auto_save = auto_save_check.button_pressed
 	_settings.language = language_option.selected
+	if LocaleSystem:
+		LocaleSystem.set_language_index(int(_settings.language))
 	_settings.background = bg_option.selected
 
 func _on_vol_changed(v: float) -> void:
@@ -253,6 +317,8 @@ func _on_apply() -> void:
 	closed.emit()
 
 func _apply_runtime_settings(_from_apply: bool) -> void:
+	if LocaleSystem:
+		LocaleSystem.set_language_index(int(_settings.get("language", 0)))
 	# Pantalla completa
 	if bool(_settings.fullscreen):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
@@ -441,7 +507,7 @@ static func apply_saved_settings_boot() -> void:
 			lbl.offset_right = -8
 			lbl.offset_bottom = 32
 			lbl.add_theme_color_override("font_color", Color(0.2, 1.0, 0.3))
-			lbl.add_theme_font_size_override("font_size", 16)
+			lbl.add_theme_font_size_override("font_size", 30)
 			lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			tree.root.add_child(lbl)
 			# Pequeño script inline no posible: actualizará cuando se abra opciones
@@ -482,7 +548,7 @@ func _apply_xp_style() -> void:
 		$Wallpaper.color = Color(0.05, 0.07, 0.12)
 	if title_label:
 		title_label.add_theme_color_override("font_color", Color(0.85, 0.92, 1.0))
-		title_label.add_theme_font_size_override("font_size", 26)
+		title_label.add_theme_font_size_override("font_size", 38)
 	if has_node("Panel"):
 		_force_panel_text($Panel)
 	for btn in [btn_apply, btn_back, btn_defaults]:
@@ -505,4 +571,4 @@ func _apply_xp_style() -> void:
 		h.bg_color = Color(0.28, 0.42, 0.72)
 		btn.add_theme_stylebox_override("hover", h)
 		btn.add_theme_color_override("font_color", Color.WHITE)
-		btn.add_theme_font_size_override("font_size", 16)
+		btn.add_theme_font_size_override("font_size", 30)

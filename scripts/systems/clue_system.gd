@@ -19,8 +19,18 @@ const CLUES: Array = [
 		"unlock_minute": 35,
 		"hidden": false,
 		"type": "photo",
+		"is_true": true,
+		"chain": "photo_chain",
+		"related_email": "day5_memory",
+		"related_clue": "clue_last_photo",
 		"title": "Foto rota",
-		"body": "Una fotografia antigua, cortada a la mitad.\nSolo se ve una mano y parte de una sonrisa.\nEn el reverso: una fecha borrosa."
+		"title_en": "Torn photo",
+		"body": "Una fotografia antigua, cortada a la mitad.\nSolo se ve una mano y parte de una sonrisa.\nEn el reverso: una fecha borrosa.\n\n[VERIFICADO: archivo original del disco]",
+		"body_en": "An old photograph, cut in half.
+You only see a hand and part of a smile.
+On the back: a blurred date.
+
+[VERIFIED: original file from the disk]"
 	},
 	{
 		"id": "clue_message",
@@ -29,8 +39,17 @@ const CLUES: Array = [
 		"unlock_minute": 20,
 		"hidden": false,
 		"type": "text",
+		"is_true": true,
+		"chain": "incident_chain",
+		"related_clue": "clue_receipt",
 		"title": "Mensaje eliminado",
-		"body": "Fragmento recuperado del disco:\n«…no fue un accidente. Guarda el dinero y…»\nEl resto esta sobreescrito."
+		"title_en": "Deleted message",
+		"body": "Fragmento recuperado del disco:\n«…no fue un accidente. Guarda el dinero y…»\nEl resto esta sobreescrito.\n\n[VERIFICADO: metadatos de borrado reales]",
+		"body_en": "Fragment recovered from the disk:
+«…it wasn't an accident. Keep the money and…»
+The rest is overwritten.
+
+[VERIFIED: real deletion metadata]"
 	},
 	{
 		"id": "clue_audio",
@@ -39,8 +58,16 @@ const CLUES: Array = [
 		"unlock_minute": 50,
 		"hidden": false,
 		"type": "audio",
+		"is_true": true,
+		"chain": "incident_chain",
 		"title": "Grabacion de voz",
-		"body": "Un audio de 6 segundos, muy distorsionado.\nSe escucha una respiracion agitada y una frase:\n«...no mires atras...»"
+		"title_en": "Voice recording",
+		"body": "Un audio de 6 segundos, muy distorsionado.\nSe escucha una respiracion agitada y una frase:\n«...no mires atras...»\n\n[VERIFICADO: timestamp coincide con la noche del incidente]",
+		"body_en": "A 6-second audio, heavily distorted.
+You hear agitated breathing and a line:
+«...don't look back...»
+
+[VERIFIED: timestamp matches the night of the incident]"
 	},
 	{
 		"id": "clue_receipt",
@@ -49,56 +76,117 @@ const CLUES: Array = [
 		"unlock_minute": 5,
 		"hidden": false,
 		"type": "document",
+		"is_true": true,
+		"chain": "incident_chain",
+		"related_bank": "meridian_payment",
 		"title": "Recibo extraño",
-		"body": "Un recibo de un local que no reconoces.\nFecha: la noche del incidente.\nMonto pagado en efectivo, sin firma."
+		"title_en": "Strange receipt",
+		"body": "Un recibo de un local que no reconoces.\nFecha: la noche del incidente.\nMonto pagado en efectivo, sin firma.\n\n[VERIFICADO: coincide con movimiento bancario HOTEL MERIDIAN]",
+		"body_en": "A receipt from a place you don't recognize.
+Date: the night of the incident.
+Paid in cash, no signature.
+
+[VERIFIED: matches HOTEL MERIDIAN bank transaction]"
 	},
 	{
 		"id": "clue_medical",
 		"unlock_day": 12,
 		"hidden": true,
 		"type": "medical",
+		"is_true": true,
+		"chain": "identity_chain",
 		"title": "[OCULTO] Archivo medico",
-		"body": "Ingreso hospitalario. Causa: trauma craneal / amnesia.\nAlta voluntaria. Sin seguimiento.\nNombre del paciente: ilegible.\n\n(Requiere RAM 8GB para leer este sector.)"
+		"title_en": "[HIDDEN] Medical file",
+		"body": "Ingreso hospitalario. Causa: trauma craneal / amnesia.\nAlta voluntaria. Sin seguimiento.\nNombre del paciente: ilegible.\n\n[VERIFICADO: sello hospitalario genuino]\n(Requiere RAM 8GB para leer este sector.)",
+		"body_en": "Hospital admission. Cause: head trauma / amnesia.
+Voluntary discharge. No follow-up.
+Patient name: illegible.
+
+[VERIFIED: genuine hospital seal]
+(Requires 8GB RAM to read this sector.)"
 	},
 	{
 		"id": "clue_diary",
 		"unlock_day": 14,
 		"hidden": false,
 		"type": "text",
+		"is_true": true,
+		"chain": "identity_chain",
 		"title": "Pagina de diario",
-		"body": "«...no se si lo que recuerdo paso de verdad.\nCada dia la historia cambia un poco.\nTengo miedo de llegar al dia 30 y no saber quien soy.»"
+		"title_en": "Diary page",
+		"body": "«...no se si lo que recuerdo paso de verdad.\nCada dia la historia cambia un poco.\nTengo miedo de llegar al dia 30 y no saber quien soy.»\n\n[VERIFICADO: escritura propia, fecha coherente]",
+		"body_en": "«...I don't know if what I remember really happened.
+Every day the story shifts a little.
+I'm afraid of reaching day 30 and not knowing who I am.»
+
+[VERIFIED: handwritten original]"
 	},
 	{
 		"id": "clue_text",
 		"unlock_day": 18,
 		"hidden": false,
 		"type": "text",
+		"is_true": true,
+		"chain": "escape_chain",
 		"title": "Texto raro",
-		"body": "Notas en un bloc digital:\n«Ellos no buscan justicia. Buscan silencio.»\n«El dia 30 no es un limite. Es una fecha de entrega.»"
+		"title_en": "Strange text",
+		"body": "Notas en un bloc digital:\n«Ellos no buscan justicia. Buscan silencio.»\n«El dia 30 no es un limite. Es una fecha de entrega.»\n\n[VERIFICADO: no alterado por el sistema]",
+		"body_en": "Repeated text across several files:
+«THE SUBJECT MUST NOT REMEMBER.»
+Someone wrote about you in third person.
+
+[VERIFIED: same phrase in medical report]"
 	},
 	{
 		"id": "clue_camera",
 		"unlock_day": 20,
 		"hidden": true,
 		"type": "photo",
+		"is_true": true,
+		"chain": "incident_chain",
 		"title": "[OCULTO] Camara oculta",
-		"body": "Un archivo de video sin miniatura, 4 segundos.\nSolo se ve una silueta cruzando la puerta.\nLa marca de tiempo no coincide con esa noche.\n\n(Requiere RAM 8GB para leer este sector.)"
+		"title_en": "Hidden camera",
+		"body": "Un archivo de video sin miniatura, 4 segundos.\nSolo se ve una silueta cruzando la puerta.\nLa marca de tiempo no coincide con esa noche.\n\n[VERIFICADO: hash de archivo intacto]\n(Requiere RAM 8GB para leer este sector.)",
+		"body_en": "A frame from a security camera.
+A figure in a hallway. Blurry face.
+The time matches the night of the incident.
+
+[VERIFIED: real camera metadata]"
 	},
 	{
 		"id": "clue_key",
 		"unlock_day": 24,
 		"hidden": true,
 		"type": "key",
+		"is_true": true,
+		"chain": "escape_chain",
+		"related_clue": "clue_map",
 		"title": "[OCULTO] La ultima pieza",
-		"body": "Una direccion. Un nombre en clave.\nSi tienes el dinero y has leido el resto,\nya sabes que hacer antes de que lleguen.\n\n(Archivo en carpeta recuerdos/ — solo con RAM 8GB.)"
+		"title_en": "[HIDDEN] The last piece",
+		"body": "Una direccion. Un nombre en clave.\nSi tienes el dinero y has leido el resto,\nya sabes que hacer antes de que lleguen.\n\n[VERIFICADO: coordenadas reales]\n(Archivo en carpeta recuerdos/ — solo con RAM 8GB.)",
+		"body_en": "An address. A codename.
+If you have the money and you've read the rest,
+you already know what to do before they arrive.
+
+[VERIFIED: real coordinates]
+(File in memories/ folder — only with 8GB RAM.)"
 	},
 	{
 		"id": "clue_map",
 		"unlock_day": 27,
 		"hidden": true,
 		"type": "key",
+		"is_true": true,
+		"chain": "escape_chain",
 		"title": "[OCULTO] Mapa marcado",
-		"body": "Un mapa de la ciudad con una ruta marcada a mano\nhasta la frontera. Una nota al margen:\n«Solo si estas seguro. No hay vuelta atras.»\n\n(Requiere RAM 8GB para leer este sector.)"
+		"title_en": "[HIDDEN] Marked map",
+		"body": "Un mapa de la ciudad con una ruta marcada a mano\nhasta la frontera. Una nota al margen:\n«Solo si estas seguro. No hay vuelta atras.»\n\n[VERIFICADO: tinta y papel originales]\n(Requiere RAM 8GB para leer este sector.)",
+		"body_en": "A city map with a route marked by hand
+to the border. A note in the margin:
+«Only if you're sure. No turning back.»
+
+[VERIFIED: original ink and paper]
+(Requires 8GB RAM to read this sector.)"
 	},
 	# --- Más archivos ---
 	{
@@ -108,8 +196,16 @@ const CLUES: Array = [
 		"unlock_minute": 5,
 		"hidden": false,
 		"type": "text",
+		"is_true": true,
+		"chain": "meta_chain",
 		"title": "Nota en el escritorio",
-		"body": "Escrito a mano:\n«No confíes en todos los correos.»\n«Algunos los inventa tu cabeza.»"
+		"title_en": "Note on the desktop",
+		"body": "Escrito a mano:\n«No confíes en todos los correos.»\n«Algunos los inventa tu cabeza.»\n\n[VERIFICADO: tu propia letra]",
+		"body_en": "Handwritten:
+«Don't trust every email.»
+«Some are made up by your head.»
+
+[VERIFIED: your own handwriting]"
 	},
 	{
 		"id": "clue_corrupted",
@@ -118,69 +214,132 @@ const CLUES: Array = [
 		"unlock_minute": 40,
 		"hidden": false,
 		"type": "warning",
+		"is_true": false,
 		"sanity_delta": -6.0,
 		"title": "archivo_corrompido.dat",
-		"body": "Al abrirlo solo ves ruido y una frase:\n«YA ESTÁS DENTRO.»\nTe duele la cabeza."
+		"title_en": "corrupted_file.dat",
+		"body": "Al abrirlo solo ves ruido y una frase:\n«YA ESTÁS DENTRO.»\nTe duele la cabeza.\n\n[POSIBLE ALUCINACIÓN: no hay registro de este archivo en el disco]",
+		"body_en": "Opening it you only see noise and a line:
+«YOU'RE ALREADY INSIDE.»
+Your head hurts.
+
+[POSSIBLE HALLUCINATION: no record of this file on disk]"
 	},
 	{
 		"id": "clue_list",
 		"unlock_day": 9,
 		"hidden": false,
 		"type": "document",
+		"is_true": true,
+		"chain": "identity_chain",
 		"title": "Lista de nombres",
-		"body": "Tres nombres tachados.\nEl cuarto es el tuyo… o alguien con el mismo apellido.\nFecha al pie: la noche del incidente."
+		"title_en": "List of names",
+		"body": "Tres nombres tachados.\nEl cuarto es el tuyo… o alguien con el mismo apellido.\nFecha al pie: la noche del incidente.\n\n[VERIFICADO: documento escaneado original]",
+		"body_en": "Three names crossed out.
+The fourth is yours… or someone with the same surname.
+Date at the bottom: the night of the incident.
+
+[VERIFIED: original scanned document]"
 	},
 	{
 		"id": "clue_scream",
 		"unlock_day": 11,
 		"hidden": false,
 		"type": "audio",
+		"is_true": false,
 		"sanity_delta": -5.0,
 		"title": "clip_grito.wav",
-		"body": "Un segundo de audio.\nNo es un grito de miedo.\nEs de rabia.\nNo quieres escucharlo otra vez."
+		"title_en": "scream_clip.wav",
+		"body": "Un segundo de audio.\nNo es un grito de miedo.\nEs de rabia.\nNo quieres escucharlo otra vez.\n\n[POSIBLE ALUCINACIÓN: el archivo no existe en el sistema de archivos]",
+		"body_en": "One second of audio.
+It isn't a scream of fear.
+It's rage.
+You don't want to hear it again.
+
+[POSSIBLE HALLUCINATION: file does not exist on the filesystem]"
 	},
 	{
 		"id": "clue_mirror",
 		"unlock_day": 13,
 		"hidden": true,
 		"type": "photo",
+		"is_true": false,
 		"sanity_delta": -7.0,
 		"title": "[OCULTO] Espejo",
-		"body": "Una foto del baño.\nEn el cristal hay una silueta de más.\nNo eras tú solo en la habitación.\n\n(RAM 8GB.)"
+		"title_en": "[HIDDEN] Mirror",
+		"body": "Una foto del baño.\nEn el cristal hay una silueta de más.\nNo eras tú solo en la habitación.\n\n[POSIBLE ALUCINACIÓN: no hay cámara en el baño]\n(RAM 8GB.)",
+		"body_en": "A photo of a mirror.
+Your reflection doesn't match the room.
+Someone else is in the glass.
+
+[POSSIBLE HALLUCINATION: the image changes when you look away]"
 	},
 	{
 		"id": "clue_contract",
 		"unlock_day": 16,
 		"hidden": false,
 		"type": "document",
+		"is_true": true,
+		"chain": "identity_chain",
 		"title": "Contrato incompleto",
-		"body": "Cláusula 7: «El sujeto no recordará…»\nEl resto está quemado.\nFirma ilegible."
+		"title_en": "Contract fragment",
+		"body": "Cláusula 7: «El sujeto no recordará…»\nEl resto está quemado.\nFirma ilegible.\n\n[VERIFICADO: papel y tinta auténticos]",
+		"body_en": "Clause 7: «The subject will not remember…»
+The rest is burned.
+Illegible signature.
+
+[VERIFIED: original paper]"
 	},
 	{
 		"id": "clue_loop",
 		"unlock_day": 19,
 		"hidden": false,
 		"type": "system",
+		"is_true": false,
 		"sanity_delta": -4.0,
 		"title": "log_reinicio.txt",
-		"body": "BOOT… BOOT… BOOT…\nMismo checksum. Mismo día.\n¿Cuántas veces has llegado al 30?"
+		"title_en": "Boot loop",
+		"body": "BOOT… BOOT… BOOT…\nMismo checksum. Mismo día.\n¿Cuántas veces has llegado al 30?\n\n[POSIBLE ALUCINACIÓN: el log del sistema no contiene estas líneas]",
+		"body_en": "BOOT… BOOT… BOOT…
+Same checksum. Same day.
+How many times have you reached day 30?
+
+[POSSIBLE HALLUCINATION]"
 	},
 	{
 		"id": "clue_threat",
 		"unlock_day": 22,
 		"hidden": true,
 		"type": "police",
+		"is_true": false,
 		"sanity_delta": -5.0,
 		"title": "[OCULTO] Amenaza",
-		"body": "Mensaje sin remitente:\n«Si transferiste el dinero, ya es tarde.»\nPuede ser real. Puede no serlo.\n\n(RAM 8GB.)"
+		"title_en": "Anonymous threat",
+		"body": "Mensaje sin remitente:\n«Si transferiste el dinero, ya es tarde.»\nPuede ser real. Puede no serlo.\n\n[POSIBLE ALUCINACIÓN: no hay registro de recepción]\n(RAM 8GB.)",
+		"body_en": "Message with no sender:
+«If you transferred the money, it's already too late.»
+It may be real.
+It may not.
+
+[UNVERIFIED]"
 	},
 	{
 		"id": "clue_last_photo",
 		"unlock_day": 26,
 		"hidden": true,
 		"type": "photo",
+		"is_true": true,
+		"chain": "photo_chain",
+		"related_clue": "clue_photo",
 		"title": "[OCULTO] La otra mitad",
-		"body": "Un fragmento que encaja con la foto rota.\nAún no se ve el rostro completo.\nPero la mano… es la tuya.\n\n(RAM 8GB.)"
+		"title_en": "Complete photo",
+		"body": "Un fragmento que encaja con la foto rota.\nAún no se ve el rostro completo.\nPero la mano… es la tuya.\n\n[VERIFICADO: empalme perfecto con Foto rota]\n(RAM 8GB.)",
+		"body_en": "The other half of the photo.
+Now you see the full face.
+You know who it is.
+You wish you didn't.
+
+[VERIFIED: completes clue_photo]"
 	},
 ]
 
@@ -277,6 +436,8 @@ func mark_read(clue_id: String) -> void:
 	if clue_id not in unlocked_ids:
 		return
 	var sanity_delta: float = 5.0
+	var is_true: bool = true
+	var related_clue: String = ""
 	# No permitir leer ocultos sin RAM
 	for clue in CLUES:
 		if str(clue["id"]) != clue_id:
@@ -285,12 +446,50 @@ func mark_read(clue_id: String) -> void:
 			return
 		if clue.has("sanity_delta"):
 			sanity_delta = float(clue["sanity_delta"])
+		is_true = bool(clue.get("is_true", true))
+		related_clue = str(clue.get("related_clue", ""))
 		break
 	read_ids.append(clue_id)
+	# Pistas falsas cuestan más cordura; las verdaderas recuperan un poco más
+	if not is_true and sanity_delta > 0:
+		sanity_delta = -absf(sanity_delta) - 2.0
+	elif is_true and sanity_delta > 0:
+		sanity_delta += 1.5
 	GameManager.change_sanity(sanity_delta)
+	if InvestigationSystem and InvestigationSystem.has_method("register_clue_read"):
+		InvestigationSystem.register_clue_read(clue_id)
+	if ParanoiaSystem and ParanoiaSystem.has_method("register_discovery_event"):
+		ParanoiaSystem.register_discovery_event("clue")
+	# Cadena: si hay related_clue y ya está desbloqueada, bonus de investigación
+	if related_clue != "" and related_clue in unlocked_ids and related_clue in read_ids:
+		if InvestigationSystem and InvestigationSystem.has_method("register_chain_complete"):
+			InvestigationSystem.register_chain_complete(clue_id)
+		GameManager.change_sanity(3.0)
 	clues_changed.emit()
 	# Reacciones del jugador al ver ciertas pistas (después de cualquier diálogo en curso)
 	_trigger_player_reaction(clue_id)
+
+## Devuelve true si la pista es verificada como real (no alucinación).
+func is_clue_true(clue_id: String) -> bool:
+	for clue in CLUES:
+		if str(clue["id"]) == clue_id:
+			return bool(clue.get("is_true", true))
+	return true
+
+## Lista de pistas leídas con su valor de verdad (para Truth Archive).
+func get_truth_archive() -> Array:
+	var result: Array = []
+	for clue in CLUES:
+		var cid: String = str(clue["id"])
+		if cid not in read_ids:
+			continue
+		result.append({
+			"id": cid,
+			"title": str(clue.get("title", cid)),
+			"is_true": bool(clue.get("is_true", true)),
+			"chain": str(clue.get("chain", ""))
+		})
+	return result
 
 ## Diálogos cortos del jugador al descubrir pistas clave.
 func _trigger_player_reaction(clue_id: String) -> void:
@@ -337,3 +536,14 @@ func try_unlock_random_from_job() -> void:
 	if pick not in unlocked_ids:
 		unlocked_ids.append(pick)
 		clues_changed.emit()
+
+
+func localized_title(clue: Dictionary) -> String:
+	if LocaleSystem:
+		return LocaleSystem.field(clue, "title")
+	return str(clue.get("title", ""))
+
+func localized_body(clue: Dictionary) -> String:
+	if LocaleSystem:
+		return LocaleSystem.field(clue, "body")
+	return str(clue.get("body", clue.get("text", "")))

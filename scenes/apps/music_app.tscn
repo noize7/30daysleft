@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://ppmusica30"]
 
-[ext_resource type="Script" uid="uid://cba46q1fmrf7h" path="res://scripts/ui/apps/app_musica.gd" id="1"]
+[ext_resource type="Script" uid="uid://dml8y5rrpoutw" path="res://scripts/ui/apps/app_musica.gd" id="1"]
 
-[node name="AppMusica" type="Control" unique_id=1303001340]
+[node name="AppMusica" type="Control" unique_id=2136592618]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,3 +10,87 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
+
+[node name="Bg" type="ColorRect" parent="." unique_id=784916361]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.92, 0.92, 0.88, 1)
+
+[node name="Root" type="VBoxContainer" parent="." unique_id=1420408467]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = -12.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Root" unique_id=1440209213]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.35, 1)
+theme_override_font_sizes/font_size = 38
+text = "Reproductor de música"
+
+[node name="TrackList" type="ItemList" parent="Root" unique_id=181191424]
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+
+[node name="Buttons" type="HBoxContainer" parent="Root" unique_id=1053504993]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BtnPrev" type="Button" parent="Root/Buttons" unique_id=1526306882]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "◀ Anterior"
+
+[node name="BtnPlay" type="Button" parent="Root/Buttons" unique_id=1631301987]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "▶ Play"
+
+[node name="BtnNext" type="Button" parent="Root/Buttons" unique_id=975353821]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Siguiente ▶"
+
+[node name="Status" type="Label" parent="Root" unique_id=413304204]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.15, 0.15, 1)
+theme_override_font_sizes/font_size = 32
+text = "Sin pista"
+autowrap_mode = 3
+
+[node name="VolRow" type="HBoxContainer" parent="Root" unique_id=35372923]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="VolLabel" type="Label" parent="Root/VolRow" unique_id=839886540]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 32
+text = "Volumen"
+
+[node name="Volume" type="HSlider" parent="Root/VolRow" unique_id=1002783735]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 0.6

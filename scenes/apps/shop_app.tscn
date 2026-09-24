@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://shopapp30"]
 
-[ext_resource type="Script" uid="uid://4ub28grmdhe8" path="res://scripts/apps/shop_app.gd" id="1_shop"]
+[ext_resource type="Script" uid="uid://dw4yx3rhn5ydp" path="res://scripts/apps/shop_app.gd" id="1_shop"]
 
 [node name="ShopApp" type="Control" unique_id=1262193945]
 layout_mode = 3
@@ -26,10 +26,12 @@ theme_override_constants/separation = 8
 
 [node name="TitleLabel" type="Label" parent="Root" unique_id=1505756760]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Tienda de mejoras  |  Meta: $150000"
 
 [node name="MoneyLabel" type="Label" parent="Root" unique_id=10343484]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Dinero disponible: $0"
 
 [node name="HBox" type="HBoxContainer" parent="Root" unique_id=160416582]
@@ -42,6 +44,7 @@ custom_minimum_size = Vector2(280, 200)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
 
 [node name="RightCol" type="VBoxContainer" parent="Root/HBox" unique_id=1666383608]
 custom_minimum_size = Vector2(200, 0)
@@ -53,19 +56,23 @@ theme_override_constants/separation = 10
 custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
 text = "Selecciona una mejora"
 autowrap_mode = 3
 
 [node name="BuyButton" type="Button" parent="Root/HBox/RightCol" unique_id=1763218074]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Comprar"
 
 [node name="FeedbackLabel" type="Label" parent="Root" unique_id=1533286780]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 
 [node name="GoalLabel" type="Label" parent="Root" unique_id=1621091027]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "El dinero se usa para mejoras y para el final ESCAPE.
 Meta: $150000 — transfiérela en el Banco."
 autowrap_mode = 3

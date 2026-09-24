@@ -41,7 +41,7 @@ func show_popup() -> void:
 	move_to_front()
 	if panel:
 		var vp := get_viewport_rect().size
-		panel.size = Vector2(240, 160)
+		panel.size = Vector2(280, 200)
 		panel.position = Vector2(12, vp.y - panel.size.y - 66)
 		panel.modulate.a = 0.0
 		panel.scale = Vector2(0.92, 0.92)
@@ -68,14 +68,14 @@ func _style() -> void:
 		ps.shadow_size = 10
 		panel.add_theme_stylebox_override("panel", ps)
 		panel.mouse_filter = Control.MOUSE_FILTER_STOP
-		panel.size = Vector2(240, 160)
+		panel.size = Vector2(280, 200)
 	if title_label:
-		title_label.text = "Inicio"
+		title_label.text = LocaleSystem.t("desktop.start", "Inicio") if LocaleSystem else "Inicio"
 		title_label.add_theme_color_override("font_color", Color(0.85, 0.92, 1.0))
-		title_label.add_theme_font_size_override("font_size", 18)
+		title_label.add_theme_font_size_override("font_size", 32)
 	if btn_cancel:
 		_blue_btn(btn_cancel)
-		btn_cancel.custom_minimum_size = Vector2(200, 38)
+		btn_cancel.custom_minimum_size = Vector2(220, 48)
 	if btn_shutdown:
 		var rs := StyleBoxFlat.new()
 		rs.bg_color = Color(0.55, 0.15, 0.18)
@@ -94,9 +94,9 @@ func _style() -> void:
 		rh.bg_color = Color(0.72, 0.22, 0.25)
 		btn_shutdown.add_theme_stylebox_override("hover", rh)
 		btn_shutdown.add_theme_color_override("font_color", Color.WHITE)
-		btn_shutdown.add_theme_font_size_override("font_size", 16)
-		btn_shutdown.custom_minimum_size = Vector2(200, 38)
-		btn_shutdown.text = "Apagar PC"
+		btn_shutdown.add_theme_font_size_override("font_size", 30)
+		btn_shutdown.custom_minimum_size = Vector2(220, 48)
+		btn_shutdown.text = LocaleSystem.t("desktop.shutdown", "Apagar PC") if LocaleSystem else "Apagar PC"
 
 func _blue_btn(btn: Button) -> void:
 	var s := StyleBoxFlat.new()
@@ -116,4 +116,4 @@ func _blue_btn(btn: Button) -> void:
 	h.bg_color = Color(0.28, 0.42, 0.72)
 	btn.add_theme_stylebox_override("hover", h)
 	btn.add_theme_color_override("font_color", Color.WHITE)
-	btn.add_theme_font_size_override("font_size", 16)
+	btn.add_theme_font_size_override("font_size", 30)

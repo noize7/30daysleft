@@ -1,6 +1,6 @@
 extends Control
-## MusicPlayer — Reproductor de música estilo XP (Tanda 8)
-## El jugador elige pistas en loop. Bajo cordura puede distorsionarse.
+## MusicPlayer — Reproductor de música estilo XP
+## UI definida en scenes/apps/music_app.tscn
 
 const TRACKS := [
 	{"id": "musica_juego1", "name": "music1", "path": "res://assets/audio/music/musica_juego1.mp3"},
@@ -10,18 +10,22 @@ const TRACKS := [
 	{"id": "musica_juego5", "name": "music5", "path": "res://assets/audio/music/musica_juego5.mp3"},
 ]
 
+@onready var _title: Label = $Root/Title
+@onready var _list: ItemList = $Root/TrackList
+@onready var _btn_prev: Button = $Root/Buttons/BtnPrev
+@onready var _btn_play: Button = $Root/Buttons/BtnPlay
+@onready var _btn_next: Button = $Root/Buttons/BtnNext
+@onready var _status: Label = $Root/Status
+@onready var _vol_label: Label = $Root/VolRow/VolLabel
+@onready var _volume: HSlider = $Root/VolRow/Volume
+
 var _player: AudioStreamPlayer = null
 var _current_idx: int = 0
 var _is_playing: bool = false
-var _list: ItemList = null
-var _btn_play: Button = null
-var _btn_prev: Button = null
-var _btn_next: Button = null
-var _status: Label = null
-var _volume: HSlider = null
 
 func _ready() -> void:
-	_build_ui()
+	_apply_locale()
+	_connect_ui()
 	_ensure_player()
 	_load_saved_track()
 	_refresh_list()
@@ -29,8 +33,56 @@ func _ready() -> void:
 		GameManager.sanity_changed.connect(_on_sanity)
 	if GameManager.has_signal("pc_powered_changed") and not GameManager.pc_powered_changed.is_connected(_on_pc_power):
 		GameManager.pc_powered_changed.connect(_on_pc_power)
+	if LocaleSystem and not LocaleSystem.language_changed.is_connected(_on_lang):
+		LocaleSystem.language_changed.connect(_on_lang)
 	if not GameManager.is_pc_on:
 		_force_stopped_ui()
+
+func _on_lang(_lang: String) -> void:
+	_apply_locale()
+	_update_status()
+
+func _apply_locale() -> void:
+	if _title:
+		_title.text = LocaleSystem.t("music.title", "Reproductor de música") if LocaleSystem else "Reproductor de música"
+	if _btn_prev:
+		_btn_prev.text = LocaleSystem.t("music.prev", "◀ Anterior") if LocaleSystem else "◀ Anterior"
+	if _btn_play:
+		_btn_play.text = LocaleSystem.t("music.pause" if _is_playing else "music.play", "❚❚ Pause" if _is_playing else "▶ Play") if LocaleSystem else ("❚❚ Pause" if _is_playing else "▶ Play")
+	if _btn_next:
+		_btn_next.text = LocaleSystem.t("music.next", "Siguiente ▶") if LocaleSystem else "Siguiente ▶"
+	if _vol_label:
+		_vol_label.text = LocaleSystem.t("music.volume", "Volumen") if LocaleSystem else "Volumen"
+	if _status and not _is_playing and _status.text.find("PC") < 0:
+		if _status.text == "Sin pista" or _status.text == "No track":
+			_status.text = LocaleSystem.t("music.no_track", "Sin pista") if LocaleSystem else "Sin pista"
+
+func _connect_ui() -> void:
+	if _list and not _list.item_selected.is_connected(_on_select):
+		_list.item_selected.connect(_on_select)
+	if _btn_prev and not _btn_prev.pressed.is_connected(_on_prev_pressed):
+		_btn_prev.pressed.connect(_on_prev_pressed)
+	if _btn_play and not _btn_play.pressed.is_connected(_on_play_pressed):
+		_btn_play.pressed.connect(_on_play_pressed)
+	if _btn_next and not _btn_next.pressed.is_connected(_on_next_pressed):
+		_btn_next.pressed.connect(_on_next_pressed)
+	if _volume and not _volume.value_changed.is_connected(_on_volume):
+		_volume.value_changed.connect(_on_volume)
+
+func _on_prev_pressed() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
+	_prev()
+
+func _on_play_pressed() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
+	_toggle_play()
+
+func _on_next_pressed() -> void:
+	if SoundSystem:
+		SoundSystem.play_button()
+	_next()
 
 func _on_pc_power(is_on: bool) -> void:
 	if not is_on:
@@ -42,13 +94,12 @@ func _on_pc_power(is_on: bool) -> void:
 func _force_stopped_ui() -> void:
 	_is_playing = false
 	if _btn_play:
-		_btn_play.text = "▶ Play"
+		_btn_play.text = LocaleSystem.t("music.play", "▶ Play") if LocaleSystem else "▶ Play"
 	if _status:
-		_status.text = "PC apagada — la música se detuvo.\nEnciende el PC y pulsa Play."
+		_status.text = LocaleSystem.t("music.pc_off", "PC apagada — la música se detuvo.\nEnciende el PC y pulsa Play.") if LocaleSystem else "PC apagada — la música se detuvo.\nEnciende el PC y pulsa Play."
 	_refresh_list()
 
 func _ensure_player() -> void:
-	# Usar un player global para que la música persista entre cierres de app
 	var root := get_tree().root
 	_player = root.get_node_or_null("MusicPlayerGlobal") as AudioStreamPlayer
 	if _player == null:
@@ -58,14 +109,11 @@ func _ensure_player() -> void:
 		_player.volume_db = linear_to_db(0.6)
 		_player.process_mode = Node.PROCESS_MODE_ALWAYS
 		root.add_child(_player)
-	# Reconectar finished por si el player ya existía
 	if not _player.finished.is_connected(_on_track_finished):
 		_player.finished.connect(_on_track_finished)
 
 func _load_stream(path: String) -> AudioStream:
-	# Carga robusta de OGG/WAV/MP3 y activa loop si es posible
 	if not ResourceLoader.exists(path):
-		# Intentar sin extensión forzada / rutas alternativas por si el usuario usó otro nombre
 		return null
 	var res = load(path)
 	if res == null:
@@ -73,7 +121,6 @@ func _load_stream(path: String) -> AudioStream:
 		return null
 	if res is AudioStream:
 		var stream: AudioStream = res as AudioStream
-		# Godot 4: AudioStreamOggVorbis, AudioStreamMP3, AudioStreamWAV tienen loop
 		if stream is AudioStreamOggVorbis:
 			(stream as AudioStreamOggVorbis).loop = true
 		elif stream is AudioStreamMP3:
@@ -85,79 +132,9 @@ func _load_stream(path: String) -> AudioStream:
 	push_warning("MusicPlayer: el recurso no es AudioStream: %s (%s)" % [path, res])
 	return null
 
-func _build_ui() -> void:
-	var bg := ColorRect.new()
-	bg.color = Color(0.92, 0.92, 0.88)
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(bg)
-
-	var title := Label.new()
-	title.text = "Music Player"
-	title.position = Vector2(12, 8)
-	title.add_theme_font_size_override("font_size", 18)
-	title.add_theme_color_override("font_color", Color(0.1, 0.1, 0.35))
-	add_child(title)
-
-	_list = ItemList.new()
-	_list.position = Vector2(12, 40)
-	_list.size = Vector2(340, 200)
-	_list.item_selected.connect(_on_select)
-	add_child(_list)
-
-	_btn_prev = Button.new()
-	_btn_prev.text = "◀ Anterior"
-	_btn_prev.position = Vector2(12, 250)
-	_btn_prev.size = Vector2(100, 32)
-	_btn_prev.pressed.connect(func():
-		if SoundSystem: SoundSystem.play_button()
-		_prev()
-	)
-	add_child(_btn_prev)
-
-	_btn_play = Button.new()
-	_btn_play.text = "▶ Play"
-	_btn_play.position = Vector2(120, 250)
-	_btn_play.size = Vector2(120, 32)
-	_btn_play.pressed.connect(func():
-		if SoundSystem: SoundSystem.play_button()
-		_toggle_play()
-	)
-	add_child(_btn_play)
-
-	_btn_next = Button.new()
-	_btn_next.text = "Siguiente ▶"
-	_btn_next.position = Vector2(250, 250)
-	_btn_next.size = Vector2(100, 32)
-	_btn_next.pressed.connect(func():
-		if SoundSystem: SoundSystem.play_button()
-		_next()
-	)
-	add_child(_btn_next)
-
-	var vol_lbl := Label.new()
-	vol_lbl.text = "Volumen"
-	vol_lbl.position = Vector2(12, 295)
-	vol_lbl.add_theme_color_override("font_color", Color(0.2, 0.2, 0.2))
-	add_child(vol_lbl)
-
-	_volume = HSlider.new()
-	_volume.min_value = 0.0
-	_volume.max_value = 1.0
-	_volume.step = 0.05
-	_volume.value = 0.6
-	_volume.position = Vector2(80, 295)
-	_volume.size = Vector2(270, 24)
-	_volume.value_changed.connect(_on_volume)
-	add_child(_volume)
-
-	_status = Label.new()
-	_status.text = "Sin pista"
-	_status.position = Vector2(12, 330)
-	_status.size = Vector2(340, 40)
-	_status.autowrap_mode = TextServer.AUTOWRAP_WORD
-	_status.add_theme_color_override("font_color", Color(0.15, 0.15, 0.15))
-
 func _refresh_list() -> void:
+	if _list == null:
+		return
 	_list.clear()
 	for i in range(TRACKS.size()):
 		var t: Dictionary = TRACKS[i]
@@ -194,17 +171,17 @@ func _play_current() -> void:
 		_player.volume_db = linear_to_db(clampf(_volume.value, 0.0, 1.0))
 		_player.play()
 		_is_playing = true
-		_btn_play.text = "❚❚ Pause"
-		_status.text = "Sonando: %s  (loop)" % str(t["name"])
+		_btn_play.text = LocaleSystem.t("music.pause", "❚❚ Pause") if LocaleSystem else "❚❚ Pause"
+		var play_fmt: String = LocaleSystem.t("music.playing", "Sonando: %s  (loop)") if LocaleSystem else "Sonando: %s  (loop)"
+		_status.text = play_fmt % str(t["name"])
 		_save_track()
-		# Debug útil si sigue sin oírse
 		if not _player.playing:
 			_status.text = "Stream cargado pero no reproduce. Revisa volumen del sistema / Master."
 	else:
-		# Sin archivo importado: mensaje claro (no fingir audio)
 		_is_playing = false
-		_btn_play.text = "▶ Play"
-		_status.text = "No se encontró: %s\nPon el OGG en assets/audio/music/ y reimporta en Godot." % path.get_file()
+		_btn_play.text = LocaleSystem.t("music.play", "▶ Play") if LocaleSystem else "▶ Play"
+		var miss_fmt: String = LocaleSystem.t("music.missing_file", "No se encontró: %s\nPon el OGG en assets/audio/music/ y reimporta en Godot.") if LocaleSystem else "No se encontró: %s\nPon el OGG en assets/audio/music/ y reimporta en Godot."
+		_status.text = miss_fmt % path.get_file()
 		push_warning("MusicPlayer: falta archivo o no importado → %s" % path)
 	_refresh_list()
 
@@ -212,7 +189,7 @@ func _pause() -> void:
 	if _player:
 		_player.stop()
 	_is_playing = false
-	_btn_play.text = "▶ Play"
+	_btn_play.text = LocaleSystem.t("music.play", "▶ Play") if LocaleSystem else "▶ Play"
 	_update_status()
 	_refresh_list()
 
@@ -225,7 +202,6 @@ func _next() -> void:
 	_play_current()
 
 func _on_track_finished() -> void:
-	# Loop infinito de la pista actual
 	if _is_playing:
 		_play_current()
 
@@ -234,23 +210,23 @@ func _on_volume(v: float) -> void:
 		_player.volume_db = linear_to_db(v)
 
 func _on_sanity(s: float) -> void:
-	# Bajo cordura: posible cambio forzado a pista de crisis
 	if s < 30.0 and _is_playing and _current_idx != 3 and randf() < 0.08:
-		_current_idx = 3  # Crisis
+		_current_idx = 3
 		_play_current()
-		_status.text = "La música se distorsiona… (cordura baja)"
+		_status.text = LocaleSystem.t("music.distorted", "La música se distorsiona… (cordura baja)") if LocaleSystem else "La música se distorsiona… (cordura baja)"
 
 func _update_status() -> void:
 	if _status == null:
 		return
 	var t: Dictionary = TRACKS[_current_idx]
 	if _is_playing:
-		_status.text = "Sonando: %s  (loop)" % str(t["name"])
+		var play_fmt: String = LocaleSystem.t("music.playing", "Sonando: %s  (loop)") if LocaleSystem else "Sonando: %s  (loop)"
+		_status.text = play_fmt % str(t["name"])
 	else:
-		_status.text = "Pausado / Listo: %s" % str(t["name"])
+		var pause_fmt: String = LocaleSystem.t("music.paused", "Pausado / Listo: %s") if LocaleSystem else "Pausado / Listo: %s"
+		_status.text = pause_fmt % str(t["name"])
 
 func _save_track() -> void:
-	# Guardar preferencia simple en user://
 	var f := FileAccess.open("user://music_pref.json", FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify({"track": _current_idx, "vol": _volume.value}))

@@ -8,4 +8,4 @@ layout_mode = 0
 mouse_default_cursor_shape = 0
 script = ExtResource("1_icon")
 app_name = "App"
-icon_scale = 1.5
+icon_scale = 2.8
