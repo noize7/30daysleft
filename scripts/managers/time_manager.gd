@@ -55,7 +55,7 @@ func _process(delta: float) -> void:
 		return
 	# Durante el tutorial: no drenar batería ni avanzar presión ambiental
 	# (el reloj sí puede avanzar suavemente si se desea; aquí lo congelamos también)
-	if GameManager.tutorial_active:
+	if GameManager.tutorial_active or GameManager.event_pause:
 		return
 	# Drenaje de batería (más fuerte fuera de horario)
 	var drain_factor: float = 1.0
@@ -134,6 +134,11 @@ func _update_work_time() -> void:
 		work_hours_changed.emit(is_work_time)
 		if not is_work_time and not _warned_end:
 			_check_hour_warnings()
+
+## [Tanda 9] Avanza el reloj del juego N minutos (descansos, eventos).
+func advance_minutes(minutes: int) -> void:
+	for i in range(maxi(0, minutes) * 60):
+		_tick_second()
 
 func get_time_string() -> String:
 	var h: int = hour

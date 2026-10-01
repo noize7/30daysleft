@@ -13,7 +13,7 @@ const TYPE_ICON_PATHS := {
 	"medical": "res://assets/Icons Pc/medico.png",
 	"key": "res://assets/Icons Pc/llave.png",
 	"locked": "res://assets/Icons Pc/Candado.png",
-	"police": "res://assets/Icons Pc/Policia.png",
+	"police": "res://assets/Icons Pc/Police.png",
 }
 var _icon_cache: Dictionary = {}
 
@@ -65,8 +65,9 @@ func _style() -> void:
 		email_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		email_body.clip_text = false
 	if email_list:
+		email_list.add_theme_color_override("font_color", Color(0.12, 0.12, 0.12))
 		email_list.add_theme_font_size_override("font_size", 24)
-		email_list.fixed_icon_size = Vector2i(28, 28)
+		email_list.fixed_icon_size = Vector2i(48, 48)
 		email_list.icon_mode = ItemList.ICON_MODE_LEFT
 	if _copy_btn:
 		var s := StyleBoxFlat.new()

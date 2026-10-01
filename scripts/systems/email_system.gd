@@ -22,10 +22,10 @@ var EMAILS: Array = [
 		"is_fake": false,
 		"type": "system",
 		"from": "sistema@local",
-		"subject": "Bienvenido de nuevo",
-		"subject_en": "Welcome back",
-		"body": "Tu sesión se reinició.\nNo recordamos el último apagado limpio.\n\nRevisa los archivos cuando puedas.\n\n— Sistema",
-		"body_en": "Your session restarted.\nWe don't remember the last clean shutdown.\n\nCheck your files when you can.\n\n— System"
+		"subject": "Sesión reiniciada",
+		"subject_en": "Session restarted",
+		"body": "Tu sesión se reinició.\nNo hay registro del último apagado limpio.\n\nTienes 30 días.\nEl programa no pregunta qué hiciste.\nSolo si cumples.\n\nRevisa los archivos cuando puedas.\n\n— Sistema",
+		"body_en": "Your session restarted.\nNo clean shutdown on record.\n\nYou have 30 days.\nThe program doesn't ask what you did.\nOnly if you deliver.\n\nCheck your files when you can.\n\n— System"
 	},
 	{
 		"id": "day1_job",
@@ -35,10 +35,10 @@ var EMAILS: Array = [
 		"is_fake": false,
 		"type": "job",
 		"from": "noreply@workgrid.mail",
-		"subject": "Nuevos encargos disponibles",
-		"subject_en": "New jobs available",
-		"body": "Hola.\n\nHay encuestas activas entre la 01:00 y las 05:00.\nEl pago se acredita al instante.\n\nWorkGrid",
-		"body_en": "Hi.\n\nSurveys are active between 01:00 and 05:00.\nPay is credited instantly.\n\nWorkGrid"
+		"subject": "Programa activo — encargos nocturnos",
+		"subject_en": "Program active — night jobs",
+		"body": "Operador,\n\nHay encargos activos entre la 01:00 y las 05:00.\nPago anónimo. Sin papeles. Sin preguntas.\n\nNo uses tu nombre real.\n\n— WorkGrid",
+		"body_en": "Operator,\n\nJobs active between 01:00 and 05:00.\nAnonymous pay. No papers. No questions.\n\nDo not use your real name.\n\n— WorkGrid"
 	},
 	{
 		"id": "day2_reminder",
@@ -63,8 +63,8 @@ var EMAILS: Array = [
 		"from": "desconocido",
 		"subject": "No abras la carpeta recuerdos",
 		"subject_en": "Don't open the memories folder",
-		"body": "Todavía no.\nNo estás listo.\n\nSi la abres, no podrás cerrarla.",
-		"body_en": "Not yet.\nYou're not ready.\n\nIf you open it, you won't be able to close it."
+		"body": "Todavía no.\nNo estás listo para esa noche.\n\nSi la abres, no podrás fingir que no pasó.\n\n(¿Quién escribió esto?)",
+		"body_en": "Not yet.\nYou're not ready for that night.\n\nIf you open it, you won't be able to pretend it didn't happen.\n\n(Who wrote this?)"
 	},
 	{
 		"id": "day5_memory",
@@ -76,8 +76,8 @@ var EMAILS: Array = [
 		"from": "tú@ayer",
 		"subject": "Foto rota",
 		"subject_en": "Torn photo",
-		"body": "Encontré una foto en el disco.\nEstá cortada por la mitad.\n\n¿Quién es la persona que falta?",
-		"body_en": "I found a photo on the disk.\nIt's cut in half.\n\nWho is the missing person?"
+		"body": "Encontré una foto en el disco.\nEstá cortada por la mitad.\n\nEn un lado estás tú.\nEn el otro… falta alguien.\nAlguien que ya no puede contestar.",
+		"body_en": "I found a photo on the disk.\nIt's cut in half.\n\nOn one side: you.\nOn the other… someone is missing.\nSomeone who can't answer anymore."
 	},
 	{
 		"id": "day5_fake",
@@ -90,7 +90,7 @@ var EMAILS: Array = [
 		"subject": "Ven a casa",
 		"subject_en": "Come home",
 		
-		"body": "Cariño, la cena está lista.\nTodo está bien.\nNunca pasó nada.\n\n(Este mensaje no debería existir.)",
+		"body": "Cariño, la cena está lista.\nTodo está bien.\nNunca pasó nada.\nVuelve a la habitación.\n\n(Esta persona ya no puede escribirte.\nCordura baja: posible alucinación.)",
 		"body_en": "Honey, dinner is ready.
 Everything is fine.
 Nothing ever happened.
@@ -107,7 +107,7 @@ Nothing ever happened.
 		"from": "vecino_402",
 		"subject": "Anoche escuché algo",
 		"subject_en": "I heard something last night",
-		"body": "No quiero meterme en problemas,\npero anoche se escuchaban gritos en tu piso.\n\n¿Está todo bien?",
+		"body": "No quiero meterme en problemas,\npero anoche se escuchaban gritos en tu piso.\nOtra vez.\n\nSi necesitas ayuda… o si la policía pregunta…\nsolo dime qué digo.",
 		"body_en": "I don't want to get into trouble,
 but last night there were screams from your floor.
 
@@ -136,7 +136,7 @@ Answer.
 		"from": "alertas@ciudad.gov",
 		"subject": "Aviso de investigación",
 		"subject_en": "Investigation notice",
-		"body": "Se ha abierto un expediente en tu zona.\nColabora si te contactan.\n\nNo ignores este mensaje.",
+		"body": "Se ha abierto un expediente por un incidente en tu zona.\nHay un fallecimiento bajo investigación.\nColabora si te contactan.\n\nNo ignores este mensaje.\n\n— Unidad de investigación",
 		"body_en": "A case has been opened in your area.
 Cooperate if they contact you.
 
@@ -179,7 +179,7 @@ This notice is automatic."
 		"from": "archivo.medico",
 		"subject": "Informe incompleto",
 		"subject_en": "Incomplete report",
-		"body": "Paciente: [REDACTADO]\nDiagnóstico: lagunas de memoria / trauma.\nRecomendación: no aislarse.\n\nPágina 2 ilegible.",
+		"body": "Paciente: [REDACTADO]\nIngreso: noche del incidente.\nDiagnóstico: lagunas de memoria / posible intoxicación / trauma.\nAlta voluntaria. Sin seguimiento.\n\nRecomendación: no aislarse. No operar maquinaria pesada. No tomar decisiones irreversibles.\n\nPágina 2: ilegible.\nNombre del acompañante: [TACHADO]",
 		"body_en": "Patient: [REDACTED]
 Diagnosis: memory gaps / trauma.
 Recommendation: do not isolate.

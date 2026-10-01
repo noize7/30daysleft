@@ -10,6 +10,8 @@ extends Control
 ##   classify  — clasifica izquierda/derecha (temática narrativa)
 ##   type      — escribe secuencia (botones o teclado)
 ##   decrypt   — descifra un código: elige el dígito correcto en secuencia
+##   mirror    — secuencia INVERTIDA (deep web, difícil)
+##   signal    — aislar señal real entre ruido con ventana que se estrecha (deep web, difícil)
 
 @onready var header: Label = $Root/Header
 @onready var level_progress: Label = $Root/LevelProgress
@@ -86,12 +88,78 @@ var _classify_answer: int = 0
 # Type
 var _type_target: String = ""
 var _type_progress: int = 0
-var _type_keys: Array = ["W", "A", "S", "D", "E", "R", "F", "G"]
+var _type_keys: Array = ["W", "A", "S", "D", "E", "R", "F", "G","X","B","M","N","L"]
 
 # Decrypt
 var _decrypt_code: Array = []
 var _decrypt_idx: int = 0
 var _decrypt_options: Array = []
+
+# Mirror (secuencia invertida — deep web)
+var _mirror_pattern: Array = []
+var _mirror_player_idx: int = 0
+var _mirror_showing: bool = false
+var _mirror_expected: Array = []  # patrón invertido que debe introducir el jugador
+
+# Signal (aislar señal real entre ruido — deep web)
+var _signal_options: Array = []  # textos de cada botón
+var _signal_correct: int = 0
+var _signal_time_left: float = 0.0
+var _signal_window: float = 2.4  # se estrecha con cada acierto
+var _signal_timer_bar: ProgressBar = null
+
+# Quiz — encuesta (elige la respuesta correcta)
+var _quiz_answer: int = 0
+var _quiz_prompt: String = ""
+
+# Tag — clasificar imágenes (elige categoría)
+var _tag_answer: int = 0
+var _tag_prompt: String = ""
+
+# Swipe — filtrar contenido (aprobar/rechazar con timer)
+var _swipe_answer: int = 0  # 0=reject 1=approve
+var _swipe_prompt: String = ""
+var _swipe_time: float = 0.0
+var _swipe_window: float = 1.8
+var _swipe_timer_bar: ProgressBar = null
+
+# Cleanse — limpieza de datos (marcar celdas corruptas en rejilla)
+var _cleanse_cells: Array = []  # true = corrupta
+var _cleanse_found: int = 0
+var _cleanse_needed: int = 0
+var _cleanse_grid: GridContainer = null
+
+# Scrape — scraping gris (clicar solo paquetes válidos)
+var _scrape_is_valid: Array = []
+var _scrape_labels: Array = []
+
+# Proxy — enrutar saltos correctos (secuencia de nodos)
+var _proxy_path: Array = []
+var _proxy_player_idx: int = 0
+var _proxy_options: Array = []
+
+# Mine — minería (mantén y suelta SOLO en el pico)
+var _mine_active: bool = false
+var _mine_value: float = 0.0
+var _mine_spike_min: float = 0.55
+var _mine_spike_max: float = 0.72
+var _mine_canvas: Control = null
+
+# Shadow — contacto sombra (clica solo en zona oscura)
+var _shadow_pos: float = 0.0
+var _shadow_dir: float = 1.0
+var _shadow_speed: float = 1.1
+var _shadow_dark_min: float = 0.35
+var _shadow_dark_max: float = 0.55
+var _shadow_canvas: Control = null
+
+# Zeroday — encontrar la celda vulnerable en rejilla con timer
+var _zeroday_grid_size: int = 4
+var _zeroday_vuln: int = 0
+var _zeroday_time: float = 0.0
+var _zeroday_window: float = 3.2
+var _zeroday_timer_bar: ProgressBar = null
+var _zeroday_cells: Array = []
 
 var MINIGAME_DESC := {
 	"click": (LocaleSystem.t("work.desc_click", "Ritmo + combo. Clica con buen tempo para multiplicar.") if LocaleSystem else "Ritmo + combo. Clica con buen tempo para multiplicar."),
@@ -101,7 +169,18 @@ var MINIGAME_DESC := {
 	"rapid": (LocaleSystem.t("work.mg_spam", "Clics rápidos. Mantén el ritmo o pierdes el combo.") if LocaleSystem else "Clics rápidos. Mantén el ritmo o pierdes el combo."),
 	"classify": (LocaleSystem.t("work.mg_classify", "Clasifica cada ítem a izquierda o derecha.") if LocaleSystem else "Clasifica cada ítem a izquierda o derecha."),
 	"type": "Pulsa las teclas en el orden indicado (teclado o botones).",
-	"decrypt": (LocaleSystem.t("work.mg_code", "Descifra el código eligiendo el dígito correcto.") if LocaleSystem else "Descifra el código eligiendo el dígito correcto.")
+	"decrypt": (LocaleSystem.t("work.mg_code", "Descifra el código eligiendo el dígito correcto.") if LocaleSystem else "Descifra el código eligiendo el dígito correcto."),
+	"mirror": "Invierte la traza: memoriza y repite AL REVÉS. Un fallo y dejan rastro de ti.",
+	"signal": "Separa el recuerdo real del ruido. Solo UNA señal es verdadera.",
+	"quiz": "Encuesta anónima del programa. Responde… aunque la pregunta te suene rara.",
+	"tag": "Etiqueta fotos que no deberías estar viendo. Algunas se parecen a esa noche.",
+	"swipe": "Filtra contenido antes de que el tiempo se acabe. Dudar también cuesta.",
+	"cleanse": "Borra las celdas 'corruptas'. A veces borras más de lo que quieres recordar.",
+	"scrape": "Extrae solo lo válido. El cebo está hecho para gente que huye.",
+	"proxy": "Enruta tu rastro por saltos anónimos. Mal hop = huella para la policía.",
+	"mine": "Minería oculta: suelta SOLO en el pico. El ruido tapa… ¿o no?",
+	"shadow": "Contacta solo en la oscuridad. Si te ven, no es el programa quien paga.",
+	"zeroday": "Encuentra el fallo antes de que se cierre la ventana. Como tus 30 días."
 }
 
 func _ready() -> void:
@@ -138,6 +217,16 @@ func _process(delta: float) -> void:
 			_process_hold(delta)
 		"rapid":
 			_process_rapid(delta)
+		"signal":
+			_process_signal(delta)
+		"swipe":
+			_process_swipe(delta)
+		"mine":
+			_process_mine(delta)
+		"shadow":
+			_process_shadow(delta)
+		"zeroday":
+			_process_zeroday(delta)
 
 func _ensure_payment_ui() -> void:
 	if _payment_option != null and is_instance_valid(_payment_option):
@@ -187,7 +276,7 @@ func _style() -> void:
 		header.add_theme_color_override("font_color", Color(0.0, 0.0, 0.5))
 		header.add_theme_font_size_override("font_size", 30)
 	if job_details:
-		job_details.add_theme_font_size_override("font_size", 30)
+		job_details.add_theme_font_size_override("font_size", 24)
 		job_details.clip_text = false
 		job_details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	if click_area:
@@ -229,7 +318,8 @@ func refresh() -> void:
 			work_status.text = LocaleSystem.t("work.off_hours", "Fuera de horario — apaga el PC para avanzar al día siguiente") if LocaleSystem else "Fuera de horario — apaga el PC para avanzar al día siguiente"
 			work_status.add_theme_color_override("font_color", Color(0.7, 0.15, 0.05))
 	if job_list:
-		job_list.add_theme_font_size_override("font_size", 27)
+		job_list.add_theme_color_override("font_color", Color(0.12, 0.12, 0.12))
+		job_list.add_theme_font_size_override("font_size", 24)
 		job_list.clear()
 		var available: Array = WorkSystem.get_available_jobs()
 		for job in available:
@@ -240,7 +330,10 @@ func refresh() -> void:
 			var mg_icon: String = {
 				"click": "●", "timing": "⏱", "sequence": "◈",
 				"hold": "▮", "rapid": "⚡", "classify": "⇄", "type": "⌨",
-				"decrypt": "🔓"
+				"decrypt": "🔓", "mirror": "↻", "signal": "📡",
+				"quiz": "❓", "tag": "🏷", "swipe": "↔",
+				"cleanse": "🧹", "scrape": "⛏", "proxy": "🔀",
+				"mine": "💎", "shadow": "🌑", "zeroday": "💀"
 			}.get(mg, "●")
 			job_list.add_item("%s Lv%d  %s  ($%d-$%d)%s" % [
 				mg_icon, int(job["level"]), (WorkSystem.localized_job_name(job) if WorkSystem and WorkSystem.has_method("localized_job_name") else str(job["name"])),
@@ -301,6 +394,7 @@ func _on_start_job() -> void:
 			return
 
 	_is_working = true
+	GameManager.is_job_running = true
 	_clicks_done = 0
 	_clicks_needed = int(_current_job.get("clicks_required", 5))
 	_minigame_type = str(_current_job.get("minigame", "click"))
@@ -347,6 +441,7 @@ func _on_start_job() -> void:
 	_finish_job()
 
 func _finish_job() -> void:
+	GameManager.is_job_running = false
 	_process_mg = false
 	_hold_active = false
 	if _current_job.is_empty():
@@ -364,7 +459,9 @@ func _finish_job() -> void:
 
 	var base_pay: float = randf_range(float(_current_job["min_pay"]), float(_current_job["max_pay"]))
 	var final_pay: float = base_pay * quality
-	GameManager.complete_job(final_pay, _current_job)
+	var job_result: Dictionary = _current_job.duplicate()
+	job_result["quality"] = quality
+	GameManager.complete_job(final_pay, job_result)
 
 	if reward_label:
 		var cpu_mult: float = 1.0
@@ -385,6 +482,8 @@ func _finish_job() -> void:
 			final_pay * cpu_mult, grade, accuracy * 100.0, _perfects, _max_combo, cpu_mult, method_txt
 		]
 		reward_label.add_theme_color_override("font_color", grade_col)
+		if LoopSystem and LoopSystem.streak > 1:
+			reward_label.text += "  RACHA×%d" % LoopSystem.streak
 		reward_label.pivot_offset = reward_label.size * 0.5
 		var tw := create_tween()
 		tw.tween_property(reward_label, "scale", Vector2(1.15, 1.15), 0.1)
@@ -496,12 +595,42 @@ func _build_minigame_ui() -> void:
 			_build_timing_area(vbox)
 		"sequence":
 			_build_sequence_area(vbox)
+		"mirror":
+			_build_mirror_area(vbox)
 		"classify":
 			_build_classify_area(vbox)
 		"type":
 			_build_type_area(vbox)
 		"decrypt":
 			_build_decrypt_area(vbox)
+		"signal":
+			_build_signal_area(vbox)
+		"quiz":
+			_build_quiz_area(vbox)
+		"tag":
+			_build_tag_area(vbox)
+		"swipe":
+			_build_swipe_area(vbox)
+		"cleanse":
+			_build_cleanse_area(vbox)
+		"scrape":
+			_build_scrape_area(vbox)
+		"proxy":
+			_build_proxy_area(vbox)
+		"mine":
+			_build_mine_area(vbox)
+			if click_area:
+				click_area.visible = true
+				click_area.disabled = false
+				click_area.text = "MANTÉN EL RITMO…"
+		"shadow":
+			_build_shadow_area(vbox)
+			if click_area:
+				click_area.visible = true
+				click_area.disabled = false
+				click_area.text = "CONTACTAR (solo si nadie mira)"
+		"zeroday":
+			_build_zeroday_area(vbox)
 		"hold":
 			_build_hold_area(vbox)
 			if click_area:
@@ -521,6 +650,13 @@ func _destroy_minigame_ui() -> void:
 	_timing_canvas = null
 	_hold_canvas = null
 	_mg_flash = null
+	_signal_timer_bar = null
+	_swipe_timer_bar = null
+	_cleanse_grid = null
+	_mine_canvas = null
+	_shadow_canvas = null
+	_zeroday_timer_bar = null
+	_zeroday_cells.clear()
 	if _mg_overlay and is_instance_valid(_mg_overlay):
 		_mg_overlay.queue_free()
 	_mg_overlay = null
@@ -632,6 +768,20 @@ func _start_minigame_logic() -> void:
 			if _mg_hint:
 				_mg_hint.text = "Observa… luego repite (teclas 1-4 o botones)"
 			call_deferred("_show_sequence")
+		"mirror":
+			_mirror_pattern.clear()
+			_mirror_expected.clear()
+			_mirror_player_idx = 0
+			_mirror_showing = false
+			_add_mirror_step()
+			if _mg_hint:
+				_mg_hint.text = "⚠ Programa oscuro — observa la traza… luego INVIÉRTELA (1-4)"
+			call_deferred("_show_mirror")
+		"signal":
+			_signal_window = 2.55 - float(GameManager.job_level) * 0.08
+			_next_signal_round()
+			if _mg_hint:
+				_mg_hint.text = "⚠ Separa el recuerdo real del ruido. Solo UNA señal es verdadera."
 		"hold":
 			_hold_active = false
 			_hold_value = 0.0
@@ -658,6 +808,41 @@ func _start_minigame_logic() -> void:
 			_generate_decrypt()
 			if _mg_hint:
 				_mg_hint.text = LocaleSystem.t("work.digit_hint", "Elige el dígito correcto del código") if LocaleSystem else "Elige el dígito correcto del código"
+		"quiz":
+			_next_quiz()
+		"tag":
+			_next_tag()
+		"swipe":
+			_swipe_window = 2.0 - float(GameManager.job_level) * 0.05
+			_next_swipe()
+		"cleanse":
+			_next_cleanse()
+		"scrape":
+			_next_scrape()
+		"proxy":
+			_next_proxy()
+		"mine":
+			_mine_active = false
+			_mine_value = 0.0
+			_mine_spike_min = 0.50 + randf() * 0.12
+			_mine_spike_max = minf(0.92, _mine_spike_min + 0.14)
+			if click_area:
+				click_area.text = "MANTÉN EL RITMO…"
+			if _mg_hint:
+				_mg_hint.text = "💎 Suelta SOLO en el pico. El ruido del ventilador no tapa todo."
+		"shadow":
+			_shadow_pos = 0.0
+			_shadow_dir = 1.0
+			_shadow_speed = 0.95 + float(GameManager.job_level) * 0.08
+			_shadow_dark_min = 0.28 + randf() * 0.15
+			_shadow_dark_max = minf(0.75, _shadow_dark_min + 0.18)
+			if click_area:
+				click_area.text = "CONTACTAR (solo si nadie mira)"
+			if _mg_hint:
+				_mg_hint.text = "🌑 Solo en la oscuridad. Si te ven, no es el programa quien paga."
+		"zeroday":
+			_zeroday_window = 3.6 - float(GameManager.job_level) * 0.15
+			_next_zeroday()
 		_:
 			if click_area:
 				click_area.text = "CLICK  0/%d" % _clicks_needed
@@ -668,12 +853,18 @@ func _start_minigame_logic() -> void:
 func _on_work_click() -> void:
 	if not _is_working:
 		return
-	if _minigame_type in ["sequence", "classify", "type"]:
+	if _minigame_type in ["sequence", "classify", "type", "mirror", "signal", "decrypt",
+			"quiz", "tag", "swipe", "cleanse", "scrape", "proxy", "zeroday"]:
 		return  # usan sus propios botones
 	if _minigame_type == "hold":
 		return  # se gestiona con button_down/up
+	if _minigame_type == "mine":
+		return  # button_down/up
 	if _minigame_type == "timing":
 		_try_timing_hit()
+		return
+	if _minigame_type == "shadow":
+		_try_shadow_hit()
 		return
 	if _minigame_type == "rapid":
 		_try_rapid_hit()
@@ -893,40 +1084,67 @@ func _draw_hold_bar() -> void:
 	_hold_canvas.draw_rect(Rect2(vx - 2, 0, 4, r.size.y), Color(1, 1, 1))
 
 func _on_hold_down() -> void:
-	if not _is_working or _minigame_type != "hold":
+	if not _is_working:
 		return
 	if _clicks_done >= _clicks_needed:
 		return
-	_hold_active = true
-	_hold_value = 0.0
+	if _minigame_type == "hold":
+		_hold_active = true
+		_hold_value = 0.0
+	elif _minigame_type == "mine":
+		_mine_active = true
+		_mine_value = 0.0
 
 func _on_hold_up() -> void:
-	if not _is_working or _minigame_type != "hold":
+	if not _is_working:
 		return
-	if not _hold_active:
-		return
-	_hold_active = false
-	var mid := (_hold_safe_min + _hold_safe_max) * 0.5
-	var is_perfect := absf(_hold_value - mid) < 0.04
-	if _hold_value >= _hold_safe_min and _hold_value <= _hold_safe_max:
-		_register_hit(1, is_perfect)
-		if _mg_hint:
-			_mg_hint.text = "★★ PERFECTO" if is_perfect else (LocaleSystem.t("work.safe_zone", "¡Bien! Zona segura.") if LocaleSystem else "¡Bien! Zona segura.")
-		_hold_safe_min = 0.35 + randf() * 0.15
-		_hold_safe_max = minf(0.95, _hold_safe_min + 0.30 + randf() * 0.08)
-	else:
-		_register_miss()
-		if _mg_hint:
-			if _hold_value < _hold_safe_min:
-				_mg_hint.text = "Demasiado pronto…"
-			else:
-				_mg_hint.text = "Te pasaste… suelta antes"
-	_hold_value = 0.0
-	if click_area and _clicks_done < _clicks_needed:
-		click_area.text = LocaleSystem.t("work.hold_action", "MANTÉN… y suelta en la zona") if LocaleSystem else "MANTÉN… y suelta en la zona"
-		click_area.modulate = Color.WHITE
-	if _hold_canvas:
-		_hold_canvas.queue_redraw()
+	if _minigame_type == "hold":
+		if not _hold_active:
+			return
+		_hold_active = false
+		var mid := (_hold_safe_min + _hold_safe_max) * 0.5
+		var is_perfect := absf(_hold_value - mid) < 0.04
+		if _hold_value >= _hold_safe_min and _hold_value <= _hold_safe_max:
+			_register_hit(1, is_perfect)
+			if _mg_hint:
+				_mg_hint.text = "★★ PERFECTO" if is_perfect else (LocaleSystem.t("work.safe_zone", "¡Bien! Zona segura.") if LocaleSystem else "¡Bien! Zona segura.")
+			_hold_safe_min = 0.35 + randf() * 0.15
+			_hold_safe_max = minf(0.95, _hold_safe_min + 0.30 + randf() * 0.08)
+		else:
+			_register_miss()
+			if _mg_hint:
+				if _hold_value < _hold_safe_min:
+					_mg_hint.text = "Demasiado pronto…"
+				else:
+					_mg_hint.text = "Te pasaste… suelta antes"
+		_hold_value = 0.0
+		if click_area and _clicks_done < _clicks_needed:
+			click_area.text = LocaleSystem.t("work.hold_action", "MANTÉN… y suelta en la zona") if LocaleSystem else "MANTÉN… y suelta en la zona"
+			click_area.modulate = Color.WHITE
+		if _hold_canvas:
+			_hold_canvas.queue_redraw()
+	elif _minigame_type == "mine":
+		if not _mine_active:
+			return
+		_mine_active = false
+		var mid := (_mine_spike_min + _mine_spike_max) * 0.5
+		var is_perfect := absf(_mine_value - mid) < 0.03
+		if _mine_value >= _mine_spike_min and _mine_value <= _mine_spike_max:
+			_register_hit(1, is_perfect)
+			if _mg_hint:
+				_mg_hint.text = "💎 ★ HASH PERFECTO" if is_perfect else "💎 Pico capturado"
+			_mine_spike_min = 0.45 + randf() * 0.20
+			_mine_spike_max = minf(0.92, _mine_spike_min + 0.10 + randf() * 0.04)
+		else:
+			_register_miss()
+			if _mg_hint:
+				_mg_hint.text = "🔥 Te pasaste del pico — rastros en el log"
+		_mine_value = 0.0
+		if click_area and _clicks_done < _clicks_needed:
+			click_area.text = "MANTÉN EL RITMO…"
+			click_area.modulate = Color.WHITE
+		if _mine_canvas:
+			_mine_canvas.queue_redraw()
 
 func _process_hold(delta: float) -> void:
 	if not _hold_active:
@@ -1018,23 +1236,24 @@ func _build_classify_area(parent: VBoxContainer) -> void:
 	_mg_buttons.append(right)
 
 func _next_classify_item() -> void:
+	# Clasificar: real vs alucinación / evidencia vs ruido — núcleo de la historia
 	var sets: Array = [
 		{"prompt": "Foto: rostro borroso en un pasillo", "left": "Real", "right": "Fake", "answer": 0},
-		{"prompt": "Imagen: logo de WorkGrid distorsionado", "left": "Seguro", "right": "Sospechoso", "answer": 1},
-		{"prompt": "Captura: mensaje de 'mamá'", "left": (LocaleSystem.t("work.legitimate", "Legítimo") if LocaleSystem else "Legítimo"), "right": (LocaleSystem.t("work.hallucination", "Alucinación") if LocaleSystem else "Alucinación"), "answer": 1},
-		{"prompt": "Archivo: recibo HOTEL MERIDIAN", "left": "Evidencia", "right": "Basura", "answer": 0},
+		{"prompt": "Captura: mensaje de alguien que ya no está", "left": "Legítimo", "right": "Alucinación", "answer": 1},
+		{"prompt": "Archivo: recibo de un hotel de una sola noche", "left": "Evidencia", "right": "Basura", "answer": 0},
 		{"prompt": "Audio: respiración + «no mires atrás»", "left": "Pista", "right": "Ruido", "answer": 0},
 		{"prompt": "Mail: «la cena está lista»", "left": "Real", "right": "Falso", "answer": 1},
-		{"prompt": "Log: BOOT… mismo checksum", "left": "Sistema", "right": "Paranoia", "answer": 1},
-		{"prompt": "Foto: mano que coincide con la tuya", "left": "Clave", "right": "Irrelevante", "answer": 0},
-		{"prompt": "Transacción: UNKNOWN RELAY +$450", "left": "Sospechosa", "right": "Normal", "answer": 0},
+		{"prompt": "Log: mismo checksum cada arranque", "left": "Sistema", "right": "Paranoia", "answer": 1},
+		{"prompt": "Foto: una mano que coincide con la tuya", "left": "Clave", "right": "Irrelevante", "answer": 0},
+		{"prompt": "Transacción: relay desconocido +$450", "left": "Sospechosa", "right": "Normal", "answer": 0},
 		{"prompt": "Video: silueta cruzando la puerta", "left": "Evidencia", "right": "Glitch", "answer": 0},
 		{"prompt": "Nota: «No confíes en todos los correos»", "left": "Tuya", "right": "Ajena", "answer": 0},
-		{"prompt": "Contrato: «El sujeto no recordará…»", "left": "Importante", "right": "Basura", "answer": 0},
-		{"prompt": "Mail policial sin sello oficial", "left": "Oficial", "right": "Falso", "answer": 1},
+		{"prompt": "Mail sin sello oficial que habla de 'el caso'", "left": "Oficial", "right": "Falso", "answer": 1},
 		{"prompt": "Mapa marcado hasta la frontera", "left": "Ruta real", "right": "Invención", "answer": 0},
-		{"prompt": "Archivo: YA ESTÁS DENTRO", "left": "Disco real", "right": (LocaleSystem.t("work.hallucination", "Alucinación") if LocaleSystem else "Alucinación"), "answer": 1},
-		{"prompt": "Lista con tu apellido tachado", "left": "Amenaza", "right": "Coincidencia", "answer": 0},
+		{"prompt": "Archivo: YA ESTÁS DENTRO", "left": "Disco real", "right": "Alucinación", "answer": 1},
+		{"prompt": "Lista con un apellido tachado — el tuyo", "left": "Amenaza", "right": "Coincidencia", "answer": 0},
+		{"prompt": "Foto de una botella rota en el suelo", "left": "Recuerdo", "right": "Ruido", "answer": 0},
+		{"prompt": "Notificación: 'alguien vio tu conexión'", "left": "Real", "right": "Paranoia", "answer": 1},
 	]
 	var pick: Dictionary = sets[randi() % sets.size()]
 	_classify_prompt = str(pick["prompt"])
@@ -1250,6 +1469,907 @@ func _on_decrypt_choice(opt_idx: int) -> void:
 		if _mg_hint:
 			_mg_hint.text = (LocaleSystem.t("work.digit_wrong", "Dígito incorrecto — código reiniciado") if LocaleSystem else "Dígito incorrecto — código reiniciado")
 
+# --- MIRROR (secuencia invertida — deep web, difícil) ---
+func _build_mirror_area(parent: VBoxContainer) -> void:
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 8)
+	parent.add_child(grid)
+	for i in range(4):
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(0, 44)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.text = _seq_labels[i]
+		b.add_theme_font_size_override("font_size", 28)
+		var bs := StyleBoxFlat.new()
+		bs.bg_color = _seq_colors[i].darkened(0.35)
+		bs.set_corner_radius_all(6)
+		bs.border_width_left = 2
+		bs.border_width_top = 2
+		bs.border_width_right = 2
+		bs.border_width_bottom = 2
+		bs.border_color = _seq_colors[i]
+		b.add_theme_stylebox_override("normal", bs)
+		b.add_theme_color_override("font_color", Color.WHITE)
+		var idx := i
+		b.pressed.connect(func(): _on_mirror_press(idx))
+		grid.add_child(b)
+		_mg_buttons.append(b)
+
+func _add_mirror_step() -> void:
+	# Más pasos y más rápido que sequence normal → más difícil
+	var base_len := 3 + int(_clicks_done)
+	while _mirror_pattern.size() < base_len:
+		_mirror_pattern.append(randi() % 4)
+	_mirror_expected = _mirror_pattern.duplicate()
+	_mirror_expected.reverse()
+	_mirror_player_idx = 0
+
+func _show_mirror() -> void:
+	if not _is_working:
+		return
+	_mirror_showing = true
+	for b in _mg_buttons:
+		if is_instance_valid(b):
+			b.disabled = true
+	if _mg_hint:
+		_mg_hint.text = "Observa la traza… (después AL REVÉS)"
+	for step in _mirror_pattern:
+		if not _is_working:
+			return
+		await get_tree().create_timer(0.28).timeout
+		_flash_mirror_btn(int(step), true)
+		await get_tree().create_timer(0.38).timeout
+		_flash_mirror_btn(int(step), false)
+	await get_tree().create_timer(0.2).timeout
+	_mirror_showing = false
+	for b in _mg_buttons:
+		if is_instance_valid(b):
+			b.disabled = false
+	if _mg_hint:
+		_mg_hint.text = "↻ Ahora INVIERTE la secuencia (1-4)"
+
+func _flash_mirror_btn(idx: int, on: bool) -> void:
+	if idx < 0 or idx >= _mg_buttons.size():
+		return
+	var b: Button = _mg_buttons[idx]
+	if not is_instance_valid(b):
+		return
+	var bs := StyleBoxFlat.new()
+	if on:
+		bs.bg_color = _seq_colors[idx]
+		bs.set_corner_radius_all(6)
+		b.modulate = Color(1.4, 1.4, 1.4)
+	else:
+		bs.bg_color = _seq_colors[idx].darkened(0.35)
+		bs.set_corner_radius_all(6)
+		bs.border_width_left = 2
+		bs.border_width_top = 2
+		bs.border_width_right = 2
+		bs.border_width_bottom = 2
+		bs.border_color = _seq_colors[idx]
+		b.modulate = Color.WHITE
+	b.add_theme_stylebox_override("normal", bs)
+
+func _on_mirror_press(idx: int) -> void:
+	if not _is_working or _mirror_showing or _clicks_done >= _clicks_needed:
+		return
+	if _mirror_player_idx >= _mirror_expected.size():
+		return
+	var expected: int = int(_mirror_expected[_mirror_player_idx])
+	if idx == expected:
+		_mirror_player_idx += 1
+		_flash_mirror_btn(idx, true)
+		if SoundSystem:
+			SoundSystem.play_click(true)
+		if _mirror_player_idx >= _mirror_expected.size():
+			# Secuencia completa al revés → hit (perfecto si era larga)
+			_register_hit(1, _mirror_expected.size() >= 5)
+			if _clicks_done < _clicks_needed:
+				_add_mirror_step()
+				call_deferred("_show_mirror")
+			if _mg_hint:
+				_mg_hint.text = "✓ Traza invertida OK"
+		else:
+			if _mg_hint:
+				_mg_hint.text = "↻ %d/%d … sigue al revés" % [_mirror_player_idx, _mirror_expected.size()]
+	else:
+		_register_miss()
+		_mirror_player_idx = 0
+		if _mg_hint:
+			_mg_hint.text = "✕ Fallo — traza reiniciada. Observa de nuevo."
+		call_deferred("_show_mirror")
+
+# --- SIGNAL (aislar señal real entre ruido — deep web, difícil) ---
+func _build_signal_area(parent: VBoxContainer) -> void:
+	_signal_timer_bar = ProgressBar.new()
+	_signal_timer_bar.custom_minimum_size = Vector2(0, 14)
+	_signal_timer_bar.max_value = 1.0
+	_signal_timer_bar.value = 1.0
+	var sfill := StyleBoxFlat.new()
+	sfill.bg_color = Color(0.85, 0.25, 0.2)
+	sfill.set_corner_radius_all(3)
+	_signal_timer_bar.add_theme_stylebox_override("fill", sfill)
+	var sbg := StyleBoxFlat.new()
+	sbg.bg_color = Color(0.12, 0.14, 0.18)
+	sbg.set_corner_radius_all(3)
+	_signal_timer_bar.add_theme_stylebox_override("background", sbg)
+	parent.add_child(_signal_timer_bar)
+
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 8)
+	parent.add_child(grid)
+	for i in range(4):
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(0, 48)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", 22)
+		var bs := StyleBoxFlat.new()
+		bs.bg_color = Color(0.15, 0.18, 0.24)
+		bs.set_corner_radius_all(6)
+		bs.border_width_left = 1
+		bs.border_width_top = 1
+		bs.border_width_right = 1
+		bs.border_width_bottom = 1
+		bs.border_color = Color(0.4, 0.55, 0.7)
+		b.add_theme_stylebox_override("normal", bs)
+		b.add_theme_color_override("font_color", Color(0.9, 0.95, 1.0))
+		var idx := i
+		b.pressed.connect(func(): _on_signal_choice(idx))
+		grid.add_child(b)
+		_mg_buttons.append(b)
+
+func _next_signal_round() -> void:
+	# Genera 4 etiquetas; solo una es la señal real
+	var real_pool := [
+		"FREQ-7A3", "NODE-Ω", "PKT_REAL", "HANDSHAKE", "TOR-EXIT",
+		"AUTH_OK", "CORE-SIG", "LIVE_CH", "TRUE_BIT", "ROOT_KEY"
+	]
+	var noise_pool := [
+		"noise…", "static", "NULL", "????", "echo",
+		"ghost", "spoof", "DEAD", "0x00", "jitter",
+		"fake_ch", "drift", "…", "corrupt", "timeout"
+	]
+	_signal_correct = randi() % 4
+	_signal_options.clear()
+	var used_noise: Array = []
+	for i in range(4):
+		if i == _signal_correct:
+			_signal_options.append(real_pool[randi() % real_pool.size()])
+		else:
+			var n: String = noise_pool[randi() % noise_pool.size()]
+			while n in used_noise:
+				n = noise_pool[randi() % noise_pool.size()]
+			used_noise.append(n)
+			_signal_options.append(n)
+	_signal_time_left = maxf(0.85, _signal_window)
+	for i in range(mini(4, _mg_buttons.size())):
+		var b: Button = _mg_buttons[i]
+		if is_instance_valid(b):
+			b.text = str(_signal_options[i])
+			b.disabled = false
+			b.modulate = Color.WHITE
+	if _signal_timer_bar:
+		_signal_timer_bar.max_value = _signal_time_left
+		_signal_timer_bar.value = _signal_time_left
+	if _mg_hint:
+		_mg_hint.text = "📡 Aísla la señal real  ·  %.1fs" % _signal_time_left
+
+func _process_signal(delta: float) -> void:
+	if _signal_time_left <= 0.0:
+		return
+	_signal_time_left -= delta
+	if _signal_timer_bar:
+		_signal_timer_bar.value = maxf(0.0, _signal_time_left)
+		# Pasa a rojo cuando queda poco
+		var ratio := _signal_time_left / maxf(0.01, _signal_window)
+		var sfill := StyleBoxFlat.new()
+		sfill.set_corner_radius_all(3)
+		if ratio < 0.35:
+			sfill.bg_color = Color(1.0, 0.15, 0.12)
+		elif ratio < 0.6:
+			sfill.bg_color = Color(0.95, 0.55, 0.1)
+		else:
+			sfill.bg_color = Color(0.85, 0.25, 0.2)
+		_signal_timer_bar.add_theme_stylebox_override("fill", sfill)
+	if _signal_time_left <= 0.0:
+		_signal_time_left = 0.0
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "⏱ Tiempo agotado — señal perdida"
+		# Penaliza y abre otra ronda más estrecha
+		_signal_window = maxf(0.9, _signal_window - 0.12)
+		if _clicks_done < _clicks_needed:
+			_next_signal_round()
+
+func _on_signal_choice(idx: int) -> void:
+	if not _is_working or _clicks_done >= _clicks_needed:
+		return
+	if _signal_time_left <= 0.0:
+		return
+	if idx == _signal_correct:
+		var was_fast := _signal_time_left > _signal_window * 0.45
+		_register_hit(1, was_fast)
+		# Cada acierto estrecha la ventana
+		_signal_window = maxf(0.85, _signal_window - 0.15)
+		if _mg_hint:
+			_mg_hint.text = "✓ Señal aislada" + (" ★" if was_fast else "")
+		if _clicks_done < _clicks_needed:
+			_next_signal_round()
+	else:
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "✕ Era ruido — señal contaminada"
+		_signal_window = maxf(0.9, _signal_window - 0.08)
+		if _clicks_done < _clicks_needed:
+			_next_signal_round()
+
+# =============================================================================
+# MINIJUEGOS NUEVOS — quiz / tag / swipe / cleanse / scrape / proxy / mine / shadow / zeroday
+# =============================================================================
+
+func _build_quiz_area(parent: VBoxContainer) -> void:
+	var prompt := Label.new()
+	prompt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	prompt.add_theme_font_size_override("font_size", 22)
+	prompt.add_theme_color_override("font_color", Color(0.95, 0.95, 1.0))
+	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	parent.add_child(prompt)
+	_mg_buttons.append(prompt)
+	for i in range(4):
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(0, 36)
+		b.add_theme_font_size_override("font_size", 20)
+		var idx := i
+		b.pressed.connect(func(): _on_quiz_choice(idx))
+		parent.add_child(b)
+		_mg_buttons.append(b)
+
+func _next_quiz() -> void:
+	# Encuestas del programa anónimo — a veces inocentes, a veces tocan la herida
+	var qs: Array = [
+		{"q": "¿Cuántas horas dormiste anoche?", "opts": ["2", "4", "7", "No recuerdo"], "a": 3},
+		{"q": "¿Vives solo?", "opts": ["Sí", "No", "Antes no", "Prefiero no decir"], "a": 0},
+		{"q": "¿Has oído golpes en la puerta esta semana?", "opts": ["No", "Sí", "Fue el viento", "No abrí"], "a": 0},
+		{"q": "El captcha: 3 + 4 = ?", "opts": ["5", "7", "12", "sangre"], "a": 1},
+		{"q": "¿Aceptas trabajar sin conocer al cliente?", "opts": ["Acepto", "Rechazo", "¿Qué cliente?", "Ya no importa"], "a": 0},
+		{"q": "¿Piensas salir del país pronto?", "opts": ["No", "Sí", "Si junto el dinero", "No es asunto suyo"], "a": 2},
+		{"q": "¿Recuerdas lo que hiciste anoche?", "opts": ["Sí", "No", "A medias", "No quiero"], "a": 2},
+		{"q": "Marca lo que NO es un sistema operativo", "opts": ["Windows", "Linux", "ToasterOS", "macOS"], "a": 2},
+		{"q": "¿Usas tu nombre real en este programa?", "opts": ["Sí", "Nunca", "A veces", "Ya no tengo nombre"], "a": 1},
+		{"q": "Si alguien toca a tu puerta a las 3 AM…", "opts": ["Abro", "No abro", "Apago la luz", "No estoy"], "a": 1},
+	]
+	var pick: Dictionary = qs[randi() % qs.size()]
+	_quiz_prompt = str(pick["q"])
+	_quiz_answer = int(pick["a"])
+	var opts: Array = pick["opts"]
+	if _mg_buttons.size() >= 5:
+		(_mg_buttons[0] as Label).text = _quiz_prompt
+		for i in range(4):
+			var b: Button = _mg_buttons[i + 1]
+			if is_instance_valid(b):
+				b.text = "%d) %s" % [i + 1, opts[i]]
+				b.disabled = false
+	if _mg_hint:
+		_mg_hint.text = "❓ Encuesta del programa — responde (1-4)"
+
+func _on_quiz_choice(idx: int) -> void:
+	if not _is_working or _clicks_done >= _clicks_needed:
+		return
+	if idx == _quiz_answer:
+		_register_hit(1, true)
+		if _mg_hint:
+			_mg_hint.text = "✓ Respuesta correcta"
+		if _clicks_done < _clicks_needed:
+			_next_quiz()
+	else:
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "✕ Incorrecto"
+		if _clicks_done < _clicks_needed:
+			_next_quiz()
+
+func _build_tag_area(parent: VBoxContainer) -> void:
+	var prompt := Label.new()
+	prompt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	prompt.add_theme_font_size_override("font_size", 22)
+	prompt.add_theme_color_override("font_color", Color(0.95, 0.95, 1.0))
+	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	parent.add_child(prompt)
+	_mg_buttons.append(prompt)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	parent.add_child(row)
+	for i in range(3):
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(0, 40)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", 20)
+		var idx := i
+		b.pressed.connect(func(): _on_tag_choice(idx))
+		row.add_child(b)
+		_mg_buttons.append(b)
+
+func _next_tag() -> void:
+	# Fotos del programa — algunas empujan el recuerdo de esa noche
+	var items: Array = [
+		{"img": "📷 Pasillo vacío, luz parpadeante", "tags": ["Interior", "Exterior", "Error"], "a": 0},
+		{"img": "📷 Mano en el cristal empañado", "tags": ["Persona", "Objeto", "Fake"], "a": 0},
+		{"img": "📷 Mapa con ruta hacia la frontera", "tags": ["Mapa", "Contrato", "Ruido"], "a": 0},
+		{"img": "📷 Silueta junto a una puerta entreabierta", "tags": ["Persona", "Animal", "Error"], "a": 0},
+		{"img": "📷 Recibo de un hotel de una sola noche", "tags": ["Documento", "Meme", "Código"], "a": 0},
+		{"img": "📷 Pantalla con texto cortado a la mitad", "tags": ["Error", "Paisaje", "Retrato"], "a": 0},
+		{"img": "📷 Foto borrosa de una pareja en un sofá", "tags": ["Persona", "Spam", "Arte"], "a": 0},
+		{"img": "📷 Botella vacía sobre una mesa manchada", "tags": ["Objeto", "Persona", "Fake"], "a": 0},
+	]
+	var pick: Dictionary = items[randi() % items.size()]
+	_tag_prompt = str(pick["img"])
+	var tags: Array = pick["tags"].duplicate()
+	var correct_label: String = str(tags[int(pick["a"])])
+	for i in range(tags.size() - 1, 0, -1):
+		var j := randi() % (i + 1)
+		var tmp = tags[i]
+		tags[i] = tags[j]
+		tags[j] = tmp
+	_tag_answer = tags.find(correct_label)
+	if _mg_buttons.size() >= 4:
+		(_mg_buttons[0] as Label).text = _tag_prompt
+		for i in range(3):
+			var b: Button = _mg_buttons[i + 1]
+			if is_instance_valid(b):
+				b.text = str(tags[i])
+				b.disabled = false
+	if _mg_hint:
+		_mg_hint.text = "🏷 Elige la etiqueta correcta"
+
+func _on_tag_choice(idx: int) -> void:
+	if not _is_working or _clicks_done >= _clicks_needed:
+		return
+	if idx == _tag_answer:
+		_register_hit(1, true)
+		if _mg_hint:
+			_mg_hint.text = "✓ Etiquetado OK"
+		if _clicks_done < _clicks_needed:
+			_next_tag()
+	else:
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "✕ Categoría incorrecta"
+		if _clicks_done < _clicks_needed:
+			_next_tag()
+
+func _build_swipe_area(parent: VBoxContainer) -> void:
+	_swipe_timer_bar = ProgressBar.new()
+	_swipe_timer_bar.custom_minimum_size = Vector2(0, 12)
+	_swipe_timer_bar.max_value = 1.0
+	_swipe_timer_bar.value = 1.0
+	var sf := StyleBoxFlat.new()
+	sf.bg_color = Color(0.3, 0.7, 0.9)
+	sf.set_corner_radius_all(3)
+	_swipe_timer_bar.add_theme_stylebox_override("fill", sf)
+	parent.add_child(_swipe_timer_bar)
+	var prompt := Label.new()
+	prompt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	prompt.add_theme_font_size_override("font_size", 22)
+	prompt.add_theme_color_override("font_color", Color(0.95, 0.95, 1.0))
+	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	parent.add_child(prompt)
+	_mg_buttons.append(prompt)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	parent.add_child(row)
+	var rej := Button.new()
+	rej.text = "✕ RECHAZAR"
+	rej.custom_minimum_size = Vector2(0, 44)
+	rej.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rej.add_theme_font_size_override("font_size", 22)
+	var rs := StyleBoxFlat.new()
+	rs.bg_color = Color(0.7, 0.2, 0.2)
+	rs.set_corner_radius_all(6)
+	rej.add_theme_stylebox_override("normal", rs)
+	rej.add_theme_color_override("font_color", Color.WHITE)
+	rej.pressed.connect(func(): _on_swipe(0))
+	row.add_child(rej)
+	_mg_buttons.append(rej)
+	var okb := Button.new()
+	okb.text = "✓ APROBAR"
+	okb.custom_minimum_size = Vector2(0, 44)
+	okb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	okb.add_theme_font_size_override("font_size", 22)
+	var os := StyleBoxFlat.new()
+	os.bg_color = Color(0.2, 0.65, 0.3)
+	os.set_corner_radius_all(6)
+	okb.add_theme_stylebox_override("normal", os)
+	okb.add_theme_color_override("font_color", Color.WHITE)
+	okb.pressed.connect(func(): _on_swipe(1))
+	row.add_child(okb)
+	_mg_buttons.append(okb)
+
+func _next_swipe() -> void:
+	# Moderación del programa — contenido real vs basura / trampas
+	var items: Array = [
+		{"t": "Post: 'necesito dinero rápido sin papeles'", "a": 0},
+		{"t": "Captura de un bug report legítimo", "a": 1},
+		{"t": "Mensaje: 'ya sabemos dónde estás'", "a": 0},
+		{"t": "Tutorial oficial del foro anónimo", "a": 1},
+		{"t": "Enlace a 'prueba de vida' con foto borrosa", "a": 0},
+		{"t": "Pregunta técnica bien formulada", "a": 1},
+		{"t": "Spam: 'la policía no revisa esto'", "a": 0},
+		{"t": "Reseña verificada del cliente 7A", "a": 1},
+		{"t": "Foto de una puerta con sangre… o es óxido", "a": 0},
+		{"t": "Log de sesión con horario válido", "a": 1},
+	]
+	var pick: Dictionary = items[randi() % items.size()]
+	_swipe_prompt = str(pick["t"])
+	_swipe_answer = int(pick["a"])
+	_swipe_time = maxf(0.9, _swipe_window)
+	if _mg_buttons.size() >= 1 and is_instance_valid(_mg_buttons[0]):
+		(_mg_buttons[0] as Label).text = _swipe_prompt
+	if _swipe_timer_bar:
+		_swipe_timer_bar.max_value = _swipe_time
+		_swipe_timer_bar.value = _swipe_time
+	if _mg_hint:
+		_mg_hint.text = "↔ Aprueba o rechaza  ·  %.1fs" % _swipe_time
+
+func _process_swipe(delta: float) -> void:
+	if _swipe_time <= 0.0:
+		return
+	_swipe_time -= delta
+	if _swipe_timer_bar:
+		_swipe_timer_bar.value = maxf(0.0, _swipe_time)
+	if _swipe_time <= 0.0:
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "⏱ Tiempo agotado"
+		_swipe_window = maxf(0.95, _swipe_window - 0.08)
+		if _clicks_done < _clicks_needed:
+			_next_swipe()
+
+func _on_swipe(side: int) -> void:
+	if not _is_working or _clicks_done >= _clicks_needed or _swipe_time <= 0.0:
+		return
+	if side == _swipe_answer:
+		var fast := _swipe_time > _swipe_window * 0.5
+		_register_hit(1, fast)
+		_swipe_window = maxf(0.95, _swipe_window - 0.05)
+		if _mg_hint:
+			_mg_hint.text = "✓ Filtrado OK" + (" ★" if fast else "")
+		if _clicks_done < _clicks_needed:
+			_next_swipe()
+	else:
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "✕ Decisión incorrecta"
+		if _clicks_done < _clicks_needed:
+			_next_swipe()
+
+func _build_cleanse_area(parent: VBoxContainer) -> void:
+	_cleanse_grid = GridContainer.new()
+	_cleanse_grid.columns = 4
+	_cleanse_grid.add_theme_constant_override("h_separation", 4)
+	_cleanse_grid.add_theme_constant_override("v_separation", 4)
+	parent.add_child(_cleanse_grid)
+
+func _next_cleanse() -> void:
+	_cleanse_cells.clear()
+	_cleanse_found = 0
+	_cleanse_needed = 3 + int(_clicks_done / 2)
+	var total := 12
+	for i in range(total):
+		_cleanse_cells.append(false)
+	var placed := 0
+	while placed < _cleanse_needed:
+		var idx := randi() % total
+		if not _cleanse_cells[idx]:
+			_cleanse_cells[idx] = true
+			placed += 1
+	if _cleanse_grid:
+		for c in _cleanse_grid.get_children():
+			c.queue_free()
+		_mg_buttons.clear()
+		for i in range(total):
+			var b := Button.new()
+			b.custom_minimum_size = Vector2(48, 40)
+			b.add_theme_font_size_override("font_size", 16)
+			if _cleanse_cells[i]:
+				b.text = "██"
+				var bs := StyleBoxFlat.new()
+				bs.bg_color = Color(0.55, 0.15, 0.15)
+				bs.set_corner_radius_all(4)
+				b.add_theme_stylebox_override("normal", bs)
+				b.add_theme_color_override("font_color", Color(1, 0.4, 0.4))
+			else:
+				b.text = "OK"
+				var bs2 := StyleBoxFlat.new()
+				bs2.bg_color = Color(0.15, 0.25, 0.18)
+				bs2.set_corner_radius_all(4)
+				b.add_theme_stylebox_override("normal", bs2)
+				b.add_theme_color_override("font_color", Color(0.5, 0.8, 0.5))
+			var idx2 := i
+			b.pressed.connect(func(): _on_cleanse_cell(idx2))
+			_cleanse_grid.add_child(b)
+			_mg_buttons.append(b)
+	if _mg_hint:
+		_mg_hint.text = "🧹 Borra lo 'corrupto'… sin borrar lo que aún necesitas (%d)" % _cleanse_needed
+
+func _on_cleanse_cell(idx: int) -> void:
+	if not _is_working or _clicks_done >= _clicks_needed:
+		return
+	if idx < 0 or idx >= _cleanse_cells.size():
+		return
+	if _cleanse_cells[idx]:
+		_cleanse_cells[idx] = false
+		_cleanse_found += 1
+		if idx < _mg_buttons.size() and is_instance_valid(_mg_buttons[idx]):
+			var b: Button = _mg_buttons[idx]
+			b.text = "✓"
+			b.disabled = true
+			b.modulate = Color(0.5, 1.0, 0.5)
+		if _cleanse_found >= _cleanse_needed:
+			_register_hit(1, _cleanse_needed >= 4)
+			if _mg_hint:
+				_mg_hint.text = "🧹 Datos limpios… o eso dice el programa"
+			if _clicks_done < _clicks_needed:
+				_next_cleanse()
+		else:
+			if _mg_hint:
+				_mg_hint.text = "🧹 %d/%d corruptas" % [_cleanse_found, _cleanse_needed]
+	else:
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "✕ Esa celda estaba sana"
+		if idx < _mg_buttons.size() and is_instance_valid(_mg_buttons[idx]):
+			_mg_buttons[idx].modulate = Color(1, 0.5, 0.5)
+
+func _build_scrape_area(parent: VBoxContainer) -> void:
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 6)
+	grid.add_theme_constant_override("v_separation", 6)
+	parent.add_child(grid)
+	for i in range(6):
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(0, 36)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", 18)
+		var idx := i
+		b.pressed.connect(func(): _on_scrape_pick(idx))
+		grid.add_child(b)
+		_mg_buttons.append(b)
+
+func _next_scrape() -> void:
+	var valid_pool := ["PKT_OK", "DATA_7A", "ROW_VALID", "JSON_OK", "CSV_CLEAN", "XML_OK"]
+	var bait_pool := ["BAIT_99", "HONEYPOT", "TRAP", "FAKE_ROW", "SPOOF", "NULL_BOMB"]
+	_scrape_is_valid.clear()
+	_scrape_labels.clear()
+	var valid_count := 2 + (randi() % 2)
+	var indices := [0, 1, 2, 3, 4, 5]
+	for i in range(indices.size() - 1, 0, -1):
+		var j := randi() % (i + 1)
+		var tmp = indices[i]
+		indices[i] = indices[j]
+		indices[j] = tmp
+	for i in range(6):
+		_scrape_is_valid.append(false)
+		_scrape_labels.append("")
+	for k in range(valid_count):
+		_scrape_is_valid[indices[k]] = true
+	for i in range(6):
+		if _scrape_is_valid[i]:
+			_scrape_labels[i] = valid_pool[randi() % valid_pool.size()]
+		else:
+			_scrape_labels[i] = bait_pool[randi() % bait_pool.size()]
+	for i in range(mini(6, _mg_buttons.size())):
+		var b: Button = _mg_buttons[i]
+		if is_instance_valid(b):
+			b.text = str(_scrape_labels[i])
+			b.disabled = false
+			b.modulate = Color.WHITE
+	if _mg_hint:
+		_mg_hint.text = "⛏ Solo lo válido. El cebo atrapa a quien huye (%d)" % valid_count
+
+func _on_scrape_pick(idx: int) -> void:
+	if not _is_working or _clicks_done >= _clicks_needed:
+		return
+	if idx < 0 or idx >= _scrape_is_valid.size():
+		return
+	if _scrape_is_valid[idx]:
+		_scrape_is_valid[idx] = false
+		if idx < _mg_buttons.size() and is_instance_valid(_mg_buttons[idx]):
+			_mg_buttons[idx].disabled = true
+			_mg_buttons[idx].text = "✓"
+			_mg_buttons[idx].modulate = Color(0.5, 1, 0.5)
+		var left := 0
+		for v in _scrape_is_valid:
+			if v:
+				left += 1
+		if left == 0:
+			_register_hit(1, true)
+			if _mg_hint:
+				_mg_hint.text = "⛏ Lote extraído"
+			if _clicks_done < _clicks_needed:
+				_next_scrape()
+		else:
+			if _mg_hint:
+				_mg_hint.text = "⛏ %d válidos restantes" % left
+	else:
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "✕ Cebo — alguien diseñó esto para gente como tú"
+		if idx < _mg_buttons.size() and is_instance_valid(_mg_buttons[idx]):
+			_mg_buttons[idx].modulate = Color(1, 0.3, 0.3)
+
+func _build_proxy_area(parent: VBoxContainer) -> void:
+	var prompt := Label.new()
+	prompt.add_theme_font_size_override("font_size", 20)
+	prompt.add_theme_color_override("font_color", Color(0.9, 0.95, 1.0))
+	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	prompt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	parent.add_child(prompt)
+	_mg_buttons.append(prompt)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	parent.add_child(row)
+	for i in range(4):
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(0, 42)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", 18)
+		var idx := i
+		b.pressed.connect(func(): _on_proxy_hop(idx))
+		row.add_child(b)
+		_mg_buttons.append(b)
+
+func _next_proxy() -> void:
+	var nodes := ["TOR-1", "VPN-A", "RELAY-X", "EXIT-9", "NODE-Ω", "CHAIN-3", "HOP-7", "MESH-2"]
+	var length := 3 + (1 if _clicks_done > 1 else 0)
+	_proxy_path.clear()
+	var used: Array = []
+	while _proxy_path.size() < length:
+		var n: String = nodes[randi() % nodes.size()]
+		if n not in used:
+			used.append(n)
+			_proxy_path.append(n)
+	_proxy_player_idx = 0
+	_proxy_options = _proxy_path.duplicate()
+	while _proxy_options.size() < 4:
+		var n2: String = nodes[randi() % nodes.size()]
+		if n2 not in _proxy_options:
+			_proxy_options.append(n2)
+	for i in range(_proxy_options.size() - 1, 0, -1):
+		var j := randi() % (i + 1)
+		var tmp = _proxy_options[i]
+		_proxy_options[i] = _proxy_options[j]
+		_proxy_options[j] = tmp
+	if _mg_buttons.size() >= 5:
+		(_mg_buttons[0] as Label).text = "Ruta: " + " → ".join(_proxy_path)
+		for i in range(4):
+			var b: Button = _mg_buttons[i + 1]
+			if is_instance_valid(b):
+				b.text = str(_proxy_options[i])
+				b.disabled = false
+				b.modulate = Color.WHITE
+	if _mg_hint:
+		_mg_hint.text = "🔀 Enruta tu rastro EN ORDEN. Mal hop = huella (%d)" % length
+
+func _on_proxy_hop(idx: int) -> void:
+	if not _is_working or _clicks_done >= _clicks_needed:
+		return
+	if _proxy_player_idx >= _proxy_path.size():
+		return
+	if idx < 0 or idx >= _proxy_options.size():
+		return
+	var chosen: String = str(_proxy_options[idx])
+	var expected: String = str(_proxy_path[_proxy_player_idx])
+	if chosen == expected:
+		_proxy_player_idx += 1
+		if idx + 1 < _mg_buttons.size() and is_instance_valid(_mg_buttons[idx + 1]):
+			_mg_buttons[idx + 1].modulate = Color(0.5, 1, 0.5)
+			_mg_buttons[idx + 1].disabled = true
+		if _proxy_player_idx >= _proxy_path.size():
+			_register_hit(1, _proxy_path.size() >= 4)
+			if _mg_hint:
+				_mg_hint.text = "🔀 Rastro limpio… por ahora"
+			if _clicks_done < _clicks_needed:
+				_next_proxy()
+		else:
+			if _mg_hint:
+				_mg_hint.text = "🔀 Hop %d/%d" % [_proxy_player_idx, _proxy_path.size()]
+	else:
+		_register_miss()
+		_proxy_player_idx = 0
+		if _mg_hint:
+			_mg_hint.text = "✕ Salto incorrecto — dejaste huella. Otra vez."
+		_next_proxy()
+
+func _build_mine_area(parent: VBoxContainer) -> void:
+	_mine_canvas = Control.new()
+	_mine_canvas.custom_minimum_size = Vector2(0, 36)
+	_mine_canvas.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_mine_canvas.draw.connect(_draw_mine_bar)
+	parent.add_child(_mine_canvas)
+
+func _draw_mine_bar() -> void:
+	if _mine_canvas == null:
+		return
+	var r := Rect2(Vector2.ZERO, _mine_canvas.size)
+	if r.size.x < 4:
+		return
+	_mine_canvas.draw_rect(r, Color(0.10, 0.12, 0.16))
+	var zx := r.size.x * _mine_spike_min
+	var zw := r.size.x * (_mine_spike_max - _mine_spike_min)
+	_mine_canvas.draw_rect(Rect2(zx, 3, zw, r.size.y - 6), Color(0.95, 0.2, 0.15, 0.9))
+	var vx := r.size.x * _mine_value
+	_mine_canvas.draw_rect(Rect2(0, 0, vx, r.size.y), Color(0.3, 0.7, 1.0, 0.4))
+	_mine_canvas.draw_rect(Rect2(vx - 2, 0, 4, r.size.y), Color(1, 1, 1))
+
+func _process_mine(delta: float) -> void:
+	if not _mine_active:
+		if _mine_canvas:
+			_mine_canvas.queue_redraw()
+		return
+	_mine_value = minf(1.0, _mine_value + delta * 0.42)
+	if click_area:
+		if _mine_value >= _mine_spike_min and _mine_value <= _mine_spike_max:
+			click_area.modulate = Color(1.0, 0.4, 0.3)
+			click_area.text = "★ PICO — SUELTA YA"
+		elif _mine_value > _mine_spike_max:
+			click_area.modulate = Color(1.0, 0.2, 0.2)
+			click_area.text = "🔥 DEMASIADO TARDE"
+		else:
+			click_area.modulate = Color(0.6, 0.85, 1.0)
+			click_area.text = "MANTÉN EL RITMO…"
+	if _mine_canvas:
+		_mine_canvas.queue_redraw()
+
+func _build_shadow_area(parent: VBoxContainer) -> void:
+	_shadow_canvas = Control.new()
+	_shadow_canvas.custom_minimum_size = Vector2(0, 36)
+	_shadow_canvas.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_shadow_canvas.draw.connect(_draw_shadow_bar)
+	parent.add_child(_shadow_canvas)
+
+func _draw_shadow_bar() -> void:
+	if _shadow_canvas == null:
+		return
+	var r := Rect2(Vector2.ZERO, _shadow_canvas.size)
+	if r.size.x < 4:
+		return
+	_shadow_canvas.draw_rect(r, Color(0.75, 0.78, 0.82))
+	var zx := r.size.x * _shadow_dark_min
+	var zw := r.size.x * (_shadow_dark_max - _shadow_dark_min)
+	_shadow_canvas.draw_rect(Rect2(zx, 0, zw, r.size.y), Color(0.08, 0.08, 0.12))
+	var mx := r.size.x * _shadow_pos
+	_shadow_canvas.draw_rect(Rect2(mx - 4, 0, 8, r.size.y), Color(0.95, 0.85, 0.2))
+	_shadow_canvas.draw_rect(Rect2(mx - 1.5, 0, 3, r.size.y), Color(1, 1, 1))
+
+func _process_shadow(delta: float) -> void:
+	_shadow_pos += _shadow_dir * _shadow_speed * delta
+	if _shadow_pos >= 1.0:
+		_shadow_pos = 1.0
+		_shadow_dir = -1.0
+	elif _shadow_pos <= 0.0:
+		_shadow_pos = 0.0
+		_shadow_dir = 1.0
+	if click_area:
+		if _shadow_pos >= _shadow_dark_min and _shadow_pos <= _shadow_dark_max:
+			click_area.modulate = Color(0.6, 0.6, 0.9)
+			click_area.text = "🌑 NADIE MIRA — AHORA"
+		else:
+			click_area.modulate = Color(1.0, 0.85, 0.5)
+			click_area.text = "⚠ TE PUEDEN VER — espera"
+	if _shadow_canvas:
+		_shadow_canvas.queue_redraw()
+
+func _try_shadow_hit() -> void:
+	if not _is_working or _clicks_done >= _clicks_needed:
+		return
+	if _shadow_pos >= _shadow_dark_min and _shadow_pos <= _shadow_dark_max:
+		var mid := (_shadow_dark_min + _shadow_dark_max) * 0.5
+		var perfect := absf(_shadow_pos - mid) < 0.04
+		_register_hit(1, perfect)
+		if _mg_hint:
+			_mg_hint.text = "🌑 Mensaje enviado. Nadie te vio." + (" ★" if perfect else "")
+		_shadow_dark_min = 0.20 + randf() * 0.25
+		_shadow_dark_max = minf(0.78, _shadow_dark_min + 0.14 + randf() * 0.04)
+		_shadow_speed = minf(1.8, _shadow_speed + 0.06)
+	else:
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "✕ Alguien pudo verte. El contacto se quema."
+
+func _build_zeroday_area(parent: VBoxContainer) -> void:
+	_zeroday_timer_bar = ProgressBar.new()
+	_zeroday_timer_bar.custom_minimum_size = Vector2(0, 12)
+	_zeroday_timer_bar.max_value = 1.0
+	_zeroday_timer_bar.value = 1.0
+	var zf := StyleBoxFlat.new()
+	zf.bg_color = Color(0.9, 0.15, 0.2)
+	zf.set_corner_radius_all(3)
+	_zeroday_timer_bar.add_theme_stylebox_override("fill", zf)
+	parent.add_child(_zeroday_timer_bar)
+	var grid := GridContainer.new()
+	grid.columns = 4
+	grid.add_theme_constant_override("h_separation", 4)
+	grid.add_theme_constant_override("v_separation", 4)
+	parent.add_child(grid)
+	_zeroday_cells.clear()
+	for i in range(16):
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(42, 36)
+		b.add_theme_font_size_override("font_size", 14)
+		b.text = "·"
+		var idx := i
+		b.pressed.connect(func(): _on_zeroday_cell(idx))
+		grid.add_child(b)
+		_zeroday_cells.append(b)
+		_mg_buttons.append(b)
+
+func _next_zeroday() -> void:
+	_zeroday_vuln = randi() % 16
+	_zeroday_time = maxf(1.2, _zeroday_window)
+	for i in range(_zeroday_cells.size()):
+		var b: Button = _zeroday_cells[i]
+		if not is_instance_valid(b):
+			continue
+		b.disabled = false
+		b.modulate = Color.WHITE
+		if i == _zeroday_vuln:
+			b.text = "⚠"
+			var bs := StyleBoxFlat.new()
+			bs.bg_color = Color(0.35, 0.12, 0.12)
+			bs.set_corner_radius_all(3)
+			b.add_theme_stylebox_override("normal", bs)
+			b.add_theme_color_override("font_color", Color(1.0, 0.55, 0.3))
+		else:
+			b.text = "·"
+			var bs2 := StyleBoxFlat.new()
+			bs2.bg_color = Color(0.14, 0.16, 0.20)
+			bs2.set_corner_radius_all(3)
+			b.add_theme_stylebox_override("normal", bs2)
+			b.add_theme_color_override("font_color", Color(0.5, 0.55, 0.6))
+	if _zeroday_timer_bar:
+		_zeroday_timer_bar.max_value = _zeroday_time
+		_zeroday_timer_bar.value = _zeroday_time
+	if _mg_hint:
+		_mg_hint.text = "💀 Encuentra el fallo antes de que se cierre  ·  %.1fs" % _zeroday_time
+
+func _process_zeroday(delta: float) -> void:
+	if _zeroday_time <= 0.0:
+		return
+	_zeroday_time -= delta
+	if _zeroday_timer_bar:
+		_zeroday_timer_bar.value = maxf(0.0, _zeroday_time)
+	if _zeroday_time <= 0.0:
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "⏱ La ventana se cerró. Como tus días."
+		_zeroday_window = maxf(1.4, _zeroday_window - 0.15)
+		if _clicks_done < _clicks_needed:
+			_next_zeroday()
+
+func _on_zeroday_cell(idx: int) -> void:
+	if not _is_working or _clicks_done >= _clicks_needed or _zeroday_time <= 0.0:
+		return
+	if idx == _zeroday_vuln:
+		var fast := _zeroday_time > _zeroday_window * 0.4
+		_register_hit(1, fast)
+		_zeroday_window = maxf(1.3, _zeroday_window - 0.18)
+		if _mg_hint:
+			_mg_hint.text = "💀 Fallo reportado. El reloj sigue." + (" ★" if fast else "")
+		if _clicks_done < _clicks_needed:
+			_next_zeroday()
+	else:
+		_register_miss()
+		if _mg_hint:
+			_mg_hint.text = "✕ Celda limpia — perdiste tiempo"
+		if idx < _zeroday_cells.size() and is_instance_valid(_zeroday_cells[idx]):
+			_zeroday_cells[idx].modulate = Color(1, 0.4, 0.4)
+			_zeroday_cells[idx].disabled = true
+
 # --- TECLADO ---
 func _unhandled_input(event: InputEvent) -> void:
 	if not _is_working or not _process_mg:
@@ -1269,6 +2389,24 @@ func _unhandled_input(event: InputEvent) -> void:
 			}
 			if map.has(code):
 				_on_sequence_press(int(map[code]))
+				get_viewport().set_input_as_handled()
+		"mirror":
+			if _mirror_showing:
+				return
+			var mmap := {
+				KEY_1: 0, KEY_2: 1, KEY_3: 2, KEY_4: 3,
+				KEY_KP_1: 0, KEY_KP_2: 1, KEY_KP_3: 2, KEY_KP_4: 3
+			}
+			if mmap.has(code):
+				_on_mirror_press(int(mmap[code]))
+				get_viewport().set_input_as_handled()
+		"signal":
+			var smap := {
+				KEY_1: 0, KEY_2: 1, KEY_3: 2, KEY_4: 3,
+				KEY_KP_1: 0, KEY_KP_2: 1, KEY_KP_3: 2, KEY_KP_4: 3
+			}
+			if smap.has(code):
+				_on_signal_choice(int(smap[code]))
 				get_viewport().set_input_as_handled()
 		"type":
 			var ch := String.chr(key.unicode).to_upper() if key.unicode > 0 else ""
@@ -1301,7 +2439,38 @@ func _unhandled_input(event: InputEvent) -> void:
 			elif code in [KEY_RIGHT, KEY_D]:
 				_on_classify(1)
 				get_viewport().set_input_as_handled()
+		"quiz":
+			var qmap := {
+				KEY_1: 0, KEY_2: 1, KEY_3: 2, KEY_4: 3,
+				KEY_KP_1: 0, KEY_KP_2: 1, KEY_KP_3: 2, KEY_KP_4: 3
+			}
+			if qmap.has(code):
+				_on_quiz_choice(int(qmap[code]))
+				get_viewport().set_input_as_handled()
+		"swipe":
+			if code in [KEY_LEFT, KEY_A]:
+				_on_swipe(0)
+				get_viewport().set_input_as_handled()
+			elif code in [KEY_RIGHT, KEY_D]:
+				_on_swipe(1)
+				get_viewport().set_input_as_handled()
+		"proxy":
+			var pmap := {
+				KEY_1: 0, KEY_2: 1, KEY_3: 2, KEY_4: 3,
+				KEY_KP_1: 0, KEY_KP_2: 1, KEY_KP_3: 2, KEY_KP_4: 3
+			}
+			if pmap.has(code):
+				_on_proxy_hop(int(pmap[code]))
+				get_viewport().set_input_as_handled()
+		"shadow":
+			if code in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]:
+				_try_shadow_hit()
+				get_viewport().set_input_as_handled()
 		"rapid", "click":
 			if code == KEY_SPACE:
 				_on_work_click()
 				get_viewport().set_input_as_handled()
+
+## [Tanda 9] Si la app se cierra a mitad de trabajo, no bloquear los eventos.
+func _exit_tree() -> void:
+	GameManager.is_job_running = false

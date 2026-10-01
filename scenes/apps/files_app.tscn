@@ -46,7 +46,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.85
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 24
 
 [node name="RightCol" type="VBoxContainer" parent="Root/MainRow" unique_id=1812588453]
 layout_mode = 2

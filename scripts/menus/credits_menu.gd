@@ -10,8 +10,8 @@ signal closed
 const CREDITS_TEXT := """Alain Daniel — Programador
 JesusVL — Programador
 Roberto — Historia y Marketing
-Angel — Compositor y Artista
-Fernando Marcano — Compositor
+Angel — Compositor
+Luis — Artista
 
 — 30 DAYS LEFT —
 Gracias por jugar."""

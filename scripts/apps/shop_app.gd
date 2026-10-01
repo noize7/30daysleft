@@ -49,7 +49,8 @@ func _style() -> void:
 		goal_label.add_theme_color_override("font_color", Color(0.25, 0.25, 0.25))
 		goal_label.add_theme_font_size_override("font_size", 24)
 	if shop_list:
-		var s: int = int(round(28.0 * icon_scale))
+		shop_list.add_theme_color_override("font_color", Color(0.12, 0.12, 0.12))
+		var s: int = int(round(30.0 * icon_scale))
 		shop_list.fixed_icon_size = Vector2i(s, s)
 		shop_list.icon_mode = ItemList.ICON_MODE_LEFT
 	if buy_button:

@@ -21,6 +21,8 @@ signal upgrade_changed(category: String, new_level: int)
 ## Se emite al transferir a la cuenta de escape (progreso actualizado).
 signal escape_changed(transferred: float)
 signal cash_payment_pending(amount: float)
+## [Tanda 9] Tras pagar un trabajo: pago final (ya con CPU y racha) y datos (incluye "quality").
+signal job_paid(final_pay: float, job_data: Dictionary)
 
 func _ready() -> void:
 	# Generar cuenta de escape al arrancar (nueva partida sin save).
@@ -66,6 +68,11 @@ var current_ending: String = ""
 ## Tutorial: mientras esté activo la batería NO baja y el diálogo guía al jugador.
 var tutorial_active: bool = false
 var tutorial_done: bool = false
+
+## [Tanda 9] True mientras hay un minijuego de trabajo en curso (los eventos esperan).
+var is_job_running: bool = false
+## [Tanda 9] True mientras un evento/decisión está abierto: congela reloj y batería.
+var event_pause: bool = false
 
 ## Posiciones guardadas de los iconos del escritorio: nombre -> [x, y]
 var icon_positions: Dictionary = {}
@@ -177,6 +184,9 @@ func complete_job(pay: float, job_data: Dictionary = {}) -> void:
 	# Multiplicador de CPU (Fase 4)
 	var mult: float = UpgradeSystem.get_cpu_multiplier()
 	var final_pay: float = pay * mult
+	# [Tanda 9] Racha de calidad (notas A/S seguidas suben el pago)
+	if LoopSystem:
+		final_pay *= LoopSystem.get_pay_multiplier()
 	
 	jobs_completed += 1
 	jobs_completed_changed.emit(jobs_completed)
@@ -208,6 +218,9 @@ func complete_job(pay: float, job_data: Dictionary = {}) -> void:
 		if ClueSystem and ClueSystem.has_method("try_unlock_random_from_job"):
 			ClueSystem.try_unlock_random_from_job()
 
+	# [Tanda 9] Avisar a cuota / racha / encargos
+	job_paid.emit(final_pay, job_data)
+
 ## Comprueba si se alcanzó el requisito del siguiente nivel laboral.
 func _check_job_level_up() -> void:
 	var new_level: int = 1
@@ -224,7 +237,7 @@ func _check_job_level_up() -> void:
 func spend_battery(amount: float) -> void:
 	if not is_pc_on or is_game_over:
 		return
-	if tutorial_active:
+	if tutorial_active or event_pause:
 		return
 	battery = clampf(battery - amount, 0.0, max_battery)
 	battery_changed.emit(battery)
@@ -271,6 +284,11 @@ func set_upgrade_level(category: String, level: int) -> void:
 func _end_day() -> void:
 	if is_game_over:
 		return
+	# [Tanda 9] Evaluar cuota del día que termina (puede dar bono o castigo)
+	if LoopSystem:
+		LoopSystem.on_day_ending()
+		if is_game_over:
+			return
 	var _prev_day: int = day
 	day += 1
 	day_changed.emit(day)
@@ -279,6 +297,9 @@ func _end_day() -> void:
 	# Sin cartel grande al pasar de día (la taskbar ya muestra Día X/30)
 	# Eventos narrativos por día (presión gradual)
 	_apply_day_events(day)
+	# [Tanda 9] Nueva cuota y encargos del día
+	if LoopSystem:
+		LoopSystem.on_day_started()
 	# Auto-guardado al terminar el día (respeta opción auto_save)
 	var do_autosave := true
 	if FileAccess.file_exists("user://settings.json"):
@@ -439,8 +460,15 @@ func reset_game() -> void:
 	current_ending = ""
 	tutorial_active = false
 	tutorial_done = false
+	is_job_running = false
+	event_pause = false
 	icon_positions = {}
 	_roll_escape_account()
+	# [Tanda 9] Reiniciar loop diario y eventos
+	if LoopSystem:
+		LoopSystem.reset()
+	if EventSystem:
+		EventSystem.reset()
 	payment_method_changed.emit(payment_method)
 	# Limpiar progreso narrativo (Tanda 4)
 	if EmailSystem:

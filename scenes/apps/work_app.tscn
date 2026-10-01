@@ -92,6 +92,7 @@ theme_override_font_sizes/font_size = 32
 text = ">  Empezar trabajo"
 
 [node name="RewardLabel" type="Label" parent="Root/BottomRow" unique_id=776908970]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32

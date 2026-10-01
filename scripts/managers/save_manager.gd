@@ -41,6 +41,9 @@ func save_game() -> bool:
 		"investigation": InvestigationSystem.get_save_data() if InvestigationSystem else {},
 		"paranoia": ParanoiaSystem.get_save_data() if ParanoiaSystem else {},
 		"bank": BankSystem.get_save_data() if BankSystem else {},
+		# Tanda 9: loop diario (cuota, racha, encargos) + eventos
+		"loop": LoopSystem.get_save_data() if LoopSystem else {},
+		"events": EventSystem.get_save_data() if EventSystem else {},
 		# Posiciones de los iconos del escritorio (arrastrados por el jugador)
 		"icon_positions": GameManager.icon_positions.duplicate(true),
 		# Escape por transferencia
@@ -142,6 +145,12 @@ func load_game() -> bool:
 	var bank_data = data.get("bank", {})
 	if BankSystem and bank_data is Dictionary:
 		BankSystem.load_save_data(bank_data)
+	var loop_data = data.get("loop", {})
+	if LoopSystem and loop_data is Dictionary:
+		LoopSystem.load_save_data(loop_data)
+	var events_data = data.get("events", {})
+	if EventSystem and events_data is Dictionary:
+		EventSystem.load_save_data(events_data)
 	# Posiciones de los iconos del escritorio
 	var ip = data.get("icon_positions", {})
 	if typeof(ip) == TYPE_DICTIONARY:

@@ -14,7 +14,7 @@ const TYPE_ICON_PATHS := {
 	"medical": "res://assets/Icons Pc/medico.png",
 	"key": "res://assets/Icons Pc/llave.png",
 	"locked": "res://assets/Icons Pc/Candado.png",
-	"police": "res://assets/Icons Pc/Policia.png",
+	"police": "res://assets/Icons Pc/Police.png",
 }
 
 ## Imágenes grandes de pistas concretas (id → ruta).
@@ -98,8 +98,9 @@ func _style() -> void:
 		clue_body.add_theme_color_override("font_color", Color(0.15, 0.15, 0.15))
 		clue_body.add_theme_font_size_override("font_size", 24)
 	if clue_list:
-		clue_list.add_theme_font_size_override("font_size", 24)
-		clue_list.fixed_icon_size = Vector2i(30, 30)
+		clue_list.add_theme_color_override("font_color", Color(0.12, 0.12, 0.12))
+		clue_list.add_theme_font_size_override("font_size", 30)
+		clue_list.fixed_icon_size = Vector2i(48, 48)
 		clue_list.icon_mode = ItemList.ICON_MODE_LEFT
 
 func _icon_for(clue: Dictionary) -> Texture2D:

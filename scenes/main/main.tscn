@@ -7,8 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://bcrr4c7f70ux5" path="res://assets/Icons Pc/carpeta.png" id="4_a8run"]
 [ext_resource type="Texture2D" uid="uid://l8l03h64km0y" path="res://assets/Icons Pc/Upgrade .png" id="5_ouso4"]
 [ext_resource type="Texture2D" uid="uid://dayrsinynty06" path="res://assets/Icons Pc/Ajustes.png" id="6_blune"]
-[ext_resource type="Texture2D" uid="uid://d3esssrgkm8d0" path="res://assets/Icons Pc/Banco.png" id="7_th5th"]
-[ext_resource type="Texture2D" uid="uid://cqqcifebxhnll" path="res://assets/Icons Pc/Musica.png" id="8_ouso4"]
+[ext_resource type="Texture2D" uid="uid://jciojdcf1ib3" path="res://assets/Icons Pc/bank.png" id="7_ouso4"]
+[ext_resource type="Texture2D" uid="uid://bil7ec1qfslx4" path="res://assets/Icons Pc/2026-09-23-215958-Dibujo 43.png" id="8_blune"]
 [ext_resource type="Texture2D" uid="uid://b66yguakjnuao" path="res://assets/sprites/windows-xp-wallpaper-v0-breluv06gbc31.png" id="9_b1x3f"]
 [ext_resource type="Texture2D" uid="uid://7onr5g5k1wbd" path="res://assets/Icons Pc/Bateria.png" id="10_a8run"]
 
@@ -25,8 +25,8 @@ icon_correo = ExtResource("3_b1x3f")
 icon_archivos = ExtResource("4_a8run")
 icon_mejoras = ExtResource("5_ouso4")
 icon_opciones = ExtResource("6_blune")
-icon_banco = ExtResource("7_th5th")
-icon_musica = ExtResource("8_ouso4")
+icon_banco = ExtResource("7_ouso4")
+icon_musica = ExtResource("8_blune")
 icon_scale = 1.8
 shop_icon_scale = 1.8
 

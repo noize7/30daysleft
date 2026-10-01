@@ -1,0 +1,421 @@
+{
+  "note": "Eventos con decisiones. Campos: id, title, text, min_day, max_day, once, weight, sanity_below, suspicion_above, payment (cash|online), min_money, choices[{text,result,effects{money,money_q,sanity,suspicion,battery_pct,minutes,clue}}]. money_q = fraccion de la cuota del dia. battery_pct positivo = pierdes bateria, negativo = ganas.",
+  "events": [
+    {
+      "id": "door_knock",
+      "title": "Golpes en la puerta",
+      "text": "Alguien golpea la puerta. Tres golpes, una pausa, tres más.\nNo esperabas a nadie. ¿Policía? ¿El que entrega el efectivo? ¿O solo la culpa?",
+      "min_day": 2,
+      "max_day": 14,
+      "weight": 1.2,
+      "choices": [
+        {
+          "text": "Mirar por la mirilla",
+          "result": "No hay nadie. Solo un sobre en el suelo con una foto arrugada. En la foto falta una cara que crees reconocer.",
+          "effects": {
+            "sanity": -4,
+            "clue": true,
+            "clue_chance": 0.3
+          }
+        },
+        {
+          "text": "Ignorarlo y seguir trabajando",
+          "result": "Los golpes paran. El silencio es peor. Sientes que alguien sigue al otro lado, escuchando.",
+          "effects": {
+            "suspicion": 2,
+            "sanity": -6
+          }
+        },
+        {
+          "text": "Apagar la luz y esperar",
+          "result": "Contienes la respiración. Nada pasa. Perdiste tiempo y batería… y la duda se queda.",
+          "effects": {
+            "sanity": -1,
+            "battery_pct": 3,
+            "minutes": 15,
+            "battery": -5,
+            "time": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "employer_extra",
+      "title": "Encargo extra del empleador",
+      "text": "Mensaje sin remitente del programa: «Necesito un trabajo limpio esta noche. Pago doble. No hagas preguntas.»\nComo si no tuvieras ya demasiadas cosas sin respuesta.",
+      "min_day": 3,
+      "max_day": 26,
+      "weight": 1.3,
+      "choices": [
+        {
+          "text": "Aceptar sin preguntar",
+          "result": "Lo entregas antes de pensarlo. El dinero llega rápido. No preguntas para qué servía.",
+          "effects": {
+            "money_q": 0.6,
+            "suspicion": 3,
+            "money": 80,
+            "sanity": -3
+          }
+        },
+        {
+          "text": "Preguntar quién es el cliente",
+          "result": "Una sola línea: «Alguien que ya te conoce.» Te quedas helado.",
+          "effects": {
+            "sanity": -8,
+            "clue": true,
+            "suspicion": 3
+          }
+        },
+        {
+          "text": "Rechazarlo",
+          "result": "No responden. Respiras más tranquilo, aunque ese dinero te habría acercado al billete.",
+          "effects": {
+            "sanity": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "sirens",
+      "title": "Sirenas a lo lejos",
+      "text": "Sirenas acercándose por la calle.\nQuizá no es por ti. Quizá el expediente ya tiene tu nombre.",
+      "min_day": 4,
+      "max_day": 30,
+      "weight": 1.4,
+      "suspicion_above": 12,
+      "once": false,
+      "choices": [
+        {
+          "text": "Esconder el equipo y esperar",
+          "result": "Cubres la pantalla. Las sirenas pasan de largo. Tardaste en volver… y el corazón no baja.",
+          "effects": {
+            "suspicion": -3,
+            "battery_pct": 5,
+            "minutes": 20,
+            "time": 20,
+            "sanity": -2
+          }
+        },
+        {
+          "text": "Seguir trabajando como si nada",
+          "result": "Te obligas a teclear. Las sirenas se pierden. Tu pulso tarda en creer que no venían por ti.",
+          "effects": {
+            "sanity": -5,
+            "suspicion": 1,
+            "money_q": 0.15
+          }
+        }
+      ]
+    },
+    {
+      "id": "sweet_smell",
+      "title": "El olor dulce",
+      "text": "Un olor dulce, casi metálico, llena la habitación.\nNo hay fuente. Ya lo oliste esa noche — o eso cree tu cabeza.",
+      "min_day": 5,
+      "max_day": 30,
+      "weight": 1.5,
+      "sanity_below": 72,
+      "once": false,
+      "choices": [
+        {
+          "text": "Abrir la ventana",
+          "result": "El aire frío ayuda. El olor se disuelve. Queda el recuerdo de por qué lo conocías.",
+          "effects": {
+            "sanity": 3,
+            "battery_pct": 2
+          }
+        },
+        {
+          "text": "Buscar de dónde viene",
+          "result": "Revisas cada rincón. En un cajón hay algo que no recordabas haber guardado. Tus manos tiemblan.",
+          "effects": {
+            "sanity": -6,
+            "clue": true,
+            "minutes": 10,
+            "clue_chance": 0.4
+          }
+        },
+        {
+          "text": "Ignorarlo",
+          "result": "Sigues. El olor se pega a la ropa toda la noche, como la culpa.",
+          "effects": {
+            "sanity": -4
+          }
+        }
+      ]
+    },
+    {
+      "id": "sudden_memory",
+      "title": "Un recuerdo que se cuela",
+      "text": "De golpe: unas manos, una luz mala, un grito ahogado.\nSe va tan rápido como llegó. Es de esa noche. Lo sabes.",
+      "min_day": 6,
+      "max_day": 30,
+      "weight": 1.3,
+      "choices": [
+        {
+          "text": "Dejar que el recuerdo llegue",
+          "result": "Cierras los ojos y te obligas a mirar. Duele. Ahora entiendes un poco más… y no puedes deshacerlo.",
+          "effects": {
+            "sanity": -5,
+            "clue": true,
+            "clue_chance": 0.5
+          }
+        },
+        {
+          "text": "Reprimirlo y concentrarte",
+          "result": "Empujas la imagen lejos. Funciona, por ahora. El vacío sigue ahí.",
+          "effects": {
+            "sanity": -2,
+            "suspicion": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "strange_charge",
+      "title": "Cargo extraño en el banco",
+      "text": "Un movimiento en la cuenta que no reconoces: un cargo a nombre de alguien que no conoces.\n¿Error del banco… o rastro de esa noche?",
+      "min_day": 4,
+      "max_day": 28,
+      "weight": 1.1,
+      "payment": "online",
+      "choices": [
+        {
+          "text": "Investigar el cargo",
+          "result": "Rastreas el nombre. Coincide con algo mencionado en un correo que casi borras. No es casualidad.",
+          "effects": {
+            "sanity": -3,
+            "suspicion": 1.5,
+            "clue": true,
+            "time": 25,
+            "clue_chance": 0.45
+          }
+        },
+        {
+          "text": "Ignorarlo",
+          "result": "Quizá es un error. Prefieres no saberlo hoy. Mañana el desconocido seguirá ahí.",
+          "effects": {
+            "money": -20,
+            "sanity": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "stranger_offer",
+      "title": "Oferta de un desconocido",
+      "text": "Usuario anónimo: «Puedo borrar tu huella en la red. Tengo un precio.»\nGente como tú siempre recibe ofertas así.",
+      "min_day": 6,
+      "max_day": 28,
+      "weight": 1.0,
+      "suspicion_above": 15,
+      "min_money": 100,
+      "choices": [
+        {
+          "text": "Pagar el servicio",
+          "result": "Envías el pago. A la hora, tus registros parecen más limpios. O eso dice el mensaje.",
+          "effects": {
+            "money_q": -0.5,
+            "suspicion": -8,
+            "money": -60,
+            "sanity": -2
+          }
+        },
+        {
+          "text": "Rechazar y bloquearlo",
+          "result": "Lo bloqueas. Podría ser una trampa. Podría haber sido la única salida limpia.",
+          "effects": {
+            "sanity": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "power_flicker",
+      "title": "La luz parpadea",
+      "text": "La luz de la habitación parpadea y la pantalla se congela un segundo. Se siente como si alguien te observara.",
+      "min_day": 3,
+      "max_day": 30,
+      "weight": 1.0,
+      "once": false,
+      "choices": [
+        {
+          "text": "Revisar la instalación eléctrica",
+          "result": "Un cable suelto. Lo arreglas, aunque pierdes tiempo.",
+          "effects": {
+            "battery_pct": 4,
+            "minutes": 15,
+            "sanity": 1
+          }
+        },
+        {
+          "text": "Dejarlo así",
+          "result": "Sigue parpadeando de vez en cuando. Te pone nervioso.",
+          "effects": {
+            "sanity": -2
+          }
+        }
+      ]
+    },
+    {
+      "id": "unknown_call",
+      "title": "Llamada sin número",
+      "text": "El teléfono vibra. Pantalla en blanco, sin número.\nA las 3 de la mañana nadie llama por trabajo.",
+      "min_day": 8,
+      "max_day": 30,
+      "weight": 1.2,
+      "choices": [
+        {
+          "text": "Contestar",
+          "result": "Solo hay respiración. Luego, muy bajo, un nombre que no usas desde esa noche.",
+          "effects": {
+            "sanity": -10,
+            "clue": true
+          }
+        },
+        {
+          "text": "Dejar que suene",
+          "result": "Suena hasta cortarse. Después, silencio. Peor que la voz.",
+          "effects": {
+            "suspicion": 1,
+            "sanity": -4
+          }
+        }
+      ]
+    },
+    {
+      "id": "anonymous_tip",
+      "title": "Propina anónima",
+      "text": "Un cliente satisfecho te envía un pago extra sin que lo pidieras. Demasiado generoso para ser casualidad.",
+      "min_day": 3,
+      "max_day": 24,
+      "weight": 0.9,
+      "choices": [
+        {
+          "text": "Quedarte con el dinero",
+          "result": "Lo guardas sin hacer preguntas. Aun así, alguien sabe que lo tienes.",
+          "effects": {
+            "money_q": 0.4,
+            "suspicion": 1
+          }
+        },
+        {
+          "text": "Devolverlo",
+          "result": "Lo devuelves. Te responden con un simple 'Buena decisión'. No sabes si es amenaza o elogio.",
+          "effects": {
+            "sanity": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "mirror",
+      "title": "El espejo",
+      "text": "Al pasar frente al espejo, tu reflejo tarda un instante en moverse.\nComo si aún estuviera en la otra habitación.",
+      "min_day": 9,
+      "max_day": 30,
+      "weight": 1.4,
+      "sanity_below": 55,
+      "once": false,
+      "choices": [
+        {
+          "text": "Mirarte fijamente",
+          "result": "El reflejo te devuelve la mirada de quien no ha dormido… y de quien no puede olvidar del todo.",
+          "effects": {
+            "sanity": -5,
+            "minutes": 10
+          }
+        },
+        {
+          "text": "Apartar la vista",
+          "result": "No quieres verte. Sigues, con la sensación de que algo se quedó mirándote.",
+          "effects": {
+            "sanity": -2
+          }
+        }
+      ]
+    },
+    {
+      "id": "neighbor_note",
+      "title": "Nota de un vecino",
+      "text": "Nota bajo la puerta: «He oído ruidos raros. ¿Todo bien?»\nEl vecino no sabe lo que pasó. Tú tampoco, del todo.",
+      "min_day": 7,
+      "max_day": 26,
+      "weight": 1.0,
+      "suspicion_above": 8,
+      "choices": [
+        {
+          "text": "Responder amablemente",
+          "result": "Dejas una nota tranquilizadora. Se conforma… por ahora. La atención es un riesgo.",
+          "effects": {
+            "suspicion": -2,
+            "battery_pct": 2,
+            "minutes": 10,
+            "sanity": 1
+          }
+        },
+        {
+          "text": "Fingir que no la viste",
+          "result": "Mejor no llamar la atención. Aunque el silencio también llama.",
+          "effects": {
+            "suspicion": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "caffeine_offer",
+      "title": "Una noche larga",
+      "text": "Los ojos te pesan. Tienes café frío en la taza y pocas horas por delante.",
+      "min_day": 5,
+      "max_day": 30,
+      "weight": 0.9,
+      "once": false,
+      "choices": [
+        {
+          "text": "Beber café y seguir",
+          "result": "Te espabilas, pero el pulso se te acelera.",
+          "effects": {
+            "battery_pct": -4,
+            "sanity": -1
+          }
+        },
+        {
+          "text": "Descansar un rato",
+          "result": "Cierras los ojos unos minutos. Vuelves con la cabeza más despejada.",
+          "effects": {
+            "sanity": 3,
+            "minutes": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "deadline_pressure",
+      "title": "Mensaje del empleador",
+      "text": "Mensaje del programa, sin firma: «Tienes producción de sobra. Queremos más. Esta noche.»\nEllos no saben que tú también tienes una fecha límite.",
+      "min_day": 12,
+      "max_day": 30,
+      "weight": 1.2,
+      "choices": [
+        {
+          "text": "Prometer más producción",
+          "result": "Aceptas el ritmo. El pago será mejor… si la cabeza aguanta.",
+          "effects": {
+            "money_q": 1.15,
+            "sanity": -4,
+            "suspicion": 2
+          }
+        },
+        {
+          "text": "Mantener tu ritmo",
+          "result": "Contestas que trabajas a tu paso. No reciben bien la respuesta. La sospecha sube un poco.",
+          "effects": {
+            "suspicion": 3,
+            "sanity": 1
+          }
+        }
+      ]
+    }
+  ]
+}

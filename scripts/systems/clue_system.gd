@@ -44,7 +44,7 @@ On the back: a blurred date.
 		"related_clue": "clue_receipt",
 		"title": "Mensaje eliminado",
 		"title_en": "Deleted message",
-		"body": "Fragmento recuperado del disco:\n«…no fue un accidente. Guarda el dinero y…»\nEl resto esta sobreescrito.\n\n[VERIFICADO: metadatos de borrado reales]",
+		"body": "Fragmento recuperado del disco:\n«…no fue un accidente. Fue el viaje. Guarda el dinero y sal del país…»\nEl resto está sobreescrito.\n\n[VERIFICADO: metadatos de borrado reales]",
 		"body_en": "Fragment recovered from the disk:
 «…it wasn't an accident. Keep the money and…»
 The rest is overwritten.
@@ -97,7 +97,7 @@ Paid in cash, no signature.
 		"chain": "identity_chain",
 		"title": "[OCULTO] Archivo medico",
 		"title_en": "[HIDDEN] Medical file",
-		"body": "Ingreso hospitalario. Causa: trauma craneal / amnesia.\nAlta voluntaria. Sin seguimiento.\nNombre del paciente: ilegible.\n\n[VERIFICADO: sello hospitalario genuino]\n(Requiere RAM 8GB para leer este sector.)",
+		"body": "Ingreso hospitalario — noche del incidente.\nCausa: trauma / amnesia / posible intoxicación.\nAlta voluntaria. Sin seguimiento.\nAcompañante: [TACHADO].\nNombre del paciente: ilegible.\n\n[VERIFICADO: sello hospitalario genuino]\n(Requiere RAM 8GB para leer este sector.)",
 		"body_en": "Hospital admission. Cause: head trauma / amnesia.
 Voluntary discharge. No follow-up.
 Patient name: illegible.
@@ -114,7 +114,7 @@ Patient name: illegible.
 		"chain": "identity_chain",
 		"title": "Pagina de diario",
 		"title_en": "Diary page",
-		"body": "«...no se si lo que recuerdo paso de verdad.\nCada dia la historia cambia un poco.\nTengo miedo de llegar al dia 30 y no saber quien soy.»\n\n[VERIFICADO: escritura propia, fecha coherente]",
+		"body": "«…no sé si lo que recuerdo pasó de verdad.\nCada día la historia de esa noche cambia un poco.\nA veces veo su cara. A veces solo el vacío.\nTengo miedo de llegar al día 30 y no saber quién soy…\nni qué hice.»\n\n[VERIFICADO: escritura propia, fecha coherente]",
 		"body_en": "«...I don't know if what I remember really happened.
 Every day the story shifts a little.
 I'm afraid of reaching day 30 and not knowing who I am.»
@@ -163,7 +163,7 @@ The time matches the night of the incident.
 		"related_clue": "clue_map",
 		"title": "[OCULTO] La ultima pieza",
 		"title_en": "[HIDDEN] The last piece",
-		"body": "Una direccion. Un nombre en clave.\nSi tienes el dinero y has leido el resto,\nya sabes que hacer antes de que lleguen.\n\n[VERIFICADO: coordenadas reales]\n(Archivo en carpeta recuerdos/ — solo con RAM 8GB.)",
+		"body": "Una dirección. Un nombre en clave.\nSi tienes el dinero del programa y has leído el resto,\nya sabes qué hacer antes de que la policía llegue…\no antes de que tu cabeza te delate.\n\n[VERIFICADO: coordenadas reales]\n(Archivo en carpeta recuerdos/ — solo con RAM 8GB.)",
 		"body_en": "An address. A codename.
 If you have the money and you've read the rest,
 you already know what to do before they arrive.
