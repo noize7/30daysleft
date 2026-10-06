@@ -324,6 +324,7 @@ func _apply_runtime_settings(_from_apply: bool) -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+		_ensure_window_fits()
 
 	# Volumen (Master + SFX, en vivo y al aplicar)
 	_apply_volumes()
@@ -377,7 +378,7 @@ func _apply_runtime_settings(_from_apply: bool) -> void:
 	var tree := Engine.get_main_loop() as SceneTree
 	if tree and tree.root:
 		var wallpaper_node = tree.root.find_child("WindowsXpWallpaperV0Breluv06Gbc31", true, false)
-		if wallpaper_node and wallpaper_node is Sprite2D:
+		if wallpaper_node and (wallpaper_node is Sprite2D or wallpaper_node is TextureRect):
 			if int(_settings.background) == 0:
 				wallpaper_node.texture = preload("res://assets/sprites/windows-xp-wallpaper-v0-breluv06gbc31.png")
 			else:
@@ -450,6 +451,7 @@ static func apply_saved_settings_boot() -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+		_ensure_window_fits()
 	# Asegurar bus SFX y aplicar volúmenes al arrancar
 	if AudioServer.get_bus_index("SFX") < 0:
 		var count: int = AudioServer.bus_count
@@ -517,7 +519,7 @@ static func apply_saved_settings_boot() -> void:
 	var tree := Engine.get_main_loop() as SceneTree
 	if tree and tree.root:
 		var wallpaper_node = tree.root.find_child("WindowsXpWallpaperV0Breluv06Gbc31", true, false)
-		if wallpaper_node and wallpaper_node is Sprite2D:
+		if wallpaper_node and (wallpaper_node is Sprite2D or wallpaper_node is TextureRect):
 			if int(settings.background) == 0:
 				wallpaper_node.texture = preload("res://assets/sprites/windows-xp-wallpaper-v0-breluv06gbc31.png")
 			else:
@@ -572,3 +574,14 @@ func _apply_xp_style() -> void:
 		btn.add_theme_stylebox_override("hover", h)
 		btn.add_theme_color_override("font_color", Color.WHITE)
 		btn.add_theme_font_size_override("font_size", 30)
+
+static func _ensure_window_fits() -> void:
+	var screen_rect := DisplayServer.screen_get_usable_rect()
+	var cur_size := DisplayServer.window_get_size()
+	if screen_rect.size.x > 0 and screen_rect.size.y > 0:
+		if cur_size.x >= screen_rect.size.x or cur_size.y >= screen_rect.size.y or cur_size.x < 800:
+			var target_w := mini(1152, screen_rect.size.x - 40)
+			var target_h := mini(648, screen_rect.size.y - 80)
+			DisplayServer.window_set_size(Vector2i(target_w, target_h))
+			@warning_ignore("integer_division")
+			DisplayServer.window_set_position(screen_rect.position + (screen_rect.size - Vector2i(target_w, target_h)) / 2)
