@@ -5,21 +5,26 @@ extends Control
 ## - Caja inferior estilo terminal + avatar de robot a la izquierda.
 ## - Texto con efecto typewriter (aparece poco a poco).
 ## - Continuar / click en panel salta el typewriter o avanza el diálogo.
-## - Durante "waiting" el botón se oculta y se muestra la pista.
-## - Botón Continuar un poco más arriba y mejor espaciado.
+## - Durante "waiting" el botón continuar se oculta y se muestra la pista.
+## - Barra inferior ActionsHBox con espaciador, botón Saltar tutorial y Continuar.
+## - Contenedores con márgenes y tamaños adecuados para evitar desbordes.
 ## - Transiciones de fade robustas sin parpadeos.
 ## =============================================================================
 
 signal continue_pressed
 signal typing_finished
 
-@onready var panel: Panel = $Panel
-@onready var portrait: TextureRect = $Panel/HBox/PortraitFrame/Portrait
-@onready var portrait_label: Label = $Panel/HBox/PortraitFrame/Portrait/BotLabel
-@onready var speaker_label: Label = $Panel/HBox/VBox/SpeakerLabel
-@onready var body_label: Label = $Panel/HBox/VBox/BodyLabel
-@onready var continue_btn: Button = $Panel/HBox/VBox/ContinueButton
-@onready var waiting_label: Label = $Panel/HBox/VBox/WaitingLabel
+@onready var panel: Panel = get_node_or_null("Panel") as Panel
+@onready var portrait_frame: Panel = get_node_or_null("Panel/HBox/PortraitFrame") as Panel
+@onready var portrait: TextureRect = get_node_or_null("Panel/HBox/PortraitFrame/Portrait") as TextureRect
+@onready var portrait_label: Label = get_node_or_null("Panel/HBox/PortraitFrame/Portrait/BotLabel") as Label
+@onready var speaker_label: Label = get_node_or_null("Panel/HBox/VBox/SpeakerLabel") as Label
+@onready var body_label: Label = get_node_or_null("Panel/HBox/VBox/BodyLabel") as Label
+@onready var actions_hbox: HBoxContainer = get_node_or_null("Panel/HBox/VBox/ActionsHBox") as HBoxContainer
+@onready var continue_btn: Button = _find_continue_button()
+@onready var waiting_label: Label = _find_waiting_label()
+@onready var skip_tutorial_btn: Button = _find_skip_tutorial_button()
+@onready var spacer: Control = get_node_or_null("Panel/HBox/VBox/ActionsHBox/Spacer") as Control
 
 var _is_waiting: bool = false
 var _is_typing: bool = false
@@ -28,7 +33,21 @@ var _type_tween: Tween = null
 var _fade_tween: Tween = null
 var _chars_per_second: float = 22.0  # typewriter más lento y legible
 var _typed_chars: int = 0
-var _skip_tutorial_btn: Button = null
+
+func _find_continue_button() -> Button:
+	var b := get_node_or_null("Panel/HBox/VBox/ActionsHBox/ContinueButton") as Button
+	if b: return b
+	return get_node_or_null("Panel/HBox/VBox/ContinueButton") as Button
+
+func _find_waiting_label() -> Label:
+	var l := get_node_or_null("Panel/HBox/VBox/ActionsHBox/WaitingLabel") as Label
+	if l: return l
+	return get_node_or_null("Panel/HBox/VBox/WaitingLabel") as Label
+
+func _find_skip_tutorial_button() -> Button:
+	var b := get_node_or_null("Panel/HBox/VBox/ActionsHBox/SkipTutorialButton") as Button
+	if b: return b
+	return get_node_or_null("Panel/HBox/VBox/SkipTutorialButton") as Button
 
 func _ready() -> void:
 	visible = false
@@ -36,12 +55,12 @@ func _ready() -> void:
 	# El Control raíz NO bloquea clicks al escritorio. Solo el Panel captura ratón.
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_apply_style()
-	_reposition_button()
-	if continue_btn:
+	_reposition_panel()
+	_ensure_skip_tutorial_button()
+	if continue_btn and not continue_btn.pressed.is_connected(_on_continue):
 		continue_btn.pressed.connect(_on_continue)
 	if panel:
 		panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	_ensure_skip_tutorial_button()
 
 func _apply_style() -> void:
 	# Panel oscuro tipo terminal
@@ -53,38 +72,52 @@ func _apply_style() -> void:
 	style.border_width_right = 2
 	style.border_width_bottom = 2
 	style.border_color = Color(0.25, 0.55, 0.85, 0.7)
-	style.content_margin_left = 14
-	style.content_margin_right = 14
+	style.content_margin_left = 16
+	style.content_margin_right = 16
 	style.content_margin_top = 12
-	style.content_margin_bottom = 10
+	style.content_margin_bottom = 12
 	style.shadow_color = Color(0, 0, 0, 0.45)
 	style.shadow_size = 8
 	if panel:
 		panel.add_theme_stylebox_override("panel", style)
 
+	if portrait_frame:
+		var pstyle := StyleBoxFlat.new()
+		pstyle.bg_color = Color(0.04, 0.07, 0.12, 0.9)
+		pstyle.set_corner_radius_all(8)
+		pstyle.border_width_left = 2
+		pstyle.border_width_top = 2
+		pstyle.border_width_right = 2
+		pstyle.border_width_bottom = 2
+		pstyle.border_color = Color(0.22, 0.45, 0.7, 0.6)
+		portrait_frame.add_theme_stylebox_override("panel", pstyle)
+
+	if portrait:
+		portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+
 	if portrait_label:
-		portrait_label.text = "BOT"
-		portrait_label.add_theme_color_override("font_color", Color(0.45, 0.85, 1.0))
-		portrait_label.add_theme_font_size_override("font_size", 24)
-		portrait_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		portrait_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		portrait_label.visible = false
 
 	if speaker_label:
 		speaker_label.add_theme_color_override("font_color", Color(0.4, 0.85, 1.0))
-		speaker_label.add_theme_font_size_override("font_size", 24)
+		speaker_label.add_theme_font_size_override("font_size", 22)
+
 	if body_label:
 		body_label.add_theme_color_override("font_color", Color(0.92, 0.95, 1.0))
-		body_label.add_theme_font_size_override("font_size", 24)
+		body_label.add_theme_font_size_override("font_size", 22)
 		body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		body_label.visible_characters = 0
+
 	if waiting_label:
 		waiting_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.4))
-		waiting_label.add_theme_font_size_override("font_size", 24)
+		waiting_label.add_theme_font_size_override("font_size", 20)
 		waiting_label.visible = false
+
 	if continue_btn:
 		continue_btn.text = "Continuar ▶"
-		continue_btn.add_theme_font_size_override("font_size", 24)
-		# Estilo del botón un poco más visible
+		continue_btn.custom_minimum_size = Vector2(150, 36)
+		continue_btn.add_theme_font_size_override("font_size", 20)
 		var btn_style := StyleBoxFlat.new()
 		btn_style.bg_color = Color(0.15, 0.35, 0.55, 0.95)
 		btn_style.set_corner_radius_all(6)
@@ -105,31 +138,63 @@ func _apply_style() -> void:
 		btn_pressed.bg_color = Color(0.1, 0.28, 0.48, 1.0)
 		continue_btn.add_theme_stylebox_override("pressed", btn_pressed)
 
-## Sube la caja y el botón Continuar de forma clara (más arriba en pantalla).
-func _reposition_button() -> void:
+	if skip_tutorial_btn:
+		_style_skip_tutorial_button(skip_tutorial_btn)
+
+func _style_skip_tutorial_button(btn: Button) -> void:
+	btn.custom_minimum_size = Vector2(160, 36)
+	btn.add_theme_font_size_override("font_size", 20)
+	var sstyle := StyleBoxFlat.new()
+	sstyle.bg_color = Color(0.35, 0.12, 0.12, 0.9)
+	sstyle.set_corner_radius_all(6)
+	sstyle.content_margin_left = 14
+	sstyle.content_margin_right = 14
+	sstyle.content_margin_top = 6
+	sstyle.content_margin_bottom = 6
+	sstyle.border_width_left = 1
+	sstyle.border_width_top = 1
+	sstyle.border_width_right = 1
+	sstyle.border_width_bottom = 1
+	sstyle.border_color = Color(0.7, 0.25, 0.25, 0.7)
+	btn.add_theme_stylebox_override("normal", sstyle)
+	var shover := sstyle.duplicate()
+	shover.bg_color = Color(0.5, 0.18, 0.18, 0.95)
+	btn.add_theme_stylebox_override("hover", shover)
+	var spressed := sstyle.duplicate()
+	spressed.bg_color = Color(0.25, 0.08, 0.08, 1.0)
+	btn.add_theme_stylebox_override("pressed", spressed)
+	btn.add_theme_color_override("font_color", Color(1.0, 0.88, 0.88))
+
+## Posiciona el panel de diálogo dejando espacio sobre la barra de tareas y márgenes limpios.
+func _reposition_panel() -> void:
 	if panel:
-		# Más arriba: deja margen sobre la taskbar y da aire al botón
-		panel.offset_top = -300.0
-		panel.offset_bottom = -100.0
-	if continue_btn:
-		continue_btn.custom_minimum_size = Vector2(150, 34)
-		var vbox = panel.get_node_or_null("HBox/VBox") if panel else null
-		if vbox and vbox is VBoxContainer:
-			vbox.add_theme_constant_override("separation", 6)
+		panel.offset_left = 420.0
+		panel.offset_right = -24.0
+		panel.offset_top = -320.0
+		panel.offset_bottom = -90.0
 
 func show_dialogue(speaker: String, text: String, waiting: bool = false) -> void:
-	# Cancelar cualquier tween anterior para evitar parpadeos / race conditions
 	_kill_tweens()
 
-	# Nunca mostrar "Saltar tutorial" fuera del tutorial
-	if _skip_tutorial_btn:
-		_skip_tutorial_btn.visible = DialogueSystem != null and DialogueSystem.is_tutorial
+	if continue_btn:
+		continue_btn.text = LocaleSystem.t("dialogue.continue", "Continuar ▶") if LocaleSystem else "Continuar ▶"
+	if skip_tutorial_btn:
+		skip_tutorial_btn.text = LocaleSystem.t("dialogue.skip_tutorial", "Saltar tutorial") if LocaleSystem else "Saltar tutorial"
+
+	# Solo mostrar "Saltar tutorial" durante la secuencia tutorial
+	if skip_tutorial_btn:
+		var is_tut := (
+			DialogueSystem != null
+			and DialogueSystem.is_tutorial
+			and DialogueSystem.is_active
+			and str(DialogueSystem.current_sequence_id) == "tutorial"
+		)
+		skip_tutorial_btn.visible = is_tut
 
 	visible = true
 	if speaker_label:
 		speaker_label.text = speaker
-		# Color distinto si habla el jugador
-		var is_player := speaker.strip_edges().to_upper() in ["TÚ", "TU", "JUGADOR", "YO"]
+		var is_player := speaker.strip_edges().to_upper() in ["TÚ", "TU", "JUGADOR", "YO", "YOU"]
 		if is_player:
 			speaker_label.add_theme_color_override("font_color", Color(1.0, 0.82, 0.35))
 		else:
@@ -142,7 +207,7 @@ func show_dialogue(speaker: String, text: String, waiting: bool = false) -> void
 		body_label.text = _full_text
 		body_label.visible_characters = 0
 
-	# Ocultar controles mientras escribimos
+	# Ocultar controles interactivos mientras se tipea
 	if continue_btn:
 		continue_btn.visible = false
 		continue_btn.disabled = true
@@ -156,14 +221,13 @@ func show_dialogue(speaker: String, text: String, waiting: bool = false) -> void
 	_fade_tween.set_trans(Tween.TRANS_CUBIC)
 	_fade_tween.tween_property(self, "modulate:a", 1.0, 0.22)
 
-	# Typewriter
 	_start_typewriter()
 
 func hide_dialogue() -> void:
 	_kill_tweens()
 	_is_typing = false
-	if _skip_tutorial_btn:
-		_skip_tutorial_btn.visible = false
+	if skip_tutorial_btn:
+		skip_tutorial_btn.visible = false
 	_fade_tween = create_tween()
 	_fade_tween.set_ease(Tween.EASE_IN)
 	_fade_tween.tween_property(self, "modulate:a", 0.0, 0.18)
@@ -193,7 +257,6 @@ func _start_typewriter() -> void:
 	var total_chars: int = _full_text.length()
 	body_label.visible_characters = 0
 
-	# Typewriter por pasos: cada letra (o grupo) avanza y puede sonar
 	var delay: float = 1.0 / maxf(1.0, _chars_per_second)
 	_type_tween = create_tween()
 	for i in range(1, total_chars + 1):
@@ -206,7 +269,6 @@ func _type_step(visible_count: int) -> void:
 		return
 	body_label.visible_characters = visible_count
 	_typed_chars = visible_count
-	# Sonido de letra (cada N caracteres; no en espacios/saltos de línea)
 	if SoundSystem and SoundSystem.sfx_typewriter:
 		var every_n: int = maxi(1, SoundSystem.typewriter_every_n_chars)
 		if visible_count % every_n == 0:
@@ -219,37 +281,35 @@ func _finish_typing() -> void:
 		return
 	_is_typing = false
 	if body_label:
-		body_label.visible_characters = -1  # mostrar todo
+		body_label.visible_characters = -1
 	_update_controls_visibility()
 	typing_finished.emit()
 
 func _ensure_skip_tutorial_button() -> void:
-	if _skip_tutorial_btn != null and is_instance_valid(_skip_tutorial_btn):
+	if skip_tutorial_btn == null or not is_instance_valid(skip_tutorial_btn):
+		skip_tutorial_btn = _find_skip_tutorial_button()
+
+	if skip_tutorial_btn != null and is_instance_valid(skip_tutorial_btn):
+		_style_skip_tutorial_button(skip_tutorial_btn)
+		if not skip_tutorial_btn.pressed.is_connected(_on_skip_tutorial):
+			skip_tutorial_btn.pressed.connect(_on_skip_tutorial)
 		return
-	_skip_tutorial_btn = Button.new()
-	_skip_tutorial_btn.name = "SkipTutorialButton"
-	_skip_tutorial_btn.text = "Saltar tutorial"
-	_skip_tutorial_btn.visible = false
-	_skip_tutorial_btn.custom_minimum_size = Vector2(50, 28)
-	_skip_tutorial_btn.add_theme_font_size_override("font_size", 25)
-	var sstyle := StyleBoxFlat.new()
-	sstyle.bg_color = Color(0.35, 0.12, 0.12, 0.9)
-	sstyle.set_corner_radius_all(5)
-	sstyle.content_margin_left = 10
-	sstyle.content_margin_right = 10
-	sstyle.content_margin_top = 4
-	sstyle.content_margin_bottom = 4
-	_skip_tutorial_btn.add_theme_stylebox_override("normal", sstyle)
-	var shover := sstyle.duplicate()
-	shover.bg_color = Color(0.5, 0.18, 0.18, 0.95)
-	_skip_tutorial_btn.add_theme_stylebox_override("hover", shover)
-	_skip_tutorial_btn.add_theme_color_override("font_color", Color(1.0, 0.85, 0.85))
-	_skip_tutorial_btn.pressed.connect(_on_skip_tutorial)
-	var vbox = panel.get_node_or_null("HBox/VBox") if panel else null
-	if vbox:
-		vbox.add_child(_skip_tutorial_btn)
+
+	skip_tutorial_btn = Button.new()
+	skip_tutorial_btn.name = "SkipTutorialButton"
+	skip_tutorial_btn.text = "Saltar tutorial"
+	skip_tutorial_btn.visible = false
+	_style_skip_tutorial_button(skip_tutorial_btn)
+	skip_tutorial_btn.pressed.connect(_on_skip_tutorial)
+
+	if actions_hbox:
+		actions_hbox.add_child(skip_tutorial_btn)
 	else:
-		add_child(_skip_tutorial_btn)
+		var vbox = panel.get_node_or_null("HBox/VBox") if panel else null
+		if vbox:
+			vbox.add_child(skip_tutorial_btn)
+		else:
+			add_child(skip_tutorial_btn)
 
 func _on_skip_tutorial() -> void:
 	if SoundSystem:
@@ -264,8 +324,8 @@ func _update_controls_visibility() -> void:
 		and DialogueSystem.is_active
 		and str(DialogueSystem.current_sequence_id) == "tutorial"
 	)
-	if _skip_tutorial_btn:
-		_skip_tutorial_btn.visible = show_skip and not _is_typing
+	if skip_tutorial_btn:
+		skip_tutorial_btn.visible = show_skip and not _is_typing
 
 	if _is_typing:
 		if continue_btn:
@@ -273,6 +333,8 @@ func _update_controls_visibility() -> void:
 			continue_btn.disabled = true
 		if waiting_label:
 			waiting_label.visible = false
+		if spacer:
+			spacer.visible = show_skip
 		return
 
 	if _is_waiting:
@@ -283,12 +345,16 @@ func _update_controls_visibility() -> void:
 			waiting_label.visible = true
 			if waiting_label.text.is_empty() or waiting_label.text.begins_with("→ Haz"):
 				waiting_label.text = "→ Haz lo que te indico para continuar…"
+		if spacer:
+			spacer.visible = false
 	else:
 		if continue_btn:
 			continue_btn.visible = true
 			continue_btn.disabled = false
 		if waiting_label:
 			waiting_label.visible = false
+		if spacer:
+			spacer.visible = true
 
 func _skip_typing() -> void:
 	if not _is_typing:
@@ -310,7 +376,6 @@ func _on_continue() -> void:
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		# Solo reaccionar si el click cae sobre el panel
 		if panel and panel.get_global_rect().has_point(event.global_position):
 			if _is_waiting:
 				return
